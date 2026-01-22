@@ -4,7 +4,7 @@ plugins {
 }
 
 dependencies {
-    api(project(":checkout-intents-java-client-okhttp"))
+    api(project(":checkout-intents-client-okhttp"))
 }
 
 // Redefine `dokkaJavadoc` to:

@@ -41,9 +41,7 @@ internal class ProGuardCompatibilityTest {
     @Test
     fun proguardRules() {
         val rulesFile =
-            javaClass.classLoader.getResourceAsStream(
-                "META-INF/proguard/checkout-intents-java-core.pro"
-            )
+            javaClass.classLoader.getResourceAsStream("META-INF/proguard/checkout-intents-core.pro")
 
         assertThat(rulesFile).isNotNull()
     }

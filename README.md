@@ -2,8 +2,8 @@
 
 <!-- x-release-please-start-version -->
 
-[![Maven Central](https://img.shields.io/maven-central/v/com.rye/checkout-intents-java)](https://central.sonatype.com/artifact/com.rye/checkout-intents-java/0.0.2)
-[![javadoc](https://javadoc.io/badge2/com.rye/checkout-intents-java/0.0.2/javadoc.svg)](https://javadoc.io/doc/com.rye/checkout-intents-java/0.0.2)
+[![Maven Central](https://img.shields.io/maven-central/v/com.rye/checkout-intents)](https://central.sonatype.com/artifact/com.rye/checkout-intents/0.0.2)
+[![javadoc](https://javadoc.io/badge2/com.rye/checkout-intents/0.0.2/javadoc.svg)](https://javadoc.io/doc/com.rye/checkout-intents/0.0.2)
 
 <!-- x-release-please-end -->
 
@@ -13,7 +13,7 @@ It is generated with [Stainless](https://www.stainless.com/).
 
 <!-- x-release-please-start-version -->
 
-The REST API documentation can be found on [docs.rye.com](https://docs.rye.com). Javadocs are available on [javadoc.io](https://javadoc.io/doc/com.rye/checkout-intents-java/0.0.2).
+The REST API documentation can be found on [docs.rye.com](https://docs.rye.com). Javadocs are available on [javadoc.io](https://javadoc.io/doc/com.rye/checkout-intents/0.0.2).
 
 <!-- x-release-please-end -->
 
@@ -24,7 +24,7 @@ The REST API documentation can be found on [docs.rye.com](https://docs.rye.com).
 ### Gradle
 
 ```kotlin
-implementation("com.rye:checkout-intents-java:0.0.2")
+implementation("com.rye:checkout-intents:0.0.2")
 ```
 
 ### Maven
@@ -32,7 +32,7 @@ implementation("com.rye:checkout-intents-java:0.0.2")
 ```xml
 <dependency>
   <groupId>com.rye</groupId>
-  <artifactId>checkout-intents-java</artifactId>
+  <artifactId>checkout-intents</artifactId>
   <version>0.0.2</version>
 </dependency>
 ```
@@ -283,26 +283,26 @@ CheckoutIntent parsedCheckoutIntent = checkoutIntent.parse();
 
 The SDK throws custom unchecked exception types:
 
-- [`CheckoutIntentsServiceException`](checkout-intents-java-core/src/main/kotlin/com/rye/errors/CheckoutIntentsServiceException.kt): Base class for HTTP errors. See this table for which exception subclass is thrown for each HTTP status code:
+- [`CheckoutIntentsServiceException`](checkout-intents-core/src/main/kotlin/com/rye/errors/CheckoutIntentsServiceException.kt): Base class for HTTP errors. See this table for which exception subclass is thrown for each HTTP status code:
 
-  | Status | Exception                                                                                                                     |
-  | ------ | ----------------------------------------------------------------------------------------------------------------------------- |
-  | 400    | [`BadRequestException`](checkout-intents-java-core/src/main/kotlin/com/rye/errors/BadRequestException.kt)                     |
-  | 401    | [`UnauthorizedException`](checkout-intents-java-core/src/main/kotlin/com/rye/errors/UnauthorizedException.kt)                 |
-  | 403    | [`PermissionDeniedException`](checkout-intents-java-core/src/main/kotlin/com/rye/errors/PermissionDeniedException.kt)         |
-  | 404    | [`NotFoundException`](checkout-intents-java-core/src/main/kotlin/com/rye/errors/NotFoundException.kt)                         |
-  | 422    | [`UnprocessableEntityException`](checkout-intents-java-core/src/main/kotlin/com/rye/errors/UnprocessableEntityException.kt)   |
-  | 429    | [`RateLimitException`](checkout-intents-java-core/src/main/kotlin/com/rye/errors/RateLimitException.kt)                       |
-  | 5xx    | [`InternalServerException`](checkout-intents-java-core/src/main/kotlin/com/rye/errors/InternalServerException.kt)             |
-  | others | [`UnexpectedStatusCodeException`](checkout-intents-java-core/src/main/kotlin/com/rye/errors/UnexpectedStatusCodeException.kt) |
+  | Status | Exception                                                                                                                |
+  | ------ | ------------------------------------------------------------------------------------------------------------------------ |
+  | 400    | [`BadRequestException`](checkout-intents-core/src/main/kotlin/com/rye/errors/BadRequestException.kt)                     |
+  | 401    | [`UnauthorizedException`](checkout-intents-core/src/main/kotlin/com/rye/errors/UnauthorizedException.kt)                 |
+  | 403    | [`PermissionDeniedException`](checkout-intents-core/src/main/kotlin/com/rye/errors/PermissionDeniedException.kt)         |
+  | 404    | [`NotFoundException`](checkout-intents-core/src/main/kotlin/com/rye/errors/NotFoundException.kt)                         |
+  | 422    | [`UnprocessableEntityException`](checkout-intents-core/src/main/kotlin/com/rye/errors/UnprocessableEntityException.kt)   |
+  | 429    | [`RateLimitException`](checkout-intents-core/src/main/kotlin/com/rye/errors/RateLimitException.kt)                       |
+  | 5xx    | [`InternalServerException`](checkout-intents-core/src/main/kotlin/com/rye/errors/InternalServerException.kt)             |
+  | others | [`UnexpectedStatusCodeException`](checkout-intents-core/src/main/kotlin/com/rye/errors/UnexpectedStatusCodeException.kt) |
 
-- [`CheckoutIntentsIoException`](checkout-intents-java-core/src/main/kotlin/com/rye/errors/CheckoutIntentsIoException.kt): I/O networking errors.
+- [`CheckoutIntentsIoException`](checkout-intents-core/src/main/kotlin/com/rye/errors/CheckoutIntentsIoException.kt): I/O networking errors.
 
-- [`CheckoutIntentsRetryableException`](checkout-intents-java-core/src/main/kotlin/com/rye/errors/CheckoutIntentsRetryableException.kt): Generic error indicating a failure that could be retried by the client.
+- [`CheckoutIntentsRetryableException`](checkout-intents-core/src/main/kotlin/com/rye/errors/CheckoutIntentsRetryableException.kt): Generic error indicating a failure that could be retried by the client.
 
-- [`CheckoutIntentsInvalidDataException`](checkout-intents-java-core/src/main/kotlin/com/rye/errors/CheckoutIntentsInvalidDataException.kt): Failure to interpret successfully parsed data. For example, when accessing a property that's supposed to be required, but the API unexpectedly omitted it from the response.
+- [`CheckoutIntentsInvalidDataException`](checkout-intents-core/src/main/kotlin/com/rye/errors/CheckoutIntentsInvalidDataException.kt): Failure to interpret successfully parsed data. For example, when accessing a property that's supposed to be required, but the API unexpectedly omitted it from the response.
 
-- [`CheckoutIntentsException`](checkout-intents-java-core/src/main/kotlin/com/rye/errors/CheckoutIntentsException.kt): Base class for all exceptions. Most errors will result in one of the previously mentioned ones, but completely generic errors may be thrown using the base class.
+- [`CheckoutIntentsException`](checkout-intents-core/src/main/kotlin/com/rye/errors/CheckoutIntentsException.kt): Base class for all exceptions. Most errors will result in one of the previously mentioned ones, but completely generic errors may be thrown using the base class.
 
 ## Pagination
 
@@ -332,7 +332,7 @@ page.autoPager()
     .forEach(checkoutIntent -> System.out.println(checkoutIntent));
 ```
 
-When using the asynchronous client, the method returns an [`AsyncStreamResponse`](checkout-intents-java-core/src/main/kotlin/com/rye/core/http/AsyncStreamResponse.kt):
+When using the asynchronous client, the method returns an [`AsyncStreamResponse`](checkout-intents-core/src/main/kotlin/com/rye/core/http/AsyncStreamResponse.kt):
 
 ```java
 import com.rye.core.http.AsyncStreamResponse;
@@ -422,7 +422,7 @@ export CHECKOUT_INTENTS_LOG=debug
 
 ## ProGuard and R8
 
-Although the SDK uses reflection, it is still usable with [ProGuard](https://github.com/Guardsquare/proguard) and [R8](https://developer.android.com/topic/performance/app-optimization/enable-app-optimization) because `checkout-intents-java-core` is published with a [configuration file](checkout-intents-java-core/src/main/resources/META-INF/proguard/checkout-intents-java-core.pro) containing [keep rules](https://www.guardsquare.com/manual/configuration/usage).
+Although the SDK uses reflection, it is still usable with [ProGuard](https://github.com/Guardsquare/proguard) and [R8](https://developer.android.com/topic/performance/app-optimization/enable-app-optimization) because `checkout-intents-core` is published with a [configuration file](checkout-intents-core/src/main/resources/META-INF/proguard/checkout-intents-core.pro) containing [keep rules](https://www.guardsquare.com/manual/configuration/usage).
 
 ProGuard and R8 should automatically detect and use the published rules, but you can also manually copy the keep rules if necessary.
 
@@ -432,7 +432,7 @@ The SDK depends on [Jackson](https://github.com/FasterXML/jackson) for JSON seri
 
 The SDK throws an exception if it detects an incompatible Jackson version at runtime (e.g. if the default version was overridden in your Maven or Gradle config).
 
-If the SDK threw an exception, but you're _certain_ the version is compatible, then disable the version check using the `checkJacksonVersionCompatibility` on [`CheckoutIntentsOkHttpClient`](checkout-intents-java-client-okhttp/src/main/kotlin/com/rye/client/okhttp/CheckoutIntentsOkHttpClient.kt) or [`CheckoutIntentsOkHttpClientAsync`](checkout-intents-java-client-okhttp/src/main/kotlin/com/rye/client/okhttp/CheckoutIntentsOkHttpClientAsync.kt).
+If the SDK threw an exception, but you're _certain_ the version is compatible, then disable the version check using the `checkJacksonVersionCompatibility` on [`CheckoutIntentsOkHttpClient`](checkout-intents-client-okhttp/src/main/kotlin/com/rye/client/okhttp/CheckoutIntentsOkHttpClient.kt) or [`CheckoutIntentsOkHttpClientAsync`](checkout-intents-client-okhttp/src/main/kotlin/com/rye/client/okhttp/CheckoutIntentsOkHttpClientAsync.kt).
 
 > [!CAUTION]
 > We make no guarantee that the SDK works correctly when the Jackson version check is disabled.
@@ -553,15 +553,15 @@ CheckoutIntentsClient client = CheckoutIntentsOkHttpClient.builder()
 
 The SDK consists of three artifacts:
 
-- `checkout-intents-java-core`
+- `checkout-intents-core`
   - Contains core SDK logic
   - Does not depend on [OkHttp](https://square.github.io/okhttp)
-  - Exposes [`CheckoutIntentsClient`](checkout-intents-java-core/src/main/kotlin/com/rye/client/CheckoutIntentsClient.kt), [`CheckoutIntentsClientAsync`](checkout-intents-java-core/src/main/kotlin/com/rye/client/CheckoutIntentsClientAsync.kt), [`CheckoutIntentsClientImpl`](checkout-intents-java-core/src/main/kotlin/com/rye/client/CheckoutIntentsClientImpl.kt), and [`CheckoutIntentsClientAsyncImpl`](checkout-intents-java-core/src/main/kotlin/com/rye/client/CheckoutIntentsClientAsyncImpl.kt), all of which can work with any HTTP client
-- `checkout-intents-java-client-okhttp`
+  - Exposes [`CheckoutIntentsClient`](checkout-intents-core/src/main/kotlin/com/rye/client/CheckoutIntentsClient.kt), [`CheckoutIntentsClientAsync`](checkout-intents-core/src/main/kotlin/com/rye/client/CheckoutIntentsClientAsync.kt), [`CheckoutIntentsClientImpl`](checkout-intents-core/src/main/kotlin/com/rye/client/CheckoutIntentsClientImpl.kt), and [`CheckoutIntentsClientAsyncImpl`](checkout-intents-core/src/main/kotlin/com/rye/client/CheckoutIntentsClientAsyncImpl.kt), all of which can work with any HTTP client
+- `checkout-intents-client-okhttp`
   - Depends on [OkHttp](https://square.github.io/okhttp)
-  - Exposes [`CheckoutIntentsOkHttpClient`](checkout-intents-java-client-okhttp/src/main/kotlin/com/rye/client/okhttp/CheckoutIntentsOkHttpClient.kt) and [`CheckoutIntentsOkHttpClientAsync`](checkout-intents-java-client-okhttp/src/main/kotlin/com/rye/client/okhttp/CheckoutIntentsOkHttpClientAsync.kt), which provide a way to construct [`CheckoutIntentsClientImpl`](checkout-intents-java-core/src/main/kotlin/com/rye/client/CheckoutIntentsClientImpl.kt) and [`CheckoutIntentsClientAsyncImpl`](checkout-intents-java-core/src/main/kotlin/com/rye/client/CheckoutIntentsClientAsyncImpl.kt), respectively, using OkHttp
-- `checkout-intents-java`
-  - Depends on and exposes the APIs of both `checkout-intents-java-core` and `checkout-intents-java-client-okhttp`
+  - Exposes [`CheckoutIntentsOkHttpClient`](checkout-intents-client-okhttp/src/main/kotlin/com/rye/client/okhttp/CheckoutIntentsOkHttpClient.kt) and [`CheckoutIntentsOkHttpClientAsync`](checkout-intents-client-okhttp/src/main/kotlin/com/rye/client/okhttp/CheckoutIntentsOkHttpClientAsync.kt), which provide a way to construct [`CheckoutIntentsClientImpl`](checkout-intents-core/src/main/kotlin/com/rye/client/CheckoutIntentsClientImpl.kt) and [`CheckoutIntentsClientAsyncImpl`](checkout-intents-core/src/main/kotlin/com/rye/client/CheckoutIntentsClientAsyncImpl.kt), respectively, using OkHttp
+- `checkout-intents`
+  - Depends on and exposes the APIs of both `checkout-intents-core` and `checkout-intents-client-okhttp`
   - Does not have its own logic
 
 This structure allows replacing the SDK's default HTTP client without pulling in unnecessary dependencies.
@@ -573,17 +573,17 @@ This structure allows replacing the SDK's default HTTP client without pulling in
 
 To use a customized `OkHttpClient`:
 
-1. Replace your [`checkout-intents-java` dependency](#installation) with `checkout-intents-java-core`
-2. Copy `checkout-intents-java-client-okhttp`'s [`OkHttpClient`](checkout-intents-java-client-okhttp/src/main/kotlin/com/rye/client/okhttp/OkHttpClient.kt) class into your code and customize it
-3. Construct [`CheckoutIntentsClientImpl`](checkout-intents-java-core/src/main/kotlin/com/rye/client/CheckoutIntentsClientImpl.kt) or [`CheckoutIntentsClientAsyncImpl`](checkout-intents-java-core/src/main/kotlin/com/rye/client/CheckoutIntentsClientAsyncImpl.kt), similarly to [`CheckoutIntentsOkHttpClient`](checkout-intents-java-client-okhttp/src/main/kotlin/com/rye/client/okhttp/CheckoutIntentsOkHttpClient.kt) or [`CheckoutIntentsOkHttpClientAsync`](checkout-intents-java-client-okhttp/src/main/kotlin/com/rye/client/okhttp/CheckoutIntentsOkHttpClientAsync.kt), using your customized client
+1. Replace your [`checkout-intents` dependency](#installation) with `checkout-intents-core`
+2. Copy `checkout-intents-client-okhttp`'s [`OkHttpClient`](checkout-intents-client-okhttp/src/main/kotlin/com/rye/client/okhttp/OkHttpClient.kt) class into your code and customize it
+3. Construct [`CheckoutIntentsClientImpl`](checkout-intents-core/src/main/kotlin/com/rye/client/CheckoutIntentsClientImpl.kt) or [`CheckoutIntentsClientAsyncImpl`](checkout-intents-core/src/main/kotlin/com/rye/client/CheckoutIntentsClientAsyncImpl.kt), similarly to [`CheckoutIntentsOkHttpClient`](checkout-intents-client-okhttp/src/main/kotlin/com/rye/client/okhttp/CheckoutIntentsOkHttpClient.kt) or [`CheckoutIntentsOkHttpClientAsync`](checkout-intents-client-okhttp/src/main/kotlin/com/rye/client/okhttp/CheckoutIntentsOkHttpClientAsync.kt), using your customized client
 
 ### Completely custom HTTP client
 
 To use a completely custom HTTP client:
 
-1. Replace your [`checkout-intents-java` dependency](#installation) with `checkout-intents-java-core`
-2. Write a class that implements the [`HttpClient`](checkout-intents-java-core/src/main/kotlin/com/rye/core/http/HttpClient.kt) interface
-3. Construct [`CheckoutIntentsClientImpl`](checkout-intents-java-core/src/main/kotlin/com/rye/client/CheckoutIntentsClientImpl.kt) or [`CheckoutIntentsClientAsyncImpl`](checkout-intents-java-core/src/main/kotlin/com/rye/client/CheckoutIntentsClientAsyncImpl.kt), similarly to [`CheckoutIntentsOkHttpClient`](checkout-intents-java-client-okhttp/src/main/kotlin/com/rye/client/okhttp/CheckoutIntentsOkHttpClient.kt) or [`CheckoutIntentsOkHttpClientAsync`](checkout-intents-java-client-okhttp/src/main/kotlin/com/rye/client/okhttp/CheckoutIntentsOkHttpClientAsync.kt), using your new client class
+1. Replace your [`checkout-intents` dependency](#installation) with `checkout-intents-core`
+2. Write a class that implements the [`HttpClient`](checkout-intents-core/src/main/kotlin/com/rye/core/http/HttpClient.kt) interface
+3. Construct [`CheckoutIntentsClientImpl`](checkout-intents-core/src/main/kotlin/com/rye/client/CheckoutIntentsClientImpl.kt) or [`CheckoutIntentsClientAsyncImpl`](checkout-intents-core/src/main/kotlin/com/rye/client/CheckoutIntentsClientAsyncImpl.kt), similarly to [`CheckoutIntentsOkHttpClient`](checkout-intents-client-okhttp/src/main/kotlin/com/rye/client/okhttp/CheckoutIntentsOkHttpClient.kt) or [`CheckoutIntentsOkHttpClientAsync`](checkout-intents-client-okhttp/src/main/kotlin/com/rye/client/okhttp/CheckoutIntentsOkHttpClientAsync.kt), using your new client class
 
 ## Undocumented API functionality
 
@@ -622,7 +622,7 @@ CheckoutIntentPurchaseParams params = CheckoutIntentPurchaseParams.builder()
 
 These properties can be accessed on the nested built object later using the `_additionalProperties()` method.
 
-To set a documented parameter or property to an undocumented or not yet supported _value_, pass a [`JsonValue`](checkout-intents-java-core/src/main/kotlin/com/rye/core/Values.kt) object to its setter:
+To set a documented parameter or property to an undocumented or not yet supported _value_, pass a [`JsonValue`](checkout-intents-core/src/main/kotlin/com/rye/core/Values.kt) object to its setter:
 
 ```java
 import com.rye.core.JsonValue;
@@ -640,7 +640,7 @@ CheckoutIntentPurchaseParams params = CheckoutIntentPurchaseParams.builder()
     .build();
 ```
 
-The most straightforward way to create a [`JsonValue`](checkout-intents-java-core/src/main/kotlin/com/rye/core/Values.kt) is using its `from(...)` method:
+The most straightforward way to create a [`JsonValue`](checkout-intents-core/src/main/kotlin/com/rye/core/Values.kt) is using its `from(...)` method:
 
 ```java
 import com.rye.core.JsonValue;
@@ -681,7 +681,7 @@ JsonValue complexValue = JsonValue.from(Map.of(
 
 Normally a `Builder` class's `build` method will throw [`IllegalStateException`](https://docs.oracle.com/javase/8/docs/api/java/lang/IllegalStateException.html) if any required parameter or property is unset.
 
-To forcibly omit a required parameter or property, pass [`JsonMissing`](checkout-intents-java-core/src/main/kotlin/com/rye/core/Values.kt):
+To forcibly omit a required parameter or property, pass [`JsonMissing`](checkout-intents-core/src/main/kotlin/com/rye/core/Values.kt):
 
 ```java
 import com.rye.core.JsonMissing;
@@ -757,7 +757,7 @@ if (productUrl.isMissing()) {
 
 In rare cases, the API may return a response that doesn't match the expected type. For example, the SDK may expect a property to contain a `String`, but the API could return something else.
 
-By default, the SDK will not throw an exception in this case. It will throw [`CheckoutIntentsInvalidDataException`](checkout-intents-java-core/src/main/kotlin/com/rye/errors/CheckoutIntentsInvalidDataException.kt) only if you directly access the property.
+By default, the SDK will not throw an exception in this case. It will throw [`CheckoutIntentsInvalidDataException`](checkout-intents-core/src/main/kotlin/com/rye/errors/CheckoutIntentsInvalidDataException.kt) only if you directly access the property.
 
 If you would prefer to check that the response is completely well-typed upfront, then either call `validate()`:
 
