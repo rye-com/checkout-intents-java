@@ -1,0 +1,13 @@
+package com.checkout_intents.api.core.http
+
+enum class HttpMethod {
+    GET,
+    HEAD,
+    POST,
+    PUT,
+    DELETE,
+    CONNECT,
+    OPTIONS,
+    TRACE,
+    PATCH,
+}
