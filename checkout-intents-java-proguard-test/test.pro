@@ -1,5 +1,5 @@
 # Specify the entrypoint where ProGuard starts to determine what's reachable.
--keep class com.checkout_intents.api.proguard.** { *; }
+-keep class com.rye.proguard.** { *; }
 
 # For the testing framework.
 -keep class org.junit.** { *; }
