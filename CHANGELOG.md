@@ -7,5 +7,4 @@ Full Changelog: [v0.0.1...v0.0.2](https://github.com/rye-com/checkout-intents-ja
 ### Chores
 
 * configure new SDK language ([7b74b90](https://github.com/rye-com/checkout-intents-java/commit/7b74b90e03ff94ab2aa9a83a3f6bde2cde29e5d2))
-* sync repo ([9423b6c](https://github.com/rye-com/checkout-intents-java/commit/9423b6cd2886d4e9ac0bea2876fb8cd15f74f33b))
-* update SDK settings ([91bb7ed](https://github.com/rye-com/checkout-intents-java/commit/91bb7ed289ef10e1998b7043236b4f2241a485d1))
+* update SDK settings ([62365c7](https://github.com/rye-com/checkout-intents-java/commit/62365c71ae0e29e22cf2ce84c2e31f278fb7bc4b))
