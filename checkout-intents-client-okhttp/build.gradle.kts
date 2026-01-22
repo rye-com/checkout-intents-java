@@ -4,7 +4,7 @@ plugins {
 }
 
 dependencies {
-    api(project(":checkout-intents-java-core"))
+    api(project(":checkout-intents-core"))
 
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
     implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
