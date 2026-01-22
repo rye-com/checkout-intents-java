@@ -27,9 +27,9 @@ configure<PublishingExtension> {
                 }
 
                 scm {
-                    connection.set("scm:git:git://github.com/stainless-sdks/checkout-intents-java.git")
-                    developerConnection.set("scm:git:git://github.com/stainless-sdks/checkout-intents-java.git")
-                    url.set("https://github.com/stainless-sdks/checkout-intents-java")
+                    connection.set("scm:git:git://github.com/rye-com/checkout-intents-java.git")
+                    developerConnection.set("scm:git:git://github.com/rye-com/checkout-intents-java.git")
+                    url.set("https://github.com/rye-com/checkout-intents-java")
                 }
 
                 versionMapping {
