@@ -237,6 +237,139 @@ CompletableFuture<CheckoutIntent> checkoutIntent = client.checkoutIntents().purc
 
 The asynchronous client supports the same options as the synchronous one, except most methods return `CompletableFuture`s.
 
+## Polling helpers
+
+This SDK includes helper methods for the asynchronous checkout flow. The recommended pattern follows Rye's two-phase checkout:
+
+```java
+import com.rye.client.CheckoutIntentsClient;
+import com.rye.client.okhttp.CheckoutIntentsOkHttpClient;
+import com.rye.models.checkoutintents.Buyer;
+import com.rye.models.checkoutintents.CheckoutIntent;
+import com.rye.models.checkoutintents.CheckoutIntentCreateParams;
+import com.rye.models.checkoutintents.CheckoutIntentConfirmParams;
+import com.rye.models.checkoutintents.PaymentMethod;
+
+CheckoutIntentsClient client = CheckoutIntentsOkHttpClient.fromEnv();
+
+// Phase 1: Create and wait for offer
+CheckoutIntentCreateParams createParams = CheckoutIntentCreateParams.builder()
+    .buyer(Buyer.builder()
+        .address1("123 Main St")
+        .city("New York")
+        .country("US")
+        .email("john.doe@example.com")
+        .firstName("John")
+        .lastName("Doe")
+        .phone("1234567890")
+        .postalCode("10001")
+        .province("NY")
+        .build())
+    .productUrl("https://example.com/product")
+    .quantity(1)
+    .build();
+
+CheckoutIntent intent = client.checkoutIntents().createAndPoll(createParams);
+
+// Handle result
+if (intent.isFailed()) {
+    System.out.println("Failed: " + intent.asFailed().failureReason());
+} else if (intent.isAwaitingConfirmation()) {
+    // Review pricing with user
+    System.out.println("Total: " + intent.asAwaitingConfirmation().offer().total());
+
+    // Phase 2: Confirm and wait for completion
+    CheckoutIntentConfirmParams confirmParams = CheckoutIntentConfirmParams.builder()
+        .paymentMethod(PaymentMethod.StripeTokenPaymentMethod.builder()
+            .stripeToken("tok_visa")
+            .type(PaymentMethod.StripeTokenPaymentMethod.Type.STRIPE_TOKEN)
+            .build())
+        .build();
+
+    CheckoutIntent completed = client.checkoutIntents()
+        .confirmAndPoll(intent.asAwaitingConfirmation().id(), confirmParams);
+
+    if (completed.isCompleted()) {
+        System.out.println("Order completed!");
+    } else if (completed.isFailed()) {
+        System.out.println("Order failed: " + completed.asFailed().failureReason());
+    } else {
+        throw new IllegalStateException("Unexpected state: " + completed);
+    }
+} else {
+    throw new IllegalStateException("Unexpected state: " + intent);
+}
+```
+
+Available polling methods:
+
+- `createAndPoll()` - Create and poll until offer is ready (`awaiting_confirmation` or `failed`)
+- `confirmAndPoll()` - Confirm and poll until completion (`completed` or `failed`)
+- `pollUntilCompleted()` - Poll until `completed` or `failed`
+- `pollUntilAwaitingConfirmation()` - Poll until offer is ready or `failed`
+
+All polling methods support customizable timeouts via `PollOptions`:
+
+```java
+import com.rye.models.checkoutintents.PollOptions;
+import java.time.Duration;
+
+// Configure polling behavior
+PollOptions options = PollOptions.builder()
+    .pollInterval(Duration.ofSeconds(5))  // Poll every 5 seconds (default)
+    .maxAttempts(120)                      // Try up to 120 times, ~10 minutes (default)
+    .build();
+
+CheckoutIntent intent = client.checkoutIntents().pollUntilCompleted(intentId, options);
+```
+
+### Handling polling timeouts
+
+When polling operations exceed `maxAttempts`, a `PollTimeoutException` is thrown with helpful context:
+
+```java
+import com.rye.errors.PollTimeoutException;
+import com.rye.models.checkoutintents.PollOptions;
+
+PollOptions options = PollOptions.builder()
+    .pollInterval(Duration.ofSeconds(5))
+    .maxAttempts(60)
+    .build();
+
+try {
+    CheckoutIntent intent = client.checkoutIntents().pollUntilCompleted(intentId, options);
+} catch (PollTimeoutException e) {
+    System.out.println("Polling timed out for intent: " + e.getIntentId());
+    System.out.println("Attempted " + e.getAttempts() + " times over " +
+        (e.getAttempts() * e.getPollIntervalMs() / 1000) + "s");
+
+    // You can retrieve the current state manually
+    CheckoutIntent currentIntent = client.checkoutIntents().retrieve(e.getIntentId());
+    System.out.println("Current state: " + currentIntent);
+}
+```
+
+### Async polling
+
+The asynchronous client also supports polling methods that return `CompletableFuture`:
+
+```java
+import com.rye.client.CheckoutIntentsClientAsync;
+import com.rye.client.okhttp.CheckoutIntentsOkHttpClientAsync;
+import java.util.concurrent.CompletableFuture;
+
+CheckoutIntentsClientAsync client = CheckoutIntentsOkHttpClientAsync.fromEnv();
+
+CompletableFuture<CheckoutIntent> intentFuture = client.checkoutIntents()
+    .createAndPoll(createParams);
+
+intentFuture.thenAccept(intent -> {
+    if (intent.isAwaitingConfirmation()) {
+        System.out.println("Offer ready: " + intent.asAwaitingConfirmation().offer().total());
+    }
+});
+```
+
 ## Raw responses
 
 The SDK defines methods that deserialize responses into instances of Java classes. However, these methods don't provide access to the response headers, status code, or the raw response body.
@@ -301,6 +434,8 @@ The SDK throws custom unchecked exception types:
 - [`CheckoutIntentsRetryableException`](checkout-intents-core/src/main/kotlin/com/rye/errors/CheckoutIntentsRetryableException.kt): Generic error indicating a failure that could be retried by the client.
 
 - [`CheckoutIntentsInvalidDataException`](checkout-intents-core/src/main/kotlin/com/rye/errors/CheckoutIntentsInvalidDataException.kt): Failure to interpret successfully parsed data. For example, when accessing a property that's supposed to be required, but the API unexpectedly omitted it from the response.
+
+- [`PollTimeoutException`](checkout-intents-core/src/main/kotlin/com/rye/errors/PollTimeoutException.kt): Thrown when polling operations exceed the configured `maxAttempts`. Contains `intentId`, `attempts`, `maxAttempts`, and `pollIntervalMs` for debugging.
 
 - [`CheckoutIntentsException`](checkout-intents-core/src/main/kotlin/com/rye/errors/CheckoutIntentsException.kt): Base class for all exceptions. Most errors will result in one of the previously mentioned ones, but completely generic errors may be thrown using the base class.
 

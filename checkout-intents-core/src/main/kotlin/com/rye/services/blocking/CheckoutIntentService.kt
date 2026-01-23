@@ -14,6 +14,7 @@ import com.rye.models.checkoutintents.CheckoutIntentListPage
 import com.rye.models.checkoutintents.CheckoutIntentListParams
 import com.rye.models.checkoutintents.CheckoutIntentPurchaseParams
 import com.rye.models.checkoutintents.CheckoutIntentRetrieveParams
+import com.rye.models.checkoutintents.PollOptions
 import java.util.function.Consumer
 
 interface CheckoutIntentService {
@@ -157,6 +158,112 @@ interface CheckoutIntentService {
     /** @see purchase */
     fun purchase(
         params: CheckoutIntentPurchaseParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CheckoutIntent
+
+    // Polling methods
+
+    /**
+     * Polls the checkout intent until it reaches the `completed` or `failed` state.
+     *
+     * @param id The checkout intent ID to poll
+     * @return The checkout intent in a terminal state (`completed` or `failed`)
+     * @throws com.rye.errors.PollTimeoutException if max attempts is exceeded
+     */
+    fun pollUntilCompleted(id: String): CheckoutIntent = pollUntilCompleted(id, PollOptions.none())
+
+    /**
+     * Polls the checkout intent until it reaches the `completed` or `failed` state.
+     *
+     * @param id The checkout intent ID to poll
+     * @param options Polling configuration options
+     * @param requestOptions Request options for each poll request
+     * @return The checkout intent in a terminal state (`completed` or `failed`)
+     * @throws com.rye.errors.PollTimeoutException if max attempts is exceeded
+     */
+    fun pollUntilCompleted(
+        id: String,
+        options: PollOptions,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CheckoutIntent
+
+    /**
+     * Polls the checkout intent until it reaches the `awaiting_confirmation` or `failed` state.
+     *
+     * @param id The checkout intent ID to poll
+     * @return The checkout intent in `awaiting_confirmation` or `failed` state
+     * @throws com.rye.errors.PollTimeoutException if max attempts is exceeded
+     */
+    fun pollUntilAwaitingConfirmation(id: String): CheckoutIntent =
+        pollUntilAwaitingConfirmation(id, PollOptions.none())
+
+    /**
+     * Polls the checkout intent until it reaches the `awaiting_confirmation` or `failed` state.
+     *
+     * @param id The checkout intent ID to poll
+     * @param options Polling configuration options
+     * @param requestOptions Request options for each poll request
+     * @return The checkout intent in `awaiting_confirmation` or `failed` state
+     * @throws com.rye.errors.PollTimeoutException if max attempts is exceeded
+     */
+    fun pollUntilAwaitingConfirmation(
+        id: String,
+        options: PollOptions,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CheckoutIntent
+
+    // Composite convenience methods
+
+    /**
+     * Creates a checkout intent and polls until it reaches the `awaiting_confirmation` state.
+     *
+     * @param params The parameters for creating the checkout intent
+     * @return The checkout intent in `awaiting_confirmation` or `failed` state
+     * @throws com.rye.errors.PollTimeoutException if max attempts is exceeded
+     */
+    fun createAndPoll(params: CheckoutIntentCreateParams): CheckoutIntent =
+        createAndPoll(params, PollOptions.none())
+
+    /**
+     * Creates a checkout intent and polls until it reaches the `awaiting_confirmation` state.
+     *
+     * @param params The parameters for creating the checkout intent
+     * @param options Polling configuration options
+     * @param requestOptions Request options for the create and poll requests
+     * @return The checkout intent in `awaiting_confirmation` or `failed` state
+     * @throws com.rye.errors.PollTimeoutException if max attempts is exceeded
+     */
+    fun createAndPoll(
+        params: CheckoutIntentCreateParams,
+        options: PollOptions,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CheckoutIntent
+
+    /**
+     * Confirms a checkout intent and polls until it reaches the `completed` state.
+     *
+     * @param id The checkout intent ID to confirm
+     * @param params The parameters for confirming the checkout intent
+     * @return The checkout intent in `completed` or `failed` state
+     * @throws com.rye.errors.PollTimeoutException if max attempts is exceeded
+     */
+    fun confirmAndPoll(id: String, params: CheckoutIntentConfirmParams): CheckoutIntent =
+        confirmAndPoll(id, params, PollOptions.none())
+
+    /**
+     * Confirms a checkout intent and polls until it reaches the `completed` state.
+     *
+     * @param id The checkout intent ID to confirm
+     * @param params The parameters for confirming the checkout intent
+     * @param options Polling configuration options
+     * @param requestOptions Request options for the confirm and poll requests
+     * @return The checkout intent in `completed` or `failed` state
+     * @throws com.rye.errors.PollTimeoutException if max attempts is exceeded
+     */
+    fun confirmAndPoll(
+        id: String,
+        params: CheckoutIntentConfirmParams,
+        options: PollOptions,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CheckoutIntent
 
