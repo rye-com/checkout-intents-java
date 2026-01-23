@@ -148,9 +148,7 @@ class CheckoutIntentServiceImpl internal constructor(private val clientOptions: 
 
         // Coerce invalid maxAttempts to 1 with a warning
         if (maxAttempts < 1) {
-            logger.warning(
-                "Invalid maxAttempts value: $maxAttempts. Coercing to 1."
-            )
+            logger.warning("Invalid maxAttempts value: $maxAttempts. Coercing to 1.")
             maxAttempts = 1
         }
 
@@ -162,8 +160,7 @@ class CheckoutIntentServiceImpl internal constructor(private val clientOptions: 
                 .build()
 
         // Create service with polling headers
-        val pollingService =
-            withOptions { builder -> builder.putAllHeaders(pollHeaders) }
+        val pollingService = withOptions { builder -> builder.putAllHeaders(pollHeaders) }
 
         var currentIntervalMs = pollIntervalMs
         var attempt = 0
