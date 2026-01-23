@@ -1,5 +1,23 @@
 # Changelog
 
+## 0.1.0 (2026-01-23)
+
+Full Changelog: [v0.0.3...v0.1.0](https://github.com/rye-com/checkout-intents-java/compare/v0.0.3...v0.1.0)
+
+### Features
+
+* **api:** auto infer env from user provided api key ([63e7893](https://github.com/rye-com/checkout-intents-java/commit/63e78939b4a72900b42a933d3be2e1e813e7eba8))
+
+
+### Bug Fixes
+
+* **client:** preserve time zone in lenient date-time parsing ([2d7bb5a](https://github.com/rye-com/checkout-intents-java/commit/2d7bb5a29bf588af205c7d86a008d0af138e2bb1))
+
+
+### Chores
+
+* **internal:** correct cache invalidation for `SKIP_MOCK_TESTS` ([f3482dc](https://github.com/rye-com/checkout-intents-java/commit/f3482dcb7bbbe89891bb60cd38a3b8689b223f44))
+
 ## 0.0.3 (2026-01-22)
 
 Full Changelog: [v0.0.2...v0.0.3](https://github.com/rye-com/checkout-intents-java/compare/v0.0.2...v0.0.3)
