@@ -8,6 +8,7 @@ import com.rye.core.checkRequired
 import com.rye.core.handlers.errorBodyHandler
 import com.rye.core.handlers.errorHandler
 import com.rye.core.handlers.jsonHandler
+import com.rye.core.http.Headers
 import com.rye.core.http.HttpMethod
 import com.rye.core.http.HttpRequest
 import com.rye.core.http.HttpResponse
@@ -16,6 +17,7 @@ import com.rye.core.http.HttpResponseFor
 import com.rye.core.http.json
 import com.rye.core.http.parseable
 import com.rye.core.prepare
+import com.rye.errors.PollTimeoutException
 import com.rye.models.checkoutintents.CheckoutIntent
 import com.rye.models.checkoutintents.CheckoutIntentAddPaymentParams
 import com.rye.models.checkoutintents.CheckoutIntentConfirmParams
@@ -25,7 +27,10 @@ import com.rye.models.checkoutintents.CheckoutIntentListPageResponse
 import com.rye.models.checkoutintents.CheckoutIntentListParams
 import com.rye.models.checkoutintents.CheckoutIntentPurchaseParams
 import com.rye.models.checkoutintents.CheckoutIntentRetrieveParams
+import com.rye.models.checkoutintents.PollOptions
+import java.time.Duration
 import java.util.function.Consumer
+import java.util.logging.Logger
 import kotlin.jvm.optionals.getOrNull
 
 class CheckoutIntentServiceImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -81,6 +86,151 @@ class CheckoutIntentServiceImpl internal constructor(private val clientOptions: 
     ): CheckoutIntent =
         // post /api/v1/checkout-intents/purchase
         withRawResponse().purchase(params, requestOptions).parse()
+
+    // Polling implementation
+
+    override fun pollUntilCompleted(
+        id: String,
+        options: PollOptions,
+        requestOptions: RequestOptions,
+    ): CheckoutIntent =
+        pollUntil(
+            id = id,
+            options = options,
+            requestOptions = requestOptions,
+            isTerminal = { it.isCompleted() || it.isFailed() },
+            targetStateDescription = "completed or failed",
+        )
+
+    override fun pollUntilAwaitingConfirmation(
+        id: String,
+        options: PollOptions,
+        requestOptions: RequestOptions,
+    ): CheckoutIntent =
+        pollUntil(
+            id = id,
+            options = options,
+            requestOptions = requestOptions,
+            isTerminal = { it.isAwaitingConfirmation() || it.isFailed() },
+            targetStateDescription = "awaiting_confirmation or failed",
+        )
+
+    override fun createAndPoll(
+        params: CheckoutIntentCreateParams,
+        options: PollOptions,
+        requestOptions: RequestOptions,
+    ): CheckoutIntent {
+        val intent = create(params, requestOptions)
+        val intentId = extractIntentId(intent)
+        return pollUntilAwaitingConfirmation(intentId, options, requestOptions)
+    }
+
+    override fun confirmAndPoll(
+        id: String,
+        params: CheckoutIntentConfirmParams,
+        options: PollOptions,
+        requestOptions: RequestOptions,
+    ): CheckoutIntent {
+        confirm(id, params, requestOptions)
+        return pollUntilCompleted(id, options, requestOptions)
+    }
+
+    private fun pollUntil(
+        id: String,
+        options: PollOptions,
+        requestOptions: RequestOptions,
+        isTerminal: (CheckoutIntent) -> Boolean,
+        targetStateDescription: String,
+    ): CheckoutIntent {
+        val pollIntervalMs =
+            options.pollInterval().orElse(PollOptions.DEFAULT_POLL_INTERVAL).toMillis()
+        var maxAttempts = options.maxAttempts().orElse(PollOptions.DEFAULT_MAX_ATTEMPTS)
+
+        // Coerce invalid maxAttempts to 1 with a warning
+        if (maxAttempts < 1) {
+            logger.warning(
+                "Invalid maxAttempts value: $maxAttempts. Coercing to 1."
+            )
+            maxAttempts = 1
+        }
+
+        // Build polling headers
+        val pollHeaders =
+            Headers.builder()
+                .put("X-Stainless-Poll-Helper", "true")
+                .put("X-Stainless-Custom-Poll-Interval", pollIntervalMs.toString())
+                .build()
+
+        // Create service with polling headers
+        val pollingService =
+            withOptions { builder -> builder.putAllHeaders(pollHeaders) }
+
+        var currentIntervalMs = pollIntervalMs
+        var attempt = 0
+
+        while (attempt < maxAttempts) {
+            attempt++
+
+            val response = pollingService.withRawResponse().retrieve(id, requestOptions)
+            val intent = response.parse()
+
+            // Check if we've reached a terminal state
+            if (isTerminal(intent)) {
+                return intent
+            }
+
+            // Check if this was our last attempt
+            if (attempt >= maxAttempts) {
+                break
+            }
+
+            // Check for server-provided retry interval
+            val retryAfterMs =
+                response.headers().values("retry-after-ms").firstOrNull()?.toLongOrNull()
+            if (retryAfterMs != null && retryAfterMs > 0) {
+                currentIntervalMs = retryAfterMs
+            }
+
+            // Sleep before next poll
+            clientOptions.sleeper.sleep(Duration.ofMillis(currentIntervalMs))
+        }
+
+        throw PollTimeoutException(
+            intentId = id,
+            attempts = attempt,
+            maxAttempts = maxAttempts,
+            pollIntervalMs = pollIntervalMs,
+            message =
+                "Polling timed out after $attempt attempts. " +
+                    "Expected state: $targetStateDescription. Intent ID: $id",
+        )
+    }
+
+    private fun extractIntentId(intent: CheckoutIntent): String =
+        intent.accept(
+            object : CheckoutIntent.Visitor<String> {
+                override fun visitRetrievingOffer(
+                    retrievingOffer: CheckoutIntent.RetrievingOfferCheckoutIntent
+                ) = retrievingOffer.id()
+
+                override fun visitAwaitingConfirmation(
+                    awaitingConfirmation: CheckoutIntent.AwaitingConfirmationCheckoutIntent
+                ) = awaitingConfirmation.id()
+
+                override fun visitPlacingOrder(
+                    placingOrder: CheckoutIntent.PlacingOrderCheckoutIntent
+                ) = placingOrder.id()
+
+                override fun visitCompleted(completed: CheckoutIntent.CompletedCheckoutIntent) =
+                    completed.id()
+
+                override fun visitFailed(failed: CheckoutIntent.FailedCheckoutIntent) = failed.id()
+            }
+        )
+
+    companion object {
+        private val logger: Logger = Logger.getLogger(CheckoutIntentServiceImpl::class.java.name)
+    }
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         CheckoutIntentService.WithRawResponse {
