@@ -9,7 +9,6 @@ import com.rye.client.okhttp.CheckoutIntentsOkHttpClientAsync
 import com.rye.core.Sleeper
 import com.rye.errors.PollTimeoutException
 import com.rye.models.checkoutintents.PollOptions
-import com.rye.services.async.CheckoutIntentServiceAsync
 import java.time.Duration
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.ExecutionException

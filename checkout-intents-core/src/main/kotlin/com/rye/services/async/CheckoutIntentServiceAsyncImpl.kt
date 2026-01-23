@@ -151,9 +151,7 @@ internal constructor(private val clientOptions: ClientOptions) : CheckoutIntentS
 
         // Coerce invalid maxAttempts to 1 with a warning
         if (maxAttempts < 1) {
-            logger.warning(
-                "Invalid maxAttempts value: $maxAttempts. Coercing to 1."
-            )
+            logger.warning("Invalid maxAttempts value: $maxAttempts. Coercing to 1.")
             maxAttempts = 1
         }
 
@@ -165,8 +163,7 @@ internal constructor(private val clientOptions: ClientOptions) : CheckoutIntentS
                 .build()
 
         // Create service with polling headers
-        val pollingService =
-            withOptions { builder -> builder.putAllHeaders(pollHeaders) }
+        val pollingService = withOptions { builder -> builder.putAllHeaders(pollHeaders) }
 
         return pollLoop(
             id = id,
@@ -221,7 +218,8 @@ internal constructor(private val clientOptions: ClientOptions) : CheckoutIntentS
                 val retryAfterMs =
                     response.headers().values("retry-after-ms").firstOrNull()?.toLongOrNull()
                 val nextIntervalMs =
-                    if (retryAfterMs != null && retryAfterMs > 0) retryAfterMs else currentIntervalMs
+                    if (retryAfterMs != null && retryAfterMs > 0) retryAfterMs
+                    else currentIntervalMs
 
                 // Sleep and then continue polling
                 clientOptions.sleeper.sleepAsync(Duration.ofMillis(nextIntervalMs)).thenCompose {
@@ -264,7 +262,8 @@ internal constructor(private val clientOptions: ClientOptions) : CheckoutIntentS
         )
 
     companion object {
-        private val logger: Logger = Logger.getLogger(CheckoutIntentServiceAsyncImpl::class.java.name)
+        private val logger: Logger =
+            Logger.getLogger(CheckoutIntentServiceAsyncImpl::class.java.name)
     }
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
