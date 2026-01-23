@@ -135,6 +135,14 @@ private constructor(
 
         const val PRODUCTION_URL = "https://api.rye.com/"
 
+        private val ENVIRONMENT_REGEX = Regex("""^RYE/(staging|production)-""")
+
+        internal fun extractEnvironmentFromApiKey(apiKey: String): String? =
+            ENVIRONMENT_REGEX.find(apiKey)?.groupValues?.get(1)
+
+        private fun urlForEnvironment(environment: String): String =
+            if (environment == "production") PRODUCTION_URL else STAGING_URL
+
         /**
          * Returns a mutable builder for constructing an instance of [ClientOptions].
          *
@@ -402,12 +410,15 @@ private constructor(
          *
          * See this table for the available options:
          *
-         * |Setter   |System property          |Environment variable       |Required|Default value                   |
-         * |---------|-------------------------|---------------------------|--------|--------------------------------|
-         * |`apiKey` |`checkoutintents.apiKey` |`CHECKOUT_INTENTS_API_KEY` |true    |-                               |
-         * |`baseUrl`|`checkoutintents.baseUrl`|`CHECKOUT_INTENTS_BASE_URL`|true    |`"https://staging.api.rye.com/"`|
+         * |Setter   |System property          |Environment variable       |Required|Default value             |
+         * |---------|-------------------------|---------------------------|--------|--------------------------|
+         * |`apiKey` |`checkoutintents.apiKey` |`CHECKOUT_INTENTS_API_KEY` |true    |-                         |
+         * |`baseUrl`|`checkoutintents.baseUrl`|`CHECKOUT_INTENTS_BASE_URL`|false   |Auto-inferred from API key|
          *
          * System properties take precedence over environment variables.
+         *
+         * The environment is automatically inferred from the API key format (`RYE/staging-` or
+         * `RYE/production-`). If the API key format doesn't match, defaults to staging.
          */
         fun fromEnv() = apply {
             (System.getProperty("checkoutintents.baseUrl")
@@ -454,6 +465,29 @@ private constructor(
             val sleeper = sleeper ?: PhantomReachableSleeper(DefaultSleeper())
             val apiKey = checkRequired("apiKey", apiKey)
 
+            // Auto-infer environment from API key
+            val inferredEnvironment = extractEnvironmentFromApiKey(apiKey)
+            val resolvedBaseUrl =
+                when {
+                    // Explicit baseUrl takes precedence
+                    baseUrl != null -> {
+                        // Validate no conflict with inferred environment (only for standard URLs)
+                        val isStandardUrl = baseUrl == STAGING_URL || baseUrl == PRODUCTION_URL
+                        if (inferredEnvironment != null && isStandardUrl) {
+                            val expectedUrl = urlForEnvironment(inferredEnvironment)
+                            require(baseUrl == expectedUrl) {
+                                "Environment mismatch: API key indicates '$inferredEnvironment' " +
+                                    "but baseUrl is set to '$baseUrl'. Expected '$expectedUrl'."
+                            }
+                        }
+                        baseUrl
+                    }
+                    // Infer from API key
+                    inferredEnvironment != null -> urlForEnvironment(inferredEnvironment)
+                    // Default to staging (null triggers the default in baseUrl())
+                    else -> null
+                }
+
             val headers = Headers.builder()
             val queryParams = QueryParams.builder()
             headers.put("X-Stainless-Lang", "java")
@@ -486,7 +520,7 @@ private constructor(
                 streamHandlerExecutor,
                 sleeper,
                 clock,
-                baseUrl,
+                resolvedBaseUrl,
                 headers.build(),
                 queryParams.build(),
                 responseValidation,
