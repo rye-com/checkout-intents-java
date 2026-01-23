@@ -271,10 +271,10 @@ CheckoutIntentCreateParams createParams = CheckoutIntentCreateParams.builder()
 
 CheckoutIntent intent = client.checkoutIntents().createAndPoll(createParams);
 
-// Handle failure during offer retrieval
+// Handle result
 if (intent.isFailed()) {
-    System.out.println("Failed: " + intent.asFailed().errors());
-} else {
+    System.out.println("Failed: " + intent.asFailed().failureReason());
+} else if (intent.isAwaitingConfirmation()) {
     // Review pricing with user
     System.out.println("Total: " + intent.asAwaitingConfirmation().offer().total());
 
@@ -289,7 +289,15 @@ if (intent.isFailed()) {
     CheckoutIntent completed = client.checkoutIntents()
         .confirmAndPoll(intent.asAwaitingConfirmation().id(), confirmParams);
 
-    System.out.println("Status: " + (completed.isCompleted() ? "completed" : "failed"));
+    if (completed.isCompleted()) {
+        System.out.println("Order completed!");
+    } else if (completed.isFailed()) {
+        System.out.println("Order failed: " + completed.asFailed().failureReason());
+    } else {
+        throw new IllegalStateException("Unexpected state: " + completed);
+    }
+} else {
+    throw new IllegalStateException("Unexpected state: " + intent);
 }
 ```
 
