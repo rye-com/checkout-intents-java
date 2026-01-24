@@ -2,8 +2,8 @@
 
 <!-- x-release-please-start-version -->
 
-[![Maven Central](https://img.shields.io/maven-central/v/com.rye/checkout-intents)](https://central.sonatype.com/artifact/com.rye/checkout-intents/0.0.3)
-[![javadoc](https://javadoc.io/badge2/com.rye/checkout-intents/0.0.3/javadoc.svg)](https://javadoc.io/doc/com.rye/checkout-intents/0.0.3)
+[![Maven Central](https://img.shields.io/maven-central/v/com.rye/checkout-intents)](https://central.sonatype.com/artifact/com.rye/checkout-intents/0.1.0)
+[![javadoc](https://javadoc.io/badge2/com.rye/checkout-intents/0.1.0/javadoc.svg)](https://javadoc.io/doc/com.rye/checkout-intents/0.1.0)
 
 <!-- x-release-please-end -->
 
@@ -13,7 +13,7 @@ It is generated with [Stainless](https://www.stainless.com/).
 
 <!-- x-release-please-start-version -->
 
-The REST API documentation can be found on [docs.rye.com](https://docs.rye.com). Javadocs are available on [javadoc.io](https://javadoc.io/doc/com.rye/checkout-intents/0.0.3).
+The REST API documentation can be found on [docs.rye.com](https://docs.rye.com). Javadocs are available on [javadoc.io](https://javadoc.io/doc/com.rye/checkout-intents/0.1.0).
 
 <!-- x-release-please-end -->
 
@@ -24,7 +24,7 @@ The REST API documentation can be found on [docs.rye.com](https://docs.rye.com).
 ### Gradle
 
 ```kotlin
-implementation("com.rye:checkout-intents:0.0.3")
+implementation("com.rye:checkout-intents:0.1.0")
 ```
 
 ### Maven
@@ -33,7 +33,7 @@ implementation("com.rye:checkout-intents:0.0.3")
 <dependency>
   <groupId>com.rye</groupId>
   <artifactId>checkout-intents</artifactId>
-  <version>0.0.3</version>
+  <version>0.1.0</version>
 </dependency>
 ```
 

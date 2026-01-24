@@ -1,5 +1,34 @@
 # Changelog
 
+## 0.1.0 (2026-01-24)
+
+Full Changelog: [v0.0.3...v0.1.0](https://github.com/rye-com/checkout-intents-java/compare/v0.0.3...v0.1.0)
+
+### Features
+
+* **api:** auto infer env from user provided api key ([63e7893](https://github.com/rye-com/checkout-intents-java/commit/63e78939b4a72900b42a933d3be2e1e813e7eba8))
+* **api:** polling exception and option classes ([e21f6f3](https://github.com/rye-com/checkout-intents-java/commit/e21f6f38054670b9dd28ef0537eccbd9d57bee3b))
+* **api:** polling exception and option classes ([2d7d1ba](https://github.com/rye-com/checkout-intents-java/commit/2d7d1bafc5d4bcc27f36e854e3fd15e3de96d6ea))
+* **api:** polling helpers ([a93bdb4](https://github.com/rye-com/checkout-intents-java/commit/a93bdb4e4f38b07a033438d3069384f55bec9a0c))
+* **api:** polling helpers ([2e59621](https://github.com/rye-com/checkout-intents-java/commit/2e59621e13aa4c3859fa735a4dc451a1669f0e2c))
+
+
+### Chores
+
+* **api:** polling helper tests ([4718564](https://github.com/rye-com/checkout-intents-java/commit/471856453e4885558c857875cfa0313c50bfdf78))
+* **api:** polling helper tests ([87238d8](https://github.com/rye-com/checkout-intents-java/commit/87238d8c76d4cb417a01f8052bf16e5b8a06a73c))
+* **internal:** run formatting ([f977e63](https://github.com/rye-com/checkout-intents-java/commit/f977e63e70109d0a1385e75db8ac03027d3b71c0))
+* **internal:** run formatting ([ac7d901](https://github.com/rye-com/checkout-intents-java/commit/ac7d90188bd7ffec15455f0a3dc0e60ff9583d9d))
+* sync repo ([3b8c55a](https://github.com/rye-com/checkout-intents-java/commit/3b8c55a2bba1e3051d2c2e39f971982767446cad))
+
+
+### Documentation
+
+* **api:** add polling helper details ([5ac1240](https://github.com/rye-com/checkout-intents-java/commit/5ac124075403ac95669d4aa7f6b4458b2bb97f1a))
+* **api:** add polling helper details ([21281c7](https://github.com/rye-com/checkout-intents-java/commit/21281c736cd6e1389d0425c751116e78bcd7d00e))
+* **api:** update polling example ([3333fb0](https://github.com/rye-com/checkout-intents-java/commit/3333fb07621165553e8a2b74adceb74f4a6e79e3))
+* **api:** update polling example ([8489612](https://github.com/rye-com/checkout-intents-java/commit/84896126ae17875945033b3df05ba087ea525195))
+
 ## 0.0.3 (2026-01-22)
 
 Full Changelog: [v0.0.2...v0.0.3](https://github.com/rye-com/checkout-intents-java/compare/v0.0.2...v0.0.3)
