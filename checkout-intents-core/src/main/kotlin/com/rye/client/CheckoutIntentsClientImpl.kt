@@ -10,6 +10,8 @@ import com.rye.services.blocking.BrandService
 import com.rye.services.blocking.BrandServiceImpl
 import com.rye.services.blocking.CheckoutIntentService
 import com.rye.services.blocking.CheckoutIntentServiceImpl
+import com.rye.services.blocking.ProductService
+import com.rye.services.blocking.ProductServiceImpl
 import java.util.function.Consumer
 
 class CheckoutIntentsClientImpl(private val clientOptions: ClientOptions) : CheckoutIntentsClient {
@@ -39,6 +41,8 @@ class CheckoutIntentsClientImpl(private val clientOptions: ClientOptions) : Chec
 
     private val brands: BrandService by lazy { BrandServiceImpl(clientOptionsWithUserAgent) }
 
+    private val products: ProductService by lazy { ProductServiceImpl(clientOptionsWithUserAgent) }
+
     override fun async(): CheckoutIntentsClientAsync = async
 
     override fun withRawResponse(): CheckoutIntentsClient.WithRawResponse = withRawResponse
@@ -51,6 +55,8 @@ class CheckoutIntentsClientImpl(private val clientOptions: ClientOptions) : Chec
     override fun betas(): BetaService = betas
 
     override fun brands(): BrandService = brands
+
+    override fun products(): ProductService = products
 
     override fun close() = clientOptions.close()
 
@@ -69,6 +75,10 @@ class CheckoutIntentsClientImpl(private val clientOptions: ClientOptions) : Chec
             BrandServiceImpl.WithRawResponseImpl(clientOptions)
         }
 
+        private val products: ProductService.WithRawResponse by lazy {
+            ProductServiceImpl.WithRawResponseImpl(clientOptions)
+        }
+
         override fun withOptions(
             modifier: Consumer<ClientOptions.Builder>
         ): CheckoutIntentsClient.WithRawResponse =
@@ -81,5 +91,7 @@ class CheckoutIntentsClientImpl(private val clientOptions: ClientOptions) : Chec
         override fun betas(): BetaService.WithRawResponse = betas
 
         override fun brands(): BrandService.WithRawResponse = brands
+
+        override fun products(): ProductService.WithRawResponse = products
     }
 }

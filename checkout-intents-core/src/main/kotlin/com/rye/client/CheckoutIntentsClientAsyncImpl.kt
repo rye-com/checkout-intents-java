@@ -10,6 +10,8 @@ import com.rye.services.async.BrandServiceAsync
 import com.rye.services.async.BrandServiceAsyncImpl
 import com.rye.services.async.CheckoutIntentServiceAsync
 import com.rye.services.async.CheckoutIntentServiceAsyncImpl
+import com.rye.services.async.ProductServiceAsync
+import com.rye.services.async.ProductServiceAsyncImpl
 import java.util.function.Consumer
 
 class CheckoutIntentsClientAsyncImpl(private val clientOptions: ClientOptions) :
@@ -40,6 +42,10 @@ class CheckoutIntentsClientAsyncImpl(private val clientOptions: ClientOptions) :
         BrandServiceAsyncImpl(clientOptionsWithUserAgent)
     }
 
+    private val products: ProductServiceAsync by lazy {
+        ProductServiceAsyncImpl(clientOptionsWithUserAgent)
+    }
+
     override fun sync(): CheckoutIntentsClient = sync
 
     override fun withRawResponse(): CheckoutIntentsClientAsync.WithRawResponse = withRawResponse
@@ -54,6 +60,8 @@ class CheckoutIntentsClientAsyncImpl(private val clientOptions: ClientOptions) :
     override fun betas(): BetaServiceAsync = betas
 
     override fun brands(): BrandServiceAsync = brands
+
+    override fun products(): ProductServiceAsync = products
 
     override fun close() = clientOptions.close()
 
@@ -72,6 +80,10 @@ class CheckoutIntentsClientAsyncImpl(private val clientOptions: ClientOptions) :
             BrandServiceAsyncImpl.WithRawResponseImpl(clientOptions)
         }
 
+        private val products: ProductServiceAsync.WithRawResponse by lazy {
+            ProductServiceAsyncImpl.WithRawResponseImpl(clientOptions)
+        }
+
         override fun withOptions(
             modifier: Consumer<ClientOptions.Builder>
         ): CheckoutIntentsClientAsync.WithRawResponse =
@@ -84,5 +96,7 @@ class CheckoutIntentsClientAsyncImpl(private val clientOptions: ClientOptions) :
         override fun betas(): BetaServiceAsync.WithRawResponse = betas
 
         override fun brands(): BrandServiceAsync.WithRawResponse = brands
+
+        override fun products(): ProductServiceAsync.WithRawResponse = products
     }
 }
