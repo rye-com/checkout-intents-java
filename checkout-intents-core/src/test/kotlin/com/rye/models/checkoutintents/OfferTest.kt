@@ -16,12 +16,24 @@ internal class OfferTest {
             Offer.builder()
                 .cost(
                     Offer.Cost.builder()
-                        .subtotal(Money.builder().amountSubunits(1500).currencyCode("USD").build())
-                        .total(Money.builder().amountSubunits(1500).currencyCode("USD").build())
-                        .discount(Money.builder().amountSubunits(1500).currencyCode("USD").build())
-                        .shipping(Money.builder().amountSubunits(1500).currencyCode("USD").build())
-                        .surcharge(Money.builder().amountSubunits(1500).currencyCode("USD").build())
-                        .tax(Money.builder().amountSubunits(1500).currencyCode("USD").build())
+                        .subtotal(
+                            Money.builder().amountSubunits(0.0).currencyCode("currencyCode").build()
+                        )
+                        .total(
+                            Money.builder().amountSubunits(0.0).currencyCode("currencyCode").build()
+                        )
+                        .discount(
+                            Money.builder().amountSubunits(0.0).currencyCode("currencyCode").build()
+                        )
+                        .shipping(
+                            Money.builder().amountSubunits(0.0).currencyCode("currencyCode").build()
+                        )
+                        .surcharge(
+                            Money.builder().amountSubunits(0.0).currencyCode("currencyCode").build()
+                        )
+                        .tax(
+                            Money.builder().amountSubunits(0.0).currencyCode("currencyCode").build()
+                        )
                         .build()
                 )
                 .shipping(
@@ -30,10 +42,16 @@ internal class OfferTest {
                             Offer.Shipping.AvailableOption.builder()
                                 .id("id")
                                 .cost(
-                                    Money.builder().amountSubunits(1500).currencyCode("USD").build()
+                                    Money.builder()
+                                        .amountSubunits(0.0)
+                                        .currencyCode("currencyCode")
+                                        .build()
                                 )
                                 .discount(
-                                    Money.builder().amountSubunits(1500).currencyCode("USD").build()
+                                    Money.builder()
+                                        .amountSubunits(0.0)
+                                        .currencyCode("currencyCode")
+                                        .build()
                                 )
                                 .build()
                         )
@@ -46,12 +64,20 @@ internal class OfferTest {
         assertThat(offer.cost())
             .isEqualTo(
                 Offer.Cost.builder()
-                    .subtotal(Money.builder().amountSubunits(1500).currencyCode("USD").build())
-                    .total(Money.builder().amountSubunits(1500).currencyCode("USD").build())
-                    .discount(Money.builder().amountSubunits(1500).currencyCode("USD").build())
-                    .shipping(Money.builder().amountSubunits(1500).currencyCode("USD").build())
-                    .surcharge(Money.builder().amountSubunits(1500).currencyCode("USD").build())
-                    .tax(Money.builder().amountSubunits(1500).currencyCode("USD").build())
+                    .subtotal(
+                        Money.builder().amountSubunits(0.0).currencyCode("currencyCode").build()
+                    )
+                    .total(Money.builder().amountSubunits(0.0).currencyCode("currencyCode").build())
+                    .discount(
+                        Money.builder().amountSubunits(0.0).currencyCode("currencyCode").build()
+                    )
+                    .shipping(
+                        Money.builder().amountSubunits(0.0).currencyCode("currencyCode").build()
+                    )
+                    .surcharge(
+                        Money.builder().amountSubunits(0.0).currencyCode("currencyCode").build()
+                    )
+                    .tax(Money.builder().amountSubunits(0.0).currencyCode("currencyCode").build())
                     .build()
             )
         assertThat(offer.shipping())
@@ -60,9 +86,17 @@ internal class OfferTest {
                     .addAvailableOption(
                         Offer.Shipping.AvailableOption.builder()
                             .id("id")
-                            .cost(Money.builder().amountSubunits(1500).currencyCode("USD").build())
+                            .cost(
+                                Money.builder()
+                                    .amountSubunits(0.0)
+                                    .currencyCode("currencyCode")
+                                    .build()
+                            )
                             .discount(
-                                Money.builder().amountSubunits(1500).currencyCode("USD").build()
+                                Money.builder()
+                                    .amountSubunits(0.0)
+                                    .currencyCode("currencyCode")
+                                    .build()
                             )
                             .build()
                     )
@@ -79,12 +113,24 @@ internal class OfferTest {
             Offer.builder()
                 .cost(
                     Offer.Cost.builder()
-                        .subtotal(Money.builder().amountSubunits(1500).currencyCode("USD").build())
-                        .total(Money.builder().amountSubunits(1500).currencyCode("USD").build())
-                        .discount(Money.builder().amountSubunits(1500).currencyCode("USD").build())
-                        .shipping(Money.builder().amountSubunits(1500).currencyCode("USD").build())
-                        .surcharge(Money.builder().amountSubunits(1500).currencyCode("USD").build())
-                        .tax(Money.builder().amountSubunits(1500).currencyCode("USD").build())
+                        .subtotal(
+                            Money.builder().amountSubunits(0.0).currencyCode("currencyCode").build()
+                        )
+                        .total(
+                            Money.builder().amountSubunits(0.0).currencyCode("currencyCode").build()
+                        )
+                        .discount(
+                            Money.builder().amountSubunits(0.0).currencyCode("currencyCode").build()
+                        )
+                        .shipping(
+                            Money.builder().amountSubunits(0.0).currencyCode("currencyCode").build()
+                        )
+                        .surcharge(
+                            Money.builder().amountSubunits(0.0).currencyCode("currencyCode").build()
+                        )
+                        .tax(
+                            Money.builder().amountSubunits(0.0).currencyCode("currencyCode").build()
+                        )
                         .build()
                 )
                 .shipping(
@@ -93,10 +139,16 @@ internal class OfferTest {
                             Offer.Shipping.AvailableOption.builder()
                                 .id("id")
                                 .cost(
-                                    Money.builder().amountSubunits(1500).currencyCode("USD").build()
+                                    Money.builder()
+                                        .amountSubunits(0.0)
+                                        .currencyCode("currencyCode")
+                                        .build()
                                 )
                                 .discount(
-                                    Money.builder().amountSubunits(1500).currencyCode("USD").build()
+                                    Money.builder()
+                                        .amountSubunits(0.0)
+                                        .currencyCode("currencyCode")
+                                        .build()
                                 )
                                 .build()
                         )

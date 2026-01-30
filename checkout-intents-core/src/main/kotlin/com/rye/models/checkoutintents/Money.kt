@@ -18,7 +18,7 @@ import java.util.Objects
 class Money
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
-    private val amountSubunits: JsonField<Int>,
+    private val amountSubunits: JsonField<Double>,
     private val currencyCode: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
@@ -27,7 +27,7 @@ private constructor(
     private constructor(
         @JsonProperty("amountSubunits")
         @ExcludeMissing
-        amountSubunits: JsonField<Int> = JsonMissing.of(),
+        amountSubunits: JsonField<Double> = JsonMissing.of(),
         @JsonProperty("currencyCode")
         @ExcludeMissing
         currencyCode: JsonField<String> = JsonMissing.of(),
@@ -37,7 +37,7 @@ private constructor(
      * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
-    fun amountSubunits(): Int = amountSubunits.getRequired("amountSubunits")
+    fun amountSubunits(): Double = amountSubunits.getRequired("amountSubunits")
 
     /**
      * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type or is
@@ -52,7 +52,7 @@ private constructor(
      */
     @JsonProperty("amountSubunits")
     @ExcludeMissing
-    fun _amountSubunits(): JsonField<Int> = amountSubunits
+    fun _amountSubunits(): JsonField<Double> = amountSubunits
 
     /**
      * Returns the raw JSON value of [currencyCode].
@@ -92,7 +92,7 @@ private constructor(
     /** A builder for [Money]. */
     class Builder internal constructor() {
 
-        private var amountSubunits: JsonField<Int>? = null
+        private var amountSubunits: JsonField<Double>? = null
         private var currencyCode: JsonField<String>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
@@ -103,16 +103,16 @@ private constructor(
             additionalProperties = money.additionalProperties.toMutableMap()
         }
 
-        fun amountSubunits(amountSubunits: Int) = amountSubunits(JsonField.of(amountSubunits))
+        fun amountSubunits(amountSubunits: Double) = amountSubunits(JsonField.of(amountSubunits))
 
         /**
          * Sets [Builder.amountSubunits] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.amountSubunits] with a well-typed [Int] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.amountSubunits] with a well-typed [Double] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun amountSubunits(amountSubunits: JsonField<Int>) = apply {
+        fun amountSubunits(amountSubunits: JsonField<Double>) = apply {
             this.amountSubunits = amountSubunits
         }
 
