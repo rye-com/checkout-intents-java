@@ -6,6 +6,7 @@ import com.rye.core.ClientOptions
 import com.rye.services.blocking.BetaService
 import com.rye.services.blocking.BrandService
 import com.rye.services.blocking.CheckoutIntentService
+import com.rye.services.blocking.ProductService
 import java.util.function.Consumer
 
 /**
@@ -50,6 +51,8 @@ interface CheckoutIntentsClient {
 
     fun brands(): BrandService
 
+    fun products(): ProductService
+
     /**
      * Closes this client, relinquishing any underlying resources.
      *
@@ -82,5 +85,7 @@ interface CheckoutIntentsClient {
         fun betas(): BetaService.WithRawResponse
 
         fun brands(): BrandService.WithRawResponse
+
+        fun products(): ProductService.WithRawResponse
     }
 }
