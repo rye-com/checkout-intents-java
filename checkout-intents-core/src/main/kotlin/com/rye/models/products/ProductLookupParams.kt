@@ -8,7 +8,7 @@ import com.rye.core.http.Headers
 import com.rye.core.http.QueryParams
 import java.util.Objects
 
-/** Retrieve a product's information by URL. */
+/** Lookup a product's information by URL. */
 class ProductLookupParams
 private constructor(
     private val url: String,
