@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.2.0 (2026-01-30)
+
+Full Changelog: [v0.1.0...v0.2.0](https://github.com/rye-com/checkout-intents-java/compare/v0.1.0...v0.2.0)
+
+### Features
+
+* **api:** introduce lookup product data endpoint ([c864f57](https://github.com/rye-com/checkout-intents-java/commit/c864f5760eec2abe91ca2c4b2d72b32a547c203b))
+* Implement shipping profile -&gt; shipping option calculation ([ffad9b7](https://github.com/rye-com/checkout-intents-java/commit/ffad9b7342ff084b75db948bdbec180986f5907d))
+
+
+### Chores
+
+* **ci:** upgrade `actions/github-script` ([bd8f824](https://github.com/rye-com/checkout-intents-java/commit/bd8f824bede3eb8d1718b9bdf28f8f9ce254cdff))
+* **internal:** rename `Product` type ([0917d5c](https://github.com/rye-com/checkout-intents-java/commit/0917d5cadc84292c6f56c2f2460d1ec59e935347))
+
 ## 0.1.0 (2026-01-24)
 
 Full Changelog: [v0.0.3...v0.1.0](https://github.com/rye-com/checkout-intents-java/compare/v0.0.3...v0.1.0)
