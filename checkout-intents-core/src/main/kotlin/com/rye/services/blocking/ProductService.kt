@@ -24,7 +24,7 @@ interface ProductService {
      */
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): ProductService
 
-    /** Retrieve a product's information by URL. */
+    /** Lookup a product's information by URL. */
     fun lookup(params: ProductLookupParams): Product = lookup(params, RequestOptions.none())
 
     /** @see lookup */

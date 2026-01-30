@@ -24,7 +24,7 @@ interface ProductServiceAsync {
      */
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): ProductServiceAsync
 
-    /** Retrieve a product's information by URL. */
+    /** Lookup a product's information by URL. */
     fun lookup(params: ProductLookupParams): CompletableFuture<Product> =
         lookup(params, RequestOptions.none())
 
