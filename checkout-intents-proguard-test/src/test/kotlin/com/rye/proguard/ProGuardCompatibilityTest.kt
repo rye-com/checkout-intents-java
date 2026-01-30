@@ -9,6 +9,7 @@ import com.rye.models.checkoutintents.BaseCheckoutIntent
 import com.rye.models.checkoutintents.Buyer
 import com.rye.models.checkoutintents.CheckoutIntent
 import com.rye.models.checkoutintents.VariantSelection
+import com.rye.models.products.ProductAvailability
 import java.time.OffsetDateTime
 import kotlin.reflect.full.memberFunctions
 import kotlin.reflect.jvm.javaMethod
@@ -54,6 +55,7 @@ internal class ProGuardCompatibilityTest {
         assertThat(client.checkoutIntents()).isNotNull()
         assertThat(client.betas()).isNotNull()
         assertThat(client.brands()).isNotNull()
+        assertThat(client.products()).isNotNull()
     }
 
     @Test
@@ -157,5 +159,19 @@ internal class ProGuardCompatibilityTest {
             )
 
         assertThat(roundtrippedCheckoutIntent).isEqualTo(checkoutIntent)
+    }
+
+    @Test
+    fun productAvailabilityRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val productAvailability = ProductAvailability.IN_STOCK
+
+        val roundtrippedProductAvailability =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(productAvailability),
+                jacksonTypeRef<ProductAvailability>(),
+            )
+
+        assertThat(roundtrippedProductAvailability).isEqualTo(productAvailability)
     }
 }

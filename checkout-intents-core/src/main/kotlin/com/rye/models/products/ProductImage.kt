@@ -1,6 +1,6 @@
 // File generated from our OpenAPI spec by Stainless.
 
-package com.rye.models.checkoutintents
+package com.rye.models.products
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
@@ -15,53 +15,47 @@ import com.rye.errors.CheckoutIntentsInvalidDataException
 import java.util.Collections
 import java.util.Objects
 
-class Money
+class ProductImage
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
-    private val amountSubunits: JsonField<Int>,
-    private val currencyCode: JsonField<String>,
+    private val isFeatured: JsonField<Boolean>,
+    private val url: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
     @JsonCreator
     private constructor(
-        @JsonProperty("amountSubunits")
+        @JsonProperty("isFeatured")
         @ExcludeMissing
-        amountSubunits: JsonField<Int> = JsonMissing.of(),
-        @JsonProperty("currencyCode")
-        @ExcludeMissing
-        currencyCode: JsonField<String> = JsonMissing.of(),
-    ) : this(amountSubunits, currencyCode, mutableMapOf())
+        isFeatured: JsonField<Boolean> = JsonMissing.of(),
+        @JsonProperty("url") @ExcludeMissing url: JsonField<String> = JsonMissing.of(),
+    ) : this(isFeatured, url, mutableMapOf())
 
     /**
      * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
-    fun amountSubunits(): Int = amountSubunits.getRequired("amountSubunits")
+    fun isFeatured(): Boolean = isFeatured.getRequired("isFeatured")
 
     /**
      * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
-    fun currencyCode(): String = currencyCode.getRequired("currencyCode")
+    fun url(): String = url.getRequired("url")
 
     /**
-     * Returns the raw JSON value of [amountSubunits].
+     * Returns the raw JSON value of [isFeatured].
      *
-     * Unlike [amountSubunits], this method doesn't throw if the JSON field has an unexpected type.
+     * Unlike [isFeatured], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("amountSubunits")
-    @ExcludeMissing
-    fun _amountSubunits(): JsonField<Int> = amountSubunits
+    @JsonProperty("isFeatured") @ExcludeMissing fun _isFeatured(): JsonField<Boolean> = isFeatured
 
     /**
-     * Returns the raw JSON value of [currencyCode].
+     * Returns the raw JSON value of [url].
      *
-     * Unlike [currencyCode], this method doesn't throw if the JSON field has an unexpected type.
+     * Unlike [url], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("currencyCode")
-    @ExcludeMissing
-    fun _currencyCode(): JsonField<String> = currencyCode
+    @JsonProperty("url") @ExcludeMissing fun _url(): JsonField<String> = url
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -78,56 +72,51 @@ private constructor(
     companion object {
 
         /**
-         * Returns a mutable builder for constructing an instance of [Money].
+         * Returns a mutable builder for constructing an instance of [ProductImage].
          *
          * The following fields are required:
          * ```java
-         * .amountSubunits()
-         * .currencyCode()
+         * .isFeatured()
+         * .url()
          * ```
          */
         @JvmStatic fun builder() = Builder()
     }
 
-    /** A builder for [Money]. */
+    /** A builder for [ProductImage]. */
     class Builder internal constructor() {
 
-        private var amountSubunits: JsonField<Int>? = null
-        private var currencyCode: JsonField<String>? = null
+        private var isFeatured: JsonField<Boolean>? = null
+        private var url: JsonField<String>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(money: Money) = apply {
-            amountSubunits = money.amountSubunits
-            currencyCode = money.currencyCode
-            additionalProperties = money.additionalProperties.toMutableMap()
+        internal fun from(productImage: ProductImage) = apply {
+            isFeatured = productImage.isFeatured
+            url = productImage.url
+            additionalProperties = productImage.additionalProperties.toMutableMap()
         }
 
-        fun amountSubunits(amountSubunits: Int) = amountSubunits(JsonField.of(amountSubunits))
+        fun isFeatured(isFeatured: Boolean) = isFeatured(JsonField.of(isFeatured))
 
         /**
-         * Sets [Builder.amountSubunits] to an arbitrary JSON value.
+         * Sets [Builder.isFeatured] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.amountSubunits] with a well-typed [Int] value instead.
+         * You should usually call [Builder.isFeatured] with a well-typed [Boolean] value instead.
          * This method is primarily for setting the field to an undocumented or not yet supported
          * value.
          */
-        fun amountSubunits(amountSubunits: JsonField<Int>) = apply {
-            this.amountSubunits = amountSubunits
-        }
+        fun isFeatured(isFeatured: JsonField<Boolean>) = apply { this.isFeatured = isFeatured }
 
-        fun currencyCode(currencyCode: String) = currencyCode(JsonField.of(currencyCode))
+        fun url(url: String) = url(JsonField.of(url))
 
         /**
-         * Sets [Builder.currencyCode] to an arbitrary JSON value.
+         * Sets [Builder.url] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.currencyCode] with a well-typed [String] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.url] with a well-typed [String] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
          */
-        fun currencyCode(currencyCode: JsonField<String>) = apply {
-            this.currencyCode = currencyCode
-        }
+        fun url(url: JsonField<String>) = apply { this.url = url }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
@@ -149,35 +138,35 @@ private constructor(
         }
 
         /**
-         * Returns an immutable instance of [Money].
+         * Returns an immutable instance of [ProductImage].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
          *
          * The following fields are required:
          * ```java
-         * .amountSubunits()
-         * .currencyCode()
+         * .isFeatured()
+         * .url()
          * ```
          *
          * @throws IllegalStateException if any required field is unset.
          */
-        fun build(): Money =
-            Money(
-                checkRequired("amountSubunits", amountSubunits),
-                checkRequired("currencyCode", currencyCode),
+        fun build(): ProductImage =
+            ProductImage(
+                checkRequired("isFeatured", isFeatured),
+                checkRequired("url", url),
                 additionalProperties.toMutableMap(),
             )
     }
 
     private var validated: Boolean = false
 
-    fun validate(): Money = apply {
+    fun validate(): ProductImage = apply {
         if (validated) {
             return@apply
         }
 
-        amountSubunits()
-        currencyCode()
+        isFeatured()
+        url()
         validated = true
     }
 
@@ -196,26 +185,23 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        (if (amountSubunits.asKnown().isPresent) 1 else 0) +
-            (if (currencyCode.asKnown().isPresent) 1 else 0)
+        (if (isFeatured.asKnown().isPresent) 1 else 0) + (if (url.asKnown().isPresent) 1 else 0)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
             return true
         }
 
-        return other is Money &&
-            amountSubunits == other.amountSubunits &&
-            currencyCode == other.currencyCode &&
+        return other is ProductImage &&
+            isFeatured == other.isFeatured &&
+            url == other.url &&
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy {
-        Objects.hash(amountSubunits, currencyCode, additionalProperties)
-    }
+    private val hashCode: Int by lazy { Objects.hash(isFeatured, url, additionalProperties) }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "Money{amountSubunits=$amountSubunits, currencyCode=$currencyCode, additionalProperties=$additionalProperties}"
+        "ProductImage{isFeatured=$isFeatured, url=$url, additionalProperties=$additionalProperties}"
 }
