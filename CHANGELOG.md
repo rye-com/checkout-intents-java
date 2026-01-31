@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.2.2 (2026-01-31)
+
+Full Changelog: [v0.2.1...v0.2.2](https://github.com/rye-com/checkout-intents-java/compare/v0.2.1...v0.2.2)
+
+### Chores
+
+* **internal:** allow passing args to `./scripts/test` ([9922d19](https://github.com/rye-com/checkout-intents-java/commit/9922d19e736cab224da2dd0f1f30c96fed8da985))
+
 ## 0.2.1 (2026-01-30)
 
 Full Changelog: [v0.2.0...v0.2.1](https://github.com/rye-com/checkout-intents-java/compare/v0.2.0...v0.2.1)
