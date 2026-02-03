@@ -27,6 +27,7 @@ internal class PaymentMethodTest {
         assertThat(paymentMethod.stripeToken()).contains(stripeToken)
         assertThat(paymentMethod.basisTheory()).isEmpty
         assertThat(paymentMethod.nekuda()).isEmpty
+        assertThat(paymentMethod.drawdown()).isEmpty
     }
 
     @Test
@@ -62,6 +63,7 @@ internal class PaymentMethodTest {
         assertThat(paymentMethod.stripeToken()).isEmpty
         assertThat(paymentMethod.basisTheory()).contains(basisTheory)
         assertThat(paymentMethod.nekuda()).isEmpty
+        assertThat(paymentMethod.drawdown()).isEmpty
     }
 
     @Test
@@ -102,6 +104,7 @@ internal class PaymentMethodTest {
         assertThat(paymentMethod.stripeToken()).isEmpty
         assertThat(paymentMethod.basisTheory()).isEmpty
         assertThat(paymentMethod.nekuda()).contains(nekuda)
+        assertThat(paymentMethod.drawdown()).isEmpty
     }
 
     @Test
@@ -117,6 +120,40 @@ internal class PaymentMethodTest {
                             .putAdditionalProperty("foo", JsonValue.from("string"))
                             .build()
                     )
+                    .build()
+            )
+
+        val roundtrippedPaymentMethod =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(paymentMethod),
+                jacksonTypeRef<PaymentMethod>(),
+            )
+
+        assertThat(roundtrippedPaymentMethod).isEqualTo(paymentMethod)
+    }
+
+    @Test
+    fun ofDrawdown() {
+        val drawdown =
+            PaymentMethod.DrawdownPaymentMethod.builder()
+                .type(PaymentMethod.DrawdownPaymentMethod.Type.DRAWDOWN)
+                .build()
+
+        val paymentMethod = PaymentMethod.ofDrawdown(drawdown)
+
+        assertThat(paymentMethod.stripeToken()).isEmpty
+        assertThat(paymentMethod.basisTheory()).isEmpty
+        assertThat(paymentMethod.nekuda()).isEmpty
+        assertThat(paymentMethod.drawdown()).contains(drawdown)
+    }
+
+    @Test
+    fun ofDrawdownRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val paymentMethod =
+            PaymentMethod.ofDrawdown(
+                PaymentMethod.DrawdownPaymentMethod.builder()
+                    .type(PaymentMethod.DrawdownPaymentMethod.Type.DRAWDOWN)
                     .build()
             )
 

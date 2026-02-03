@@ -1424,6 +1424,10 @@ private constructor(
             fun paymentMethod(nekuda: PaymentMethod.NekudaPaymentMethod) =
                 paymentMethod(PaymentMethod.ofNekuda(nekuda))
 
+            /** Alias for calling [paymentMethod] with `PaymentMethod.ofDrawdown(drawdown)`. */
+            fun paymentMethod(drawdown: PaymentMethod.DrawdownPaymentMethod) =
+                paymentMethod(PaymentMethod.ofDrawdown(drawdown))
+
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
                 putAllAdditionalProperties(additionalProperties)
@@ -2158,6 +2162,10 @@ private constructor(
             /** Alias for calling [paymentMethod] with `PaymentMethod.ofNekuda(nekuda)`. */
             fun paymentMethod(nekuda: PaymentMethod.NekudaPaymentMethod) =
                 paymentMethod(PaymentMethod.ofNekuda(nekuda))
+
+            /** Alias for calling [paymentMethod] with `PaymentMethod.ofDrawdown(drawdown)`. */
+            fun paymentMethod(drawdown: PaymentMethod.DrawdownPaymentMethod) =
+                paymentMethod(PaymentMethod.ofDrawdown(drawdown))
 
             fun state(state: State) = state(JsonField.of(state))
 
@@ -2936,6 +2944,10 @@ private constructor(
             /** Alias for calling [paymentMethod] with `PaymentMethod.ofNekuda(nekuda)`. */
             fun paymentMethod(nekuda: PaymentMethod.NekudaPaymentMethod) =
                 paymentMethod(PaymentMethod.ofNekuda(nekuda))
+
+            /** Alias for calling [paymentMethod] with `PaymentMethod.ofDrawdown(drawdown)`. */
+            fun paymentMethod(drawdown: PaymentMethod.DrawdownPaymentMethod) =
+                paymentMethod(PaymentMethod.ofDrawdown(drawdown))
 
             fun state(state: State) = state(JsonField.of(state))
 
@@ -3733,6 +3745,10 @@ private constructor(
             /** Alias for calling [paymentMethod] with `PaymentMethod.ofNekuda(nekuda)`. */
             fun paymentMethod(nekuda: PaymentMethod.NekudaPaymentMethod) =
                 paymentMethod(PaymentMethod.ofNekuda(nekuda))
+
+            /** Alias for calling [paymentMethod] with `PaymentMethod.ofDrawdown(drawdown)`. */
+            fun paymentMethod(drawdown: PaymentMethod.DrawdownPaymentMethod) =
+                paymentMethod(PaymentMethod.ofDrawdown(drawdown))
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
