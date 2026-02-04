@@ -51,7 +51,6 @@ internal class CheckoutSessionServiceAsyncTest {
                             )
                             .build()
                     )
-                    .discoverPromoCodes(true)
                     .addPromoCode("string")
                     .addVariantSelection(
                         VariantSelection.builder()
