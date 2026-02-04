@@ -7,7 +7,6 @@ import com.rye.services.blocking.BetaService
 import com.rye.services.blocking.BrandService
 import com.rye.services.blocking.CheckoutIntentService
 import com.rye.services.blocking.ProductService
-import com.rye.services.blocking.ShipmentService
 import java.util.function.Consumer
 
 /**
@@ -48,8 +47,6 @@ interface CheckoutIntentsClient {
 
     fun checkoutIntents(): CheckoutIntentService
 
-    fun shipments(): ShipmentService
-
     fun betas(): BetaService
 
     fun brands(): BrandService
@@ -84,8 +81,6 @@ interface CheckoutIntentsClient {
         ): CheckoutIntentsClient.WithRawResponse
 
         fun checkoutIntents(): CheckoutIntentService.WithRawResponse
-
-        fun shipments(): ShipmentService.WithRawResponse
 
         fun betas(): BetaService.WithRawResponse
 
