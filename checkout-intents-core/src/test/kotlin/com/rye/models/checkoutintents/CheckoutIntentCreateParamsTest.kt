@@ -36,6 +36,7 @@ internal class CheckoutIntentCreateParamsTest {
                     )
                     .build()
             )
+            .discoverPromoCodes(true)
             .addPromoCode("sqF12lZ1VlBb")
             .addVariantSelection(
                 VariantSelection.builder()
@@ -75,6 +76,7 @@ internal class CheckoutIntentCreateParamsTest {
                         )
                         .build()
                 )
+                .discoverPromoCodes(true)
                 .addPromoCode("sqF12lZ1VlBb")
                 .addVariantSelection(
                     VariantSelection.builder()
@@ -113,6 +115,7 @@ internal class CheckoutIntentCreateParamsTest {
                     )
                     .build()
             )
+        assertThat(body.discoverPromoCodes()).contains(true)
         assertThat(body.promoCodes().getOrNull()).containsExactly("sqF12lZ1VlBb")
         assertThat(body.variantSelections().getOrNull())
             .containsExactly(

@@ -43,6 +43,7 @@ internal class CheckoutIntentListPageResponseTest {
                                 )
                                 .build()
                         )
+                        .discoverPromoCodes(true)
                         .addPromoCode("sqF12lZ1VlBb")
                         .addVariantSelection(
                             VariantSelection.builder()
@@ -94,6 +95,7 @@ internal class CheckoutIntentListPageResponseTest {
                                 )
                                 .build()
                         )
+                        .discoverPromoCodes(true)
                         .addPromoCode("sqF12lZ1VlBb")
                         .addVariantSelection(
                             VariantSelection.builder()
@@ -150,6 +152,7 @@ internal class CheckoutIntentListPageResponseTest {
                                 )
                                 .build()
                         )
+                        .discoverPromoCodes(true)
                         .addPromoCode("sqF12lZ1VlBb")
                         .addVariantSelection(
                             VariantSelection.builder()
