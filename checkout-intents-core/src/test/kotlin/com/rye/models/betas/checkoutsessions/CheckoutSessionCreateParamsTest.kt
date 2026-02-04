@@ -37,7 +37,6 @@ internal class CheckoutSessionCreateParamsTest {
                     )
                     .build()
             )
-            .discoverPromoCodes(true)
             .addPromoCode("string")
             .addVariantSelection(
                 VariantSelection.builder()
@@ -77,7 +76,6 @@ internal class CheckoutSessionCreateParamsTest {
                         )
                         .build()
                 )
-                .discoverPromoCodes(true)
                 .addPromoCode("string")
                 .addVariantSelection(
                     VariantSelection.builder()
@@ -116,7 +114,6 @@ internal class CheckoutSessionCreateParamsTest {
                     )
                     .build()
             )
-        assertThat(body.discoverPromoCodes()).contains(true)
         assertThat(body.promoCodes().getOrNull()).containsExactly("string")
         assertThat(body.variantSelections().getOrNull())
             .containsExactly(
