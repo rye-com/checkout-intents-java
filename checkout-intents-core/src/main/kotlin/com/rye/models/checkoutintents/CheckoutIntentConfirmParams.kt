@@ -132,6 +132,11 @@ private constructor(
             body.paymentMethod(nekuda)
         }
 
+        /** Alias for calling [paymentMethod] with `PaymentMethod.ofDrawdown(drawdown)`. */
+        fun paymentMethod(drawdown: PaymentMethod.DrawdownPaymentMethod) = apply {
+            body.paymentMethod(drawdown)
+        }
+
         fun additionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) = apply {
             body.additionalProperties(additionalBodyProperties)
         }
@@ -379,6 +384,10 @@ private constructor(
             /** Alias for calling [paymentMethod] with `PaymentMethod.ofNekuda(nekuda)`. */
             fun paymentMethod(nekuda: PaymentMethod.NekudaPaymentMethod) =
                 paymentMethod(PaymentMethod.ofNekuda(nekuda))
+
+            /** Alias for calling [paymentMethod] with `PaymentMethod.ofDrawdown(drawdown)`. */
+            fun paymentMethod(drawdown: PaymentMethod.DrawdownPaymentMethod) =
+                paymentMethod(PaymentMethod.ofDrawdown(drawdown))
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
