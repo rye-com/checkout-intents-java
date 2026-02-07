@@ -1,5 +1,24 @@
 # Changelog
 
+## 0.3.0 (2026-02-07)
+
+Full Changelog: [v0.2.1...v0.3.0](https://github.com/rye-com/checkout-intents-java/compare/v0.2.1...v0.3.0)
+
+### Features
+
+* add merchants API endpoint ([12f99f9](https://github.com/rye-com/checkout-intents-java/commit/12f99f9a7b66686050f0c7e88e2aa24f1346b4d4))
+* Add stainless updates ([fb0f075](https://github.com/rye-com/checkout-intents-java/commit/fb0f075ef6a3e09e80120f3731237153dd01e207))
+* Billing: Envelope payment processing fields ([72d18b0](https://github.com/rye-com/checkout-intents-java/commit/72d18b0637dd2fad04f26c1a7675c13b7163b697))
+* Billing: Integrate drawdown payments in order flow ([7029b35](https://github.com/rye-com/checkout-intents-java/commit/7029b3574ebd60646607851a5e8e203b2a815bef))
+* integrate promo codes discovery to checkout intent flow ([f9395c5](https://github.com/rye-com/checkout-intents-java/commit/f9395c53d322d83e964b02bade7829a3809ddd52))
+* Phase 3: Strategy Interface + Normalizer ([0d545d4](https://github.com/rye-com/checkout-intents-java/commit/0d545d4091b5b12ec83818fa15021265d9f81dad))
+
+
+### Chores
+
+* **internal:** allow passing args to `./scripts/test` ([9922d19](https://github.com/rye-com/checkout-intents-java/commit/9922d19e736cab224da2dd0f1f30c96fed8da985))
+* **internal:** upgrade AssertJ ([b06bd05](https://github.com/rye-com/checkout-intents-java/commit/b06bd05688fda0a5e1fade045b8fdfe66f4f44a9))
+
 ## 0.2.1 (2026-01-30)
 
 Full Changelog: [v0.2.0...v0.2.1](https://github.com/rye-com/checkout-intents-java/compare/v0.2.0...v0.2.1)
