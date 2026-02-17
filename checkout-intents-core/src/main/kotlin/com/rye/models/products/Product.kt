@@ -28,6 +28,7 @@ private constructor(
     private val brand: JsonField<String>,
     private val description: JsonField<String>,
     private val images: JsonField<List<ProductImage>>,
+    private val isPurchasable: JsonField<Boolean>,
     private val name: JsonField<String>,
     private val price: JsonField<Money>,
     private val sku: JsonField<String>,
@@ -48,11 +49,26 @@ private constructor(
         @JsonProperty("images")
         @ExcludeMissing
         images: JsonField<List<ProductImage>> = JsonMissing.of(),
+        @JsonProperty("isPurchasable")
+        @ExcludeMissing
+        isPurchasable: JsonField<Boolean> = JsonMissing.of(),
         @JsonProperty("name") @ExcludeMissing name: JsonField<String> = JsonMissing.of(),
         @JsonProperty("price") @ExcludeMissing price: JsonField<Money> = JsonMissing.of(),
         @JsonProperty("sku") @ExcludeMissing sku: JsonField<String> = JsonMissing.of(),
         @JsonProperty("url") @ExcludeMissing url: JsonField<String> = JsonMissing.of(),
-    ) : this(id, availability, brand, description, images, name, price, sku, url, mutableMapOf())
+    ) : this(
+        id,
+        availability,
+        brand,
+        description,
+        images,
+        isPurchasable,
+        name,
+        price,
+        sku,
+        url,
+        mutableMapOf(),
+    )
 
     /**
      * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type or is
@@ -90,6 +106,12 @@ private constructor(
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun images(): List<ProductImage> = images.getRequired("images")
+
+    /**
+     * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
+    fun isPurchasable(): Boolean = isPurchasable.getRequired("isPurchasable")
 
     /**
      * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type or is
@@ -153,6 +175,15 @@ private constructor(
     @JsonProperty("images") @ExcludeMissing fun _images(): JsonField<List<ProductImage>> = images
 
     /**
+     * Returns the raw JSON value of [isPurchasable].
+     *
+     * Unlike [isPurchasable], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("isPurchasable")
+    @ExcludeMissing
+    fun _isPurchasable(): JsonField<Boolean> = isPurchasable
+
+    /**
      * Returns the raw JSON value of [name].
      *
      * Unlike [name], this method doesn't throw if the JSON field has an unexpected type.
@@ -204,6 +235,7 @@ private constructor(
          * .brand()
          * .description()
          * .images()
+         * .isPurchasable()
          * .name()
          * .price()
          * .sku()
@@ -221,6 +253,7 @@ private constructor(
         private var brand: JsonField<String>? = null
         private var description: JsonField<String>? = null
         private var images: JsonField<MutableList<ProductImage>>? = null
+        private var isPurchasable: JsonField<Boolean>? = null
         private var name: JsonField<String>? = null
         private var price: JsonField<Money>? = null
         private var sku: JsonField<String>? = null
@@ -234,6 +267,7 @@ private constructor(
             brand = product.brand
             description = product.description
             images = product.images.map { it.toMutableList() }
+            isPurchasable = product.isPurchasable
             name = product.name
             price = product.price
             sku = product.sku
@@ -325,6 +359,19 @@ private constructor(
                 }
         }
 
+        fun isPurchasable(isPurchasable: Boolean) = isPurchasable(JsonField.of(isPurchasable))
+
+        /**
+         * Sets [Builder.isPurchasable] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.isPurchasable] with a well-typed [Boolean] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun isPurchasable(isPurchasable: JsonField<Boolean>) = apply {
+            this.isPurchasable = isPurchasable
+        }
+
         fun name(name: String) = name(JsonField.of(name))
 
         /**
@@ -399,6 +446,7 @@ private constructor(
          * .brand()
          * .description()
          * .images()
+         * .isPurchasable()
          * .name()
          * .price()
          * .sku()
@@ -414,6 +462,7 @@ private constructor(
                 checkRequired("brand", brand),
                 checkRequired("description", description),
                 checkRequired("images", images).map { it.toImmutable() },
+                checkRequired("isPurchasable", isPurchasable),
                 checkRequired("name", name),
                 checkRequired("price", price),
                 checkRequired("sku", sku),
@@ -434,6 +483,7 @@ private constructor(
         brand()
         description()
         images().forEach { it.validate() }
+        isPurchasable()
         name()
         price().validate()
         sku()
@@ -461,6 +511,7 @@ private constructor(
             (if (brand.asKnown().isPresent) 1 else 0) +
             (if (description.asKnown().isPresent) 1 else 0) +
             (images.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
+            (if (isPurchasable.asKnown().isPresent) 1 else 0) +
             (if (name.asKnown().isPresent) 1 else 0) +
             (price.asKnown().getOrNull()?.validity() ?: 0) +
             (if (sku.asKnown().isPresent) 1 else 0) +
@@ -477,6 +528,7 @@ private constructor(
             brand == other.brand &&
             description == other.description &&
             images == other.images &&
+            isPurchasable == other.isPurchasable &&
             name == other.name &&
             price == other.price &&
             sku == other.sku &&
@@ -491,6 +543,7 @@ private constructor(
             brand,
             description,
             images,
+            isPurchasable,
             name,
             price,
             sku,
@@ -502,5 +555,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "Product{id=$id, availability=$availability, brand=$brand, description=$description, images=$images, name=$name, price=$price, sku=$sku, url=$url, additionalProperties=$additionalProperties}"
+        "Product{id=$id, availability=$availability, brand=$brand, description=$description, images=$images, isPurchasable=$isPurchasable, name=$name, price=$price, sku=$sku, url=$url, additionalProperties=$additionalProperties}"
 }
