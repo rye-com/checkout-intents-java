@@ -1507,6 +1507,10 @@ private constructor(
             fun paymentMethod(nekuda: PaymentMethod.NekudaPaymentMethod) =
                 paymentMethod(PaymentMethod.ofNekuda(nekuda))
 
+            /** Alias for calling [paymentMethod] with `PaymentMethod.ofPrava(prava)`. */
+            fun paymentMethod(prava: PaymentMethod.PravaPaymentMethod) =
+                paymentMethod(PaymentMethod.ofPrava(prava))
+
             /** Alias for calling [paymentMethod] with `PaymentMethod.ofDrawdown(drawdown)`. */
             fun paymentMethod(drawdown: PaymentMethod.DrawdownPaymentMethod) =
                 paymentMethod(PaymentMethod.ofDrawdown(drawdown))
@@ -2289,6 +2293,10 @@ private constructor(
             /** Alias for calling [paymentMethod] with `PaymentMethod.ofNekuda(nekuda)`. */
             fun paymentMethod(nekuda: PaymentMethod.NekudaPaymentMethod) =
                 paymentMethod(PaymentMethod.ofNekuda(nekuda))
+
+            /** Alias for calling [paymentMethod] with `PaymentMethod.ofPrava(prava)`. */
+            fun paymentMethod(prava: PaymentMethod.PravaPaymentMethod) =
+                paymentMethod(PaymentMethod.ofPrava(prava))
 
             /** Alias for calling [paymentMethod] with `PaymentMethod.ofDrawdown(drawdown)`. */
             fun paymentMethod(drawdown: PaymentMethod.DrawdownPaymentMethod) =
@@ -3115,6 +3123,10 @@ private constructor(
             /** Alias for calling [paymentMethod] with `PaymentMethod.ofNekuda(nekuda)`. */
             fun paymentMethod(nekuda: PaymentMethod.NekudaPaymentMethod) =
                 paymentMethod(PaymentMethod.ofNekuda(nekuda))
+
+            /** Alias for calling [paymentMethod] with `PaymentMethod.ofPrava(prava)`. */
+            fun paymentMethod(prava: PaymentMethod.PravaPaymentMethod) =
+                paymentMethod(PaymentMethod.ofPrava(prava))
 
             /** Alias for calling [paymentMethod] with `PaymentMethod.ofDrawdown(drawdown)`. */
             fun paymentMethod(drawdown: PaymentMethod.DrawdownPaymentMethod) =
@@ -3960,6 +3972,10 @@ private constructor(
             /** Alias for calling [paymentMethod] with `PaymentMethod.ofNekuda(nekuda)`. */
             fun paymentMethod(nekuda: PaymentMethod.NekudaPaymentMethod) =
                 paymentMethod(PaymentMethod.ofNekuda(nekuda))
+
+            /** Alias for calling [paymentMethod] with `PaymentMethod.ofPrava(prava)`. */
+            fun paymentMethod(prava: PaymentMethod.PravaPaymentMethod) =
+                paymentMethod(PaymentMethod.ofPrava(prava))
 
             /** Alias for calling [paymentMethod] with `PaymentMethod.ofDrawdown(drawdown)`. */
             fun paymentMethod(drawdown: PaymentMethod.DrawdownPaymentMethod) =
