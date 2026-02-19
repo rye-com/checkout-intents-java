@@ -270,26 +270,26 @@ private constructor(
 
         companion object {
 
+            @JvmField val COMPLETED = of("completed")
+
+            @JvmField val FAILED = of("failed")
+
             @JvmField val RETRIEVING_OFFER = of("retrieving_offer")
 
             @JvmField val AWAITING_CONFIRMATION = of("awaiting_confirmation")
 
             @JvmField val PLACING_ORDER = of("placing_order")
 
-            @JvmField val COMPLETED = of("completed")
-
-            @JvmField val FAILED = of("failed")
-
             @JvmStatic fun of(value: String) = State(JsonField.of(value))
         }
 
         /** An enum containing [State]'s known values. */
         enum class Known {
+            COMPLETED,
+            FAILED,
             RETRIEVING_OFFER,
             AWAITING_CONFIRMATION,
             PLACING_ORDER,
-            COMPLETED,
-            FAILED,
         }
 
         /**
@@ -302,11 +302,11 @@ private constructor(
          * - It was constructed with an arbitrary value using the [of] method.
          */
         enum class Value {
+            COMPLETED,
+            FAILED,
             RETRIEVING_OFFER,
             AWAITING_CONFIRMATION,
             PLACING_ORDER,
-            COMPLETED,
-            FAILED,
             /** An enum member indicating that [State] was instantiated with an unknown value. */
             _UNKNOWN,
         }
@@ -320,11 +320,11 @@ private constructor(
          */
         fun value(): Value =
             when (this) {
+                COMPLETED -> Value.COMPLETED
+                FAILED -> Value.FAILED
                 RETRIEVING_OFFER -> Value.RETRIEVING_OFFER
                 AWAITING_CONFIRMATION -> Value.AWAITING_CONFIRMATION
                 PLACING_ORDER -> Value.PLACING_ORDER
-                COMPLETED -> Value.COMPLETED
-                FAILED -> Value.FAILED
                 else -> Value._UNKNOWN
             }
 
@@ -339,11 +339,11 @@ private constructor(
          */
         fun known(): Known =
             when (this) {
+                COMPLETED -> Known.COMPLETED
+                FAILED -> Known.FAILED
                 RETRIEVING_OFFER -> Known.RETRIEVING_OFFER
                 AWAITING_CONFIRMATION -> Known.AWAITING_CONFIRMATION
                 PLACING_ORDER -> Known.PLACING_ORDER
-                COMPLETED -> Known.COMPLETED
-                FAILED -> Known.FAILED
                 else -> throw CheckoutIntentsInvalidDataException("Unknown State: $value")
             }
 
