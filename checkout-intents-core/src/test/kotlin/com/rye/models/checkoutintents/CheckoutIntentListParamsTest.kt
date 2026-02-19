@@ -15,7 +15,7 @@ internal class CheckoutIntentListParamsTest {
             .after("after")
             .before("before")
             .limit(0.0)
-            .addState(CheckoutIntentListParams.State.COMPLETED)
+            .addState(CheckoutIntentListParams.State.RETRIEVING_OFFER)
             .build()
     }
 
@@ -27,7 +27,7 @@ internal class CheckoutIntentListParamsTest {
                 .after("after")
                 .before("before")
                 .limit(0.0)
-                .addState(CheckoutIntentListParams.State.COMPLETED)
+                .addState(CheckoutIntentListParams.State.RETRIEVING_OFFER)
                 .build()
 
         val queryParams = params._queryParams()
@@ -39,7 +39,7 @@ internal class CheckoutIntentListParamsTest {
                     .put("after", "after")
                     .put("before", "before")
                     .put("limit", "0.0")
-                    .put("state", listOf("completed").joinToString(","))
+                    .put("state", listOf("retrieving_offer").joinToString(","))
                     .build()
             )
     }
