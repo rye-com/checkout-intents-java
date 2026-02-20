@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test
 
 internal class CheckoutSessionServiceTest {
 
-    @Disabled("Prism tests are disabled")
+    @Disabled("Mock server tests are disabled")
     @Test
     fun create() {
         val client = CheckoutIntentsOkHttpClient.builder().apiKey("My API Key").build()

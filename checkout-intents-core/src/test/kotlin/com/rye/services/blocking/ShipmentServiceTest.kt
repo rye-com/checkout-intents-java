@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test
 
 internal class ShipmentServiceTest {
 
-    @Disabled("Prism tests are disabled")
+    @Disabled("Mock server tests are disabled")
     @Test
     fun retrieve() {
         val client = CheckoutIntentsOkHttpClient.builder().apiKey("My API Key").build()
@@ -19,7 +19,7 @@ internal class ShipmentServiceTest {
         shipment.validate()
     }
 
-    @Disabled("Prism tests are disabled")
+    @Disabled("Mock server tests are disabled")
     @Test
     fun list() {
         val client = CheckoutIntentsOkHttpClient.builder().apiKey("My API Key").build()

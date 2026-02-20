@@ -15,7 +15,7 @@ import org.junit.jupiter.api.Test
 
 internal class CheckoutIntentServiceTest {
 
-    @Disabled("Prism tests are disabled")
+    @Disabled("Mock server tests are disabled")
     @Test
     fun create() {
         val client = CheckoutIntentsOkHttpClient.builder().apiKey("My API Key").build()
@@ -63,7 +63,7 @@ internal class CheckoutIntentServiceTest {
         checkoutIntent.validate()
     }
 
-    @Disabled("Prism tests are disabled")
+    @Disabled("Mock server tests are disabled")
     @Test
     fun retrieve() {
         val client = CheckoutIntentsOkHttpClient.builder().apiKey("My API Key").build()
@@ -74,7 +74,7 @@ internal class CheckoutIntentServiceTest {
         checkoutIntent.validate()
     }
 
-    @Disabled("Prism tests are disabled")
+    @Disabled("Mock server tests are disabled")
     @Test
     fun list() {
         val client = CheckoutIntentsOkHttpClient.builder().apiKey("My API Key").build()
@@ -85,7 +85,7 @@ internal class CheckoutIntentServiceTest {
         page.response().validate()
     }
 
-    @Disabled("Prism tests are disabled")
+    @Disabled("Mock server tests are disabled")
     @Test
     fun addPayment() {
         val client = CheckoutIntentsOkHttpClient.builder().apiKey("My API Key").build()
@@ -107,7 +107,7 @@ internal class CheckoutIntentServiceTest {
         checkoutIntent.validate()
     }
 
-    @Disabled("Prism tests are disabled")
+    @Disabled("Mock server tests are disabled")
     @Test
     fun confirm() {
         val client = CheckoutIntentsOkHttpClient.builder().apiKey("My API Key").build()
@@ -129,7 +129,7 @@ internal class CheckoutIntentServiceTest {
         checkoutIntent.validate()
     }
 
-    @Disabled("Prism tests are disabled")
+    @Disabled("Mock server tests are disabled")
     @Test
     fun purchase() {
         val client = CheckoutIntentsOkHttpClient.builder().apiKey("My API Key").build()
