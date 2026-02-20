@@ -2,25 +2,18 @@
 
 package com.rye.services.blocking.betas
 
-import com.rye.TestServerExtension
 import com.rye.client.okhttp.CheckoutIntentsOkHttpClient
 import com.rye.models.betas.checkoutsessions.CheckoutSessionCreateParams
 import com.rye.models.checkoutintents.VariantSelection
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
 
-@ExtendWith(TestServerExtension::class)
 internal class CheckoutSessionServiceTest {
 
     @Disabled("Prism tests are disabled")
     @Test
     fun create() {
-        val client =
-            CheckoutIntentsOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("My API Key")
-                .build()
+        val client = CheckoutIntentsOkHttpClient.builder().apiKey("My API Key").build()
         val checkoutSessionService = client.betas().checkoutSessions()
 
         val checkoutSession =

@@ -2,7 +2,6 @@
 
 package com.rye.services.async
 
-import com.rye.TestServerExtension
 import com.rye.client.okhttp.CheckoutIntentsOkHttpClientAsync
 import com.rye.models.checkoutintents.Buyer
 import com.rye.models.checkoutintents.CheckoutIntentAddPaymentParams
@@ -13,19 +12,13 @@ import com.rye.models.checkoutintents.PaymentMethod
 import com.rye.models.checkoutintents.VariantSelection
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
 
-@ExtendWith(TestServerExtension::class)
 internal class CheckoutIntentServiceAsyncTest {
 
     @Disabled("Prism tests are disabled")
     @Test
     fun create() {
-        val client =
-            CheckoutIntentsOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("My API Key")
-                .build()
+        val client = CheckoutIntentsOkHttpClientAsync.builder().apiKey("My API Key").build()
         val checkoutIntentServiceAsync = client.checkoutIntents()
 
         val checkoutIntentFuture =
@@ -74,11 +67,7 @@ internal class CheckoutIntentServiceAsyncTest {
     @Disabled("Prism tests are disabled")
     @Test
     fun retrieve() {
-        val client =
-            CheckoutIntentsOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("My API Key")
-                .build()
+        val client = CheckoutIntentsOkHttpClientAsync.builder().apiKey("My API Key").build()
         val checkoutIntentServiceAsync = client.checkoutIntents()
 
         val checkoutIntentFuture = checkoutIntentServiceAsync.retrieve("id")
@@ -90,11 +79,7 @@ internal class CheckoutIntentServiceAsyncTest {
     @Disabled("Prism tests are disabled")
     @Test
     fun list() {
-        val client =
-            CheckoutIntentsOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("My API Key")
-                .build()
+        val client = CheckoutIntentsOkHttpClientAsync.builder().apiKey("My API Key").build()
         val checkoutIntentServiceAsync = client.checkoutIntents()
 
         val pageFuture = checkoutIntentServiceAsync.list()
@@ -106,11 +91,7 @@ internal class CheckoutIntentServiceAsyncTest {
     @Disabled("Prism tests are disabled")
     @Test
     fun addPayment() {
-        val client =
-            CheckoutIntentsOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("My API Key")
-                .build()
+        val client = CheckoutIntentsOkHttpClientAsync.builder().apiKey("My API Key").build()
         val checkoutIntentServiceAsync = client.checkoutIntents()
 
         val checkoutIntentFuture =
@@ -133,11 +114,7 @@ internal class CheckoutIntentServiceAsyncTest {
     @Disabled("Prism tests are disabled")
     @Test
     fun confirm() {
-        val client =
-            CheckoutIntentsOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("My API Key")
-                .build()
+        val client = CheckoutIntentsOkHttpClientAsync.builder().apiKey("My API Key").build()
         val checkoutIntentServiceAsync = client.checkoutIntents()
 
         val checkoutIntentFuture =
@@ -160,11 +137,7 @@ internal class CheckoutIntentServiceAsyncTest {
     @Disabled("Prism tests are disabled")
     @Test
     fun purchase() {
-        val client =
-            CheckoutIntentsOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("My API Key")
-                .build()
+        val client = CheckoutIntentsOkHttpClientAsync.builder().apiKey("My API Key").build()
         val checkoutIntentServiceAsync = client.checkoutIntents()
 
         val checkoutIntentFuture =
