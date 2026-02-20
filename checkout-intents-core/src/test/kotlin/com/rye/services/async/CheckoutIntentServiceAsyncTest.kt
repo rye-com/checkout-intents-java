@@ -15,7 +15,7 @@ import org.junit.jupiter.api.Test
 
 internal class CheckoutIntentServiceAsyncTest {
 
-    @Disabled("Prism tests are disabled")
+    @Disabled("Mock server tests are disabled")
     @Test
     fun create() {
         val client = CheckoutIntentsOkHttpClientAsync.builder().apiKey("My API Key").build()
@@ -64,7 +64,7 @@ internal class CheckoutIntentServiceAsyncTest {
         checkoutIntent.validate()
     }
 
-    @Disabled("Prism tests are disabled")
+    @Disabled("Mock server tests are disabled")
     @Test
     fun retrieve() {
         val client = CheckoutIntentsOkHttpClientAsync.builder().apiKey("My API Key").build()
@@ -76,7 +76,7 @@ internal class CheckoutIntentServiceAsyncTest {
         checkoutIntent.validate()
     }
 
-    @Disabled("Prism tests are disabled")
+    @Disabled("Mock server tests are disabled")
     @Test
     fun list() {
         val client = CheckoutIntentsOkHttpClientAsync.builder().apiKey("My API Key").build()
@@ -88,7 +88,7 @@ internal class CheckoutIntentServiceAsyncTest {
         page.response().validate()
     }
 
-    @Disabled("Prism tests are disabled")
+    @Disabled("Mock server tests are disabled")
     @Test
     fun addPayment() {
         val client = CheckoutIntentsOkHttpClientAsync.builder().apiKey("My API Key").build()
@@ -111,7 +111,7 @@ internal class CheckoutIntentServiceAsyncTest {
         checkoutIntent.validate()
     }
 
-    @Disabled("Prism tests are disabled")
+    @Disabled("Mock server tests are disabled")
     @Test
     fun confirm() {
         val client = CheckoutIntentsOkHttpClientAsync.builder().apiKey("My API Key").build()
@@ -134,7 +134,7 @@ internal class CheckoutIntentServiceAsyncTest {
         checkoutIntent.validate()
     }
 
-    @Disabled("Prism tests are disabled")
+    @Disabled("Mock server tests are disabled")
     @Test
     fun purchase() {
         val client = CheckoutIntentsOkHttpClientAsync.builder().apiKey("My API Key").build()
