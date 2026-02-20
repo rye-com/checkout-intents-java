@@ -2,23 +2,16 @@
 
 package com.rye.services.blocking
 
-import com.rye.TestServerExtension
 import com.rye.client.okhttp.CheckoutIntentsOkHttpClient
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
 
-@ExtendWith(TestServerExtension::class)
 internal class ShipmentServiceTest {
 
     @Disabled("Prism tests are disabled")
     @Test
     fun retrieve() {
-        val client =
-            CheckoutIntentsOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("My API Key")
-                .build()
+        val client = CheckoutIntentsOkHttpClient.builder().apiKey("My API Key").build()
         val shipmentService = client.shipments()
 
         val shipment = shipmentService.retrieve("id")
@@ -29,11 +22,7 @@ internal class ShipmentServiceTest {
     @Disabled("Prism tests are disabled")
     @Test
     fun list() {
-        val client =
-            CheckoutIntentsOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("My API Key")
-                .build()
+        val client = CheckoutIntentsOkHttpClient.builder().apiKey("My API Key").build()
         val shipmentService = client.shipments()
 
         val page = shipmentService.list()
