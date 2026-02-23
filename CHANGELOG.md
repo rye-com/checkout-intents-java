@@ -1,5 +1,41 @@
 # Changelog
 
+## 0.3.0 (2026-02-23)
+
+Full Changelog: [v0.2.1...v0.3.0](https://github.com/rye-com/checkout-intents-java/compare/v0.2.1...v0.3.0)
+
+### Features
+
+* add merchants API endpoint ([12f99f9](https://github.com/rye-com/checkout-intents-java/commit/12f99f9a7b66686050f0c7e88e2aa24f1346b4d4))
+* Add PaymentMethod support for Prava ([ae6d6cb](https://github.com/rye-com/checkout-intents-java/commit/ae6d6cb511cb99356f8ece3701992e54d8177b8a))
+* Add stainless updates ([fb0f075](https://github.com/rye-com/checkout-intents-java/commit/fb0f075ef6a3e09e80120f3731237153dd01e207))
+* Billing: Add BillingReconciliationService for expired drawdown orders ([d3a3855](https://github.com/rye-com/checkout-intents-java/commit/d3a385579eecd5a24d4a8f808c2c1e48801d394b))
+* Billing: Envelope payment processing fields ([72d18b0](https://github.com/rye-com/checkout-intents-java/commit/72d18b0637dd2fad04f26c1a7675c13b7163b697))
+* Billing: Integrate drawdown payments in order flow ([7029b35](https://github.com/rye-com/checkout-intents-java/commit/7029b3574ebd60646607851a5e8e203b2a815bef))
+* Centralize Shopify domain resolution into ShopifyDomainResolver service ([2053e4f](https://github.com/rye-com/checkout-intents-java/commit/2053e4f55e472bc230b748dabf3dcb2631358965))
+* **client:** add connection pooling option ([d7faa58](https://github.com/rye-com/checkout-intents-java/commit/d7faa5878327d0b74dd9f7120b6e581c427db31a))
+* Enable searching checkoutIntent by order Id on dev console ([534be19](https://github.com/rye-com/checkout-intents-java/commit/534be1973cdab9b6d5ea8fe329572e4082597cf2))
+* integrate promo codes discovery to checkout intent flow ([f9395c5](https://github.com/rye-com/checkout-intents-java/commit/f9395c53d322d83e964b02bade7829a3809ddd52))
+* Phase 3: Strategy Interface + Normalizer ([0d545d4](https://github.com/rye-com/checkout-intents-java/commit/0d545d4091b5b12ec83818fa15021265d9f81dad))
+* Remove `shipments` from our stainless config ([e5f9bec](https://github.com/rye-com/checkout-intents-java/commit/e5f9bec1c262ee7d0669317a1f3b95ff5896ac7e))
+* Remove duplicate method from controller ([9980917](https://github.com/rye-com/checkout-intents-java/commit/9980917a7b24a1e4e5fc37cee4aebee2ac898ccb))
+* Unwrap `rd.bizrate.com` affiliate URLs ([d835fa0](https://github.com/rye-com/checkout-intents-java/commit/d835fa0fe51c6fa432f1a1ef638ad03f1c13d212))
+* Update return states to better reflect return lifecycle ([ff88f7f](https://github.com/rye-com/checkout-intents-java/commit/ff88f7f9e1a22dc69f47069ecd7cdcb5de1411bf))
+* wire up wizard layout and pass layout type through JWT ([0277eb6](https://github.com/rye-com/checkout-intents-java/commit/0277eb6c2196c0a86327889065f87ba7fc67ab6f))
+
+
+### Chores
+
+* **internal:** allow passing args to `./scripts/test` ([9922d19](https://github.com/rye-com/checkout-intents-java/commit/9922d19e736cab224da2dd0f1f30c96fed8da985))
+* **internal:** improvements ([095494e](https://github.com/rye-com/checkout-intents-java/commit/095494ee6a943e8dab283c17e2b8b2953373cf7f))
+* **internal:** improvements ([6e2347f](https://github.com/rye-com/checkout-intents-java/commit/6e2347fd839e359c4a8ac523ad5bc3f8e9d47ac2))
+* **internal:** improvements ([441a859](https://github.com/rye-com/checkout-intents-java/commit/441a859fb471f3ba10c556b1077bef4d630b3085))
+* **internal:** make `OkHttp` constructor internal ([fb67eeb](https://github.com/rye-com/checkout-intents-java/commit/fb67eeb647c0a70c9f49d7e1a9281bbd4488448d))
+* **internal:** remove mock server code ([f43dd50](https://github.com/rye-com/checkout-intents-java/commit/f43dd50bfe1bdeb8e8e298d449960b37607c4237))
+* **internal:** update `TestServerExtension` comment ([4771bb0](https://github.com/rye-com/checkout-intents-java/commit/4771bb0c7d080e594889a74a9a5f2f8705533048))
+* **internal:** upgrade AssertJ ([b06bd05](https://github.com/rye-com/checkout-intents-java/commit/b06bd05688fda0a5e1fade045b8fdfe66f4f44a9))
+* update mock server docs ([e1ab598](https://github.com/rye-com/checkout-intents-java/commit/e1ab5984bb885d1c9f7b10064390ef94556c438a))
+
 ## 0.2.1 (2026-01-30)
 
 Full Changelog: [v0.2.0...v0.2.1](https://github.com/rye-com/checkout-intents-java/compare/v0.2.0...v0.2.1)
