@@ -8,7 +8,7 @@ repositories {
 
 allprojects {
     group = "com.rye"
-    version = "0.2.1" // x-release-please-version
+    version = "0.3.0" // x-release-please-version
 }
 
 subprojects {
