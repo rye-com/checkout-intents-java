@@ -12,6 +12,8 @@ import com.rye.services.async.CheckoutIntentServiceAsync
 import com.rye.services.async.CheckoutIntentServiceAsyncImpl
 import com.rye.services.async.ProductServiceAsync
 import com.rye.services.async.ProductServiceAsyncImpl
+import com.rye.services.async.ShipmentServiceAsync
+import com.rye.services.async.ShipmentServiceAsyncImpl
 import java.util.function.Consumer
 
 class CheckoutIntentsClientAsyncImpl(private val clientOptions: ClientOptions) :
@@ -36,6 +38,10 @@ class CheckoutIntentsClientAsyncImpl(private val clientOptions: ClientOptions) :
         CheckoutIntentServiceAsyncImpl(clientOptionsWithUserAgent)
     }
 
+    private val shipments: ShipmentServiceAsync by lazy {
+        ShipmentServiceAsyncImpl(clientOptionsWithUserAgent)
+    }
+
     private val betas: BetaServiceAsync by lazy { BetaServiceAsyncImpl(clientOptionsWithUserAgent) }
 
     private val brands: BrandServiceAsync by lazy {
@@ -57,6 +63,8 @@ class CheckoutIntentsClientAsyncImpl(private val clientOptions: ClientOptions) :
 
     override fun checkoutIntents(): CheckoutIntentServiceAsync = checkoutIntents
 
+    override fun shipments(): ShipmentServiceAsync = shipments
+
     override fun betas(): BetaServiceAsync = betas
 
     override fun brands(): BrandServiceAsync = brands
@@ -70,6 +78,10 @@ class CheckoutIntentsClientAsyncImpl(private val clientOptions: ClientOptions) :
 
         private val checkoutIntents: CheckoutIntentServiceAsync.WithRawResponse by lazy {
             CheckoutIntentServiceAsyncImpl.WithRawResponseImpl(clientOptions)
+        }
+
+        private val shipments: ShipmentServiceAsync.WithRawResponse by lazy {
+            ShipmentServiceAsyncImpl.WithRawResponseImpl(clientOptions)
         }
 
         private val betas: BetaServiceAsync.WithRawResponse by lazy {
@@ -92,6 +104,8 @@ class CheckoutIntentsClientAsyncImpl(private val clientOptions: ClientOptions) :
             )
 
         override fun checkoutIntents(): CheckoutIntentServiceAsync.WithRawResponse = checkoutIntents
+
+        override fun shipments(): ShipmentServiceAsync.WithRawResponse = shipments
 
         override fun betas(): BetaServiceAsync.WithRawResponse = betas
 

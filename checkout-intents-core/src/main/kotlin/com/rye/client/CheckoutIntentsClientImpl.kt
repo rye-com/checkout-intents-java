@@ -12,6 +12,8 @@ import com.rye.services.blocking.CheckoutIntentService
 import com.rye.services.blocking.CheckoutIntentServiceImpl
 import com.rye.services.blocking.ProductService
 import com.rye.services.blocking.ProductServiceImpl
+import com.rye.services.blocking.ShipmentService
+import com.rye.services.blocking.ShipmentServiceImpl
 import java.util.function.Consumer
 
 class CheckoutIntentsClientImpl(private val clientOptions: ClientOptions) : CheckoutIntentsClient {
@@ -37,6 +39,10 @@ class CheckoutIntentsClientImpl(private val clientOptions: ClientOptions) : Chec
         CheckoutIntentServiceImpl(clientOptionsWithUserAgent)
     }
 
+    private val shipments: ShipmentService by lazy {
+        ShipmentServiceImpl(clientOptionsWithUserAgent)
+    }
+
     private val betas: BetaService by lazy { BetaServiceImpl(clientOptionsWithUserAgent) }
 
     private val brands: BrandService by lazy { BrandServiceImpl(clientOptionsWithUserAgent) }
@@ -52,6 +58,8 @@ class CheckoutIntentsClientImpl(private val clientOptions: ClientOptions) : Chec
 
     override fun checkoutIntents(): CheckoutIntentService = checkoutIntents
 
+    override fun shipments(): ShipmentService = shipments
+
     override fun betas(): BetaService = betas
 
     override fun brands(): BrandService = brands
@@ -65,6 +73,10 @@ class CheckoutIntentsClientImpl(private val clientOptions: ClientOptions) : Chec
 
         private val checkoutIntents: CheckoutIntentService.WithRawResponse by lazy {
             CheckoutIntentServiceImpl.WithRawResponseImpl(clientOptions)
+        }
+
+        private val shipments: ShipmentService.WithRawResponse by lazy {
+            ShipmentServiceImpl.WithRawResponseImpl(clientOptions)
         }
 
         private val betas: BetaService.WithRawResponse by lazy {
@@ -87,6 +99,8 @@ class CheckoutIntentsClientImpl(private val clientOptions: ClientOptions) : Chec
             )
 
         override fun checkoutIntents(): CheckoutIntentService.WithRawResponse = checkoutIntents
+
+        override fun shipments(): ShipmentService.WithRawResponse = shipments
 
         override fun betas(): BetaService.WithRawResponse = betas
 
