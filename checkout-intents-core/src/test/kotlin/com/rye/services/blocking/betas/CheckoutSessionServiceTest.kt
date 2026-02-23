@@ -45,6 +45,7 @@ internal class CheckoutSessionServiceTest {
                             .build()
                     )
                     .discoverPromoCodes(true)
+                    .layout(CheckoutSessionCreateParams.Layout.DEFAULT)
                     .addPromoCode("string")
                     .addVariantSelection(
                         VariantSelection.builder()
