@@ -7,7 +7,6 @@ import com.rye.services.async.BetaServiceAsync
 import com.rye.services.async.BrandServiceAsync
 import com.rye.services.async.CheckoutIntentServiceAsync
 import com.rye.services.async.ProductServiceAsync
-import com.rye.services.async.ShipmentServiceAsync
 import java.util.function.Consumer
 
 /**
@@ -48,8 +47,6 @@ interface CheckoutIntentsClientAsync {
 
     fun checkoutIntents(): CheckoutIntentServiceAsync
 
-    fun shipments(): ShipmentServiceAsync
-
     fun betas(): BetaServiceAsync
 
     fun brands(): BrandServiceAsync
@@ -85,8 +82,6 @@ interface CheckoutIntentsClientAsync {
         ): CheckoutIntentsClientAsync.WithRawResponse
 
         fun checkoutIntents(): CheckoutIntentServiceAsync.WithRawResponse
-
-        fun shipments(): ShipmentServiceAsync.WithRawResponse
 
         fun betas(): BetaServiceAsync.WithRawResponse
 
