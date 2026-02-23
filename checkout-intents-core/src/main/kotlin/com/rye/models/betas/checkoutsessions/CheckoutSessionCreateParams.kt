@@ -69,14 +69,6 @@ private constructor(
     fun discoverPromoCodes(): Optional<Boolean> = body.discoverPromoCodes()
 
     /**
-     * Optional layout for the checkout UI (e.g. "wizard"). Defaults to the standard layout.
-     *
-     * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
-     */
-    fun layout(): Optional<Layout> = body.layout()
-
-    /**
      * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type (e.g. if
      *   the server responded with an unexpected value).
      */
@@ -123,13 +115,6 @@ private constructor(
      * type.
      */
     fun _discoverPromoCodes(): JsonField<Boolean> = body._discoverPromoCodes()
-
-    /**
-     * Returns the raw JSON value of [layout].
-     *
-     * Unlike [layout], this method doesn't throw if the JSON field has an unexpected type.
-     */
-    fun _layout(): JsonField<Layout> = body._layout()
 
     /**
      * Returns the raw JSON value of [promoCodes].
@@ -260,17 +245,6 @@ private constructor(
         fun discoverPromoCodes(discoverPromoCodes: JsonField<Boolean>) = apply {
             body.discoverPromoCodes(discoverPromoCodes)
         }
-
-        /** Optional layout for the checkout UI (e.g. "wizard"). Defaults to the standard layout. */
-        fun layout(layout: Layout) = apply { body.layout(layout) }
-
-        /**
-         * Sets [Builder.layout] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.layout] with a well-typed [Layout] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
-         */
-        fun layout(layout: JsonField<Layout>) = apply { body.layout(layout) }
 
         fun promoCodes(promoCodes: List<String>) = apply { body.promoCodes(promoCodes) }
 
@@ -466,7 +440,6 @@ private constructor(
         private val buyer: JsonField<Buyer>,
         private val constraints: JsonField<Constraints>,
         private val discoverPromoCodes: JsonField<Boolean>,
-        private val layout: JsonField<Layout>,
         private val promoCodes: JsonField<List<String>>,
         private val variantSelections: JsonField<List<VariantSelection>>,
         private val additionalProperties: MutableMap<String, JsonValue>,
@@ -485,7 +458,6 @@ private constructor(
             @JsonProperty("discoverPromoCodes")
             @ExcludeMissing
             discoverPromoCodes: JsonField<Boolean> = JsonMissing.of(),
-            @JsonProperty("layout") @ExcludeMissing layout: JsonField<Layout> = JsonMissing.of(),
             @JsonProperty("promoCodes")
             @ExcludeMissing
             promoCodes: JsonField<List<String>> = JsonMissing.of(),
@@ -498,7 +470,6 @@ private constructor(
             buyer,
             constraints,
             discoverPromoCodes,
-            layout,
             promoCodes,
             variantSelections,
             mutableMapOf(),
@@ -539,14 +510,6 @@ private constructor(
          */
         fun discoverPromoCodes(): Optional<Boolean> =
             discoverPromoCodes.getOptional("discoverPromoCodes")
-
-        /**
-         * Optional layout for the checkout UI (e.g. "wizard"). Defaults to the standard layout.
-         *
-         * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type
-         *   (e.g. if the server responded with an unexpected value).
-         */
-        fun layout(): Optional<Layout> = layout.getOptional("layout")
 
         /**
          * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type
@@ -604,13 +567,6 @@ private constructor(
         fun _discoverPromoCodes(): JsonField<Boolean> = discoverPromoCodes
 
         /**
-         * Returns the raw JSON value of [layout].
-         *
-         * Unlike [layout], this method doesn't throw if the JSON field has an unexpected type.
-         */
-        @JsonProperty("layout") @ExcludeMissing fun _layout(): JsonField<Layout> = layout
-
-        /**
          * Returns the raw JSON value of [promoCodes].
          *
          * Unlike [promoCodes], this method doesn't throw if the JSON field has an unexpected type.
@@ -663,7 +619,6 @@ private constructor(
             private var buyer: JsonField<Buyer> = JsonMissing.of()
             private var constraints: JsonField<Constraints> = JsonMissing.of()
             private var discoverPromoCodes: JsonField<Boolean> = JsonMissing.of()
-            private var layout: JsonField<Layout> = JsonMissing.of()
             private var promoCodes: JsonField<MutableList<String>>? = null
             private var variantSelections: JsonField<MutableList<VariantSelection>>? = null
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
@@ -675,7 +630,6 @@ private constructor(
                 buyer = body.buyer
                 constraints = body.constraints
                 discoverPromoCodes = body.discoverPromoCodes
-                layout = body.layout
                 promoCodes = body.promoCodes.map { it.toMutableList() }
                 variantSelections = body.variantSelections.map { it.toMutableList() }
                 additionalProperties = body.additionalProperties.toMutableMap()
@@ -744,20 +698,6 @@ private constructor(
             fun discoverPromoCodes(discoverPromoCodes: JsonField<Boolean>) = apply {
                 this.discoverPromoCodes = discoverPromoCodes
             }
-
-            /**
-             * Optional layout for the checkout UI (e.g. "wizard"). Defaults to the standard layout.
-             */
-            fun layout(layout: Layout) = layout(JsonField.of(layout))
-
-            /**
-             * Sets [Builder.layout] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.layout] with a well-typed [Layout] value instead.
-             * This method is primarily for setting the field to an undocumented or not yet
-             * supported value.
-             */
-            fun layout(layout: JsonField<Layout>) = apply { this.layout = layout }
 
             fun promoCodes(promoCodes: List<String>) = promoCodes(JsonField.of(promoCodes))
 
@@ -849,7 +789,6 @@ private constructor(
                     buyer,
                     constraints,
                     discoverPromoCodes,
-                    layout,
                     (promoCodes ?: JsonMissing.of()).map { it.toImmutable() },
                     (variantSelections ?: JsonMissing.of()).map { it.toImmutable() },
                     additionalProperties.toMutableMap(),
@@ -868,7 +807,6 @@ private constructor(
             buyer().ifPresent { it.validate() }
             constraints().ifPresent { it.validate() }
             discoverPromoCodes()
-            layout().ifPresent { it.validate() }
             promoCodes()
             variantSelections().ifPresent { it.forEach { it.validate() } }
             validated = true
@@ -895,7 +833,6 @@ private constructor(
                 (buyer.asKnown().getOrNull()?.validity() ?: 0) +
                 (constraints.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (discoverPromoCodes.asKnown().isPresent) 1 else 0) +
-                (layout.asKnown().getOrNull()?.validity() ?: 0) +
                 (promoCodes.asKnown().getOrNull()?.size ?: 0) +
                 (variantSelections.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0)
 
@@ -910,7 +847,6 @@ private constructor(
                 buyer == other.buyer &&
                 constraints == other.constraints &&
                 discoverPromoCodes == other.discoverPromoCodes &&
-                layout == other.layout &&
                 promoCodes == other.promoCodes &&
                 variantSelections == other.variantSelections &&
                 additionalProperties == other.additionalProperties
@@ -923,7 +859,6 @@ private constructor(
                 buyer,
                 constraints,
                 discoverPromoCodes,
-                layout,
                 promoCodes,
                 variantSelections,
                 additionalProperties,
@@ -933,7 +868,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{productUrl=$productUrl, quantity=$quantity, buyer=$buyer, constraints=$constraints, discoverPromoCodes=$discoverPromoCodes, layout=$layout, promoCodes=$promoCodes, variantSelections=$variantSelections, additionalProperties=$additionalProperties}"
+            "Body{productUrl=$productUrl, quantity=$quantity, buyer=$buyer, constraints=$constraints, discoverPromoCodes=$discoverPromoCodes, promoCodes=$promoCodes, variantSelections=$variantSelections, additionalProperties=$additionalProperties}"
     }
 
     /**
@@ -1805,134 +1740,6 @@ private constructor(
 
         override fun toString() =
             "Constraints{maxShippingPrice=$maxShippingPrice, maxTotalPrice=$maxTotalPrice, offerRetrievalEffort=$offerRetrievalEffort, additionalProperties=$additionalProperties}"
-    }
-
-    /** Optional layout for the checkout UI (e.g. "wizard"). Defaults to the standard layout. */
-    class Layout @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
-
-        /**
-         * Returns this class instance's raw value.
-         *
-         * This is usually only useful if this instance was deserialized from data that doesn't
-         * match any known member, and you want to know that value. For example, if the SDK is on an
-         * older version than the API, then the API may respond with new members that the SDK is
-         * unaware of.
-         */
-        @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
-
-        companion object {
-
-            @JvmField val DEFAULT = of("default")
-
-            @JvmField val WIZARD = of("wizard")
-
-            @JvmStatic fun of(value: String) = Layout(JsonField.of(value))
-        }
-
-        /** An enum containing [Layout]'s known values. */
-        enum class Known {
-            DEFAULT,
-            WIZARD,
-        }
-
-        /**
-         * An enum containing [Layout]'s known values, as well as an [_UNKNOWN] member.
-         *
-         * An instance of [Layout] can contain an unknown value in a couple of cases:
-         * - It was deserialized from data that doesn't match any known member. For example, if the
-         *   SDK is on an older version than the API, then the API may respond with new members that
-         *   the SDK is unaware of.
-         * - It was constructed with an arbitrary value using the [of] method.
-         */
-        enum class Value {
-            DEFAULT,
-            WIZARD,
-            /** An enum member indicating that [Layout] was instantiated with an unknown value. */
-            _UNKNOWN,
-        }
-
-        /**
-         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
-         * if the class was instantiated with an unknown value.
-         *
-         * Use the [known] method instead if you're certain the value is always known or if you want
-         * to throw for the unknown case.
-         */
-        fun value(): Value =
-            when (this) {
-                DEFAULT -> Value.DEFAULT
-                WIZARD -> Value.WIZARD
-                else -> Value._UNKNOWN
-            }
-
-        /**
-         * Returns an enum member corresponding to this class instance's value.
-         *
-         * Use the [value] method instead if you're uncertain the value is always known and don't
-         * want to throw for the unknown case.
-         *
-         * @throws CheckoutIntentsInvalidDataException if this class instance's value is a not a
-         *   known member.
-         */
-        fun known(): Known =
-            when (this) {
-                DEFAULT -> Known.DEFAULT
-                WIZARD -> Known.WIZARD
-                else -> throw CheckoutIntentsInvalidDataException("Unknown Layout: $value")
-            }
-
-        /**
-         * Returns this class instance's primitive wire representation.
-         *
-         * This differs from the [toString] method because that method is primarily for debugging
-         * and generally doesn't throw.
-         *
-         * @throws CheckoutIntentsInvalidDataException if this class instance's value does not have
-         *   the expected primitive type.
-         */
-        fun asString(): String =
-            _value().asString().orElseThrow {
-                CheckoutIntentsInvalidDataException("Value is not a String")
-            }
-
-        private var validated: Boolean = false
-
-        fun validate(): Layout = apply {
-            if (validated) {
-                return@apply
-            }
-
-            known()
-            validated = true
-        }
-
-        fun isValid(): Boolean =
-            try {
-                validate()
-                true
-            } catch (e: CheckoutIntentsInvalidDataException) {
-                false
-            }
-
-        /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
-         *
-         * Used for best match union deserialization.
-         */
-        @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
-
-        override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
-
-            return other is Layout && value == other.value
-        }
-
-        override fun hashCode() = value.hashCode()
-
-        override fun toString() = value.toString()
     }
 
     override fun equals(other: Any?): Boolean {
