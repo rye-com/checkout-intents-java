@@ -630,6 +630,7 @@ internal class CheckoutIntentTest {
                         .value("Small, Red, XS, L, etc.")
                         .build()
                 )
+                .estimatedDeliveryDate(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .offer(
                     Offer.builder()
                         .cost(
@@ -739,6 +740,7 @@ internal class CheckoutIntentTest {
                             .value("Small, Red, XS, L, etc.")
                             .build()
                     )
+                    .estimatedDeliveryDate(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .offer(
                         Offer.builder()
                             .cost(

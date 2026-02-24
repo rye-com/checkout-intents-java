@@ -2600,6 +2600,7 @@ private constructor(
         private val discoverPromoCodes: JsonField<Boolean>,
         private val promoCodes: JsonField<List<String>>,
         private val variantSelections: JsonField<List<VariantSelection>>,
+        private val estimatedDeliveryDate: JsonField<OffsetDateTime>,
         private val offer: JsonField<Offer>,
         private val orderId: JsonField<String>,
         private val paymentMethod: JsonField<PaymentMethod>,
@@ -2630,6 +2631,9 @@ private constructor(
             @JsonProperty("variantSelections")
             @ExcludeMissing
             variantSelections: JsonField<List<VariantSelection>> = JsonMissing.of(),
+            @JsonProperty("estimatedDeliveryDate")
+            @ExcludeMissing
+            estimatedDeliveryDate: JsonField<OffsetDateTime> = JsonMissing.of(),
             @JsonProperty("offer") @ExcludeMissing offer: JsonField<Offer> = JsonMissing.of(),
             @JsonProperty("orderId") @ExcludeMissing orderId: JsonField<String> = JsonMissing.of(),
             @JsonProperty("paymentMethod")
@@ -2646,6 +2650,7 @@ private constructor(
             discoverPromoCodes,
             promoCodes,
             variantSelections,
+            estimatedDeliveryDate,
             offer,
             orderId,
             paymentMethod,
@@ -2727,6 +2732,13 @@ private constructor(
          */
         fun variantSelections(): Optional<List<VariantSelection>> =
             variantSelections.getOptional("variantSelections")
+
+        /**
+         * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type
+         *   (e.g. if the server responded with an unexpected value).
+         */
+        fun estimatedDeliveryDate(): Optional<OffsetDateTime> =
+            estimatedDeliveryDate.getOptional("estimatedDeliveryDate")
 
         /**
          * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type or
@@ -2833,6 +2845,16 @@ private constructor(
         fun _variantSelections(): JsonField<List<VariantSelection>> = variantSelections
 
         /**
+         * Returns the raw JSON value of [estimatedDeliveryDate].
+         *
+         * Unlike [estimatedDeliveryDate], this method doesn't throw if the JSON field has an
+         * unexpected type.
+         */
+        @JsonProperty("estimatedDeliveryDate")
+        @ExcludeMissing
+        fun _estimatedDeliveryDate(): JsonField<OffsetDateTime> = estimatedDeliveryDate
+
+        /**
          * Returns the raw JSON value of [offer].
          *
          * Unlike [offer], this method doesn't throw if the JSON field has an unexpected type.
@@ -2887,6 +2909,7 @@ private constructor(
              * .createdAt()
              * .productUrl()
              * .quantity()
+             * .estimatedDeliveryDate()
              * .offer()
              * .orderId()
              * .paymentMethod()
@@ -2908,6 +2931,7 @@ private constructor(
             private var discoverPromoCodes: JsonField<Boolean> = JsonMissing.of()
             private var promoCodes: JsonField<MutableList<String>>? = null
             private var variantSelections: JsonField<MutableList<VariantSelection>>? = null
+            private var estimatedDeliveryDate: JsonField<OffsetDateTime>? = null
             private var offer: JsonField<Offer>? = null
             private var orderId: JsonField<String>? = null
             private var paymentMethod: JsonField<PaymentMethod>? = null
@@ -2926,6 +2950,7 @@ private constructor(
                 promoCodes = completedCheckoutIntent.promoCodes.map { it.toMutableList() }
                 variantSelections =
                     completedCheckoutIntent.variantSelections.map { it.toMutableList() }
+                estimatedDeliveryDate = completedCheckoutIntent.estimatedDeliveryDate
                 offer = completedCheckoutIntent.offer
                 orderId = completedCheckoutIntent.orderId
                 paymentMethod = completedCheckoutIntent.paymentMethod
@@ -3069,6 +3094,27 @@ private constructor(
                     }
             }
 
+            fun estimatedDeliveryDate(estimatedDeliveryDate: OffsetDateTime?) =
+                estimatedDeliveryDate(JsonField.ofNullable(estimatedDeliveryDate))
+
+            /**
+             * Alias for calling [Builder.estimatedDeliveryDate] with
+             * `estimatedDeliveryDate.orElse(null)`.
+             */
+            fun estimatedDeliveryDate(estimatedDeliveryDate: Optional<OffsetDateTime>) =
+                estimatedDeliveryDate(estimatedDeliveryDate.getOrNull())
+
+            /**
+             * Sets [Builder.estimatedDeliveryDate] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.estimatedDeliveryDate] with a well-typed
+             * [OffsetDateTime] value instead. This method is primarily for setting the field to an
+             * undocumented or not yet supported value.
+             */
+            fun estimatedDeliveryDate(estimatedDeliveryDate: JsonField<OffsetDateTime>) = apply {
+                this.estimatedDeliveryDate = estimatedDeliveryDate
+            }
+
             fun offer(offer: Offer) = offer(JsonField.of(offer))
 
             /**
@@ -3174,6 +3220,7 @@ private constructor(
              * .createdAt()
              * .productUrl()
              * .quantity()
+             * .estimatedDeliveryDate()
              * .offer()
              * .orderId()
              * .paymentMethod()
@@ -3193,6 +3240,7 @@ private constructor(
                     discoverPromoCodes,
                     (promoCodes ?: JsonMissing.of()).map { it.toImmutable() },
                     (variantSelections ?: JsonMissing.of()).map { it.toImmutable() },
+                    checkRequired("estimatedDeliveryDate", estimatedDeliveryDate),
                     checkRequired("offer", offer),
                     checkRequired("orderId", orderId),
                     checkRequired("paymentMethod", paymentMethod),
@@ -3217,6 +3265,7 @@ private constructor(
             discoverPromoCodes()
             promoCodes()
             variantSelections().ifPresent { it.forEach { it.validate() } }
+            estimatedDeliveryDate()
             offer().validate()
             orderId()
             paymentMethod().validate()
@@ -3249,6 +3298,7 @@ private constructor(
                 (if (discoverPromoCodes.asKnown().isPresent) 1 else 0) +
                 (promoCodes.asKnown().getOrNull()?.size ?: 0) +
                 (variantSelections.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
+                (if (estimatedDeliveryDate.asKnown().isPresent) 1 else 0) +
                 (offer.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (orderId.asKnown().isPresent) 1 else 0) +
                 (paymentMethod.asKnown().getOrNull()?.validity() ?: 0) +
@@ -3392,6 +3442,7 @@ private constructor(
                 discoverPromoCodes == other.discoverPromoCodes &&
                 promoCodes == other.promoCodes &&
                 variantSelections == other.variantSelections &&
+                estimatedDeliveryDate == other.estimatedDeliveryDate &&
                 offer == other.offer &&
                 orderId == other.orderId &&
                 paymentMethod == other.paymentMethod &&
@@ -3410,6 +3461,7 @@ private constructor(
                 discoverPromoCodes,
                 promoCodes,
                 variantSelections,
+                estimatedDeliveryDate,
                 offer,
                 orderId,
                 paymentMethod,
@@ -3421,7 +3473,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "CompletedCheckoutIntent{id=$id, buyer=$buyer, createdAt=$createdAt, productUrl=$productUrl, quantity=$quantity, constraints=$constraints, discoverPromoCodes=$discoverPromoCodes, promoCodes=$promoCodes, variantSelections=$variantSelections, offer=$offer, orderId=$orderId, paymentMethod=$paymentMethod, state=$state, additionalProperties=$additionalProperties}"
+            "CompletedCheckoutIntent{id=$id, buyer=$buyer, createdAt=$createdAt, productUrl=$productUrl, quantity=$quantity, constraints=$constraints, discoverPromoCodes=$discoverPromoCodes, promoCodes=$promoCodes, variantSelections=$variantSelections, estimatedDeliveryDate=$estimatedDeliveryDate, offer=$offer, orderId=$orderId, paymentMethod=$paymentMethod, state=$state, additionalProperties=$additionalProperties}"
     }
 
     class FailedCheckoutIntent
