@@ -1,3 +1,5 @@
+// File generated from our OpenAPI spec by Stainless.
+
 package com.rye.core.http
 
 import com.rye.core.DefaultSleeper
