@@ -6,8 +6,6 @@ import com.rye.core.ClientOptions
 import com.rye.core.getPackageVersion
 import com.rye.services.async.BetaServiceAsync
 import com.rye.services.async.BetaServiceAsyncImpl
-import com.rye.services.async.BillingServiceAsync
-import com.rye.services.async.BillingServiceAsyncImpl
 import com.rye.services.async.BrandServiceAsync
 import com.rye.services.async.BrandServiceAsyncImpl
 import com.rye.services.async.CheckoutIntentServiceAsync
@@ -48,10 +46,6 @@ class CheckoutIntentsClientAsyncImpl(private val clientOptions: ClientOptions) :
         ProductServiceAsyncImpl(clientOptionsWithUserAgent)
     }
 
-    private val billing: BillingServiceAsync by lazy {
-        BillingServiceAsyncImpl(clientOptionsWithUserAgent)
-    }
-
     override fun sync(): CheckoutIntentsClient = sync
 
     override fun withRawResponse(): CheckoutIntentsClientAsync.WithRawResponse = withRawResponse
@@ -68,8 +62,6 @@ class CheckoutIntentsClientAsyncImpl(private val clientOptions: ClientOptions) :
     override fun brands(): BrandServiceAsync = brands
 
     override fun products(): ProductServiceAsync = products
-
-    override fun billing(): BillingServiceAsync = billing
 
     override fun close() = clientOptions.close()
 
@@ -92,10 +84,6 @@ class CheckoutIntentsClientAsyncImpl(private val clientOptions: ClientOptions) :
             ProductServiceAsyncImpl.WithRawResponseImpl(clientOptions)
         }
 
-        private val billing: BillingServiceAsync.WithRawResponse by lazy {
-            BillingServiceAsyncImpl.WithRawResponseImpl(clientOptions)
-        }
-
         override fun withOptions(
             modifier: Consumer<ClientOptions.Builder>
         ): CheckoutIntentsClientAsync.WithRawResponse =
@@ -110,7 +98,5 @@ class CheckoutIntentsClientAsyncImpl(private val clientOptions: ClientOptions) :
         override fun brands(): BrandServiceAsync.WithRawResponse = brands
 
         override fun products(): ProductServiceAsync.WithRawResponse = products
-
-        override fun billing(): BillingServiceAsync.WithRawResponse = billing
     }
 }
