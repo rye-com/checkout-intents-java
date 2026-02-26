@@ -4,7 +4,6 @@ package com.rye.client
 
 import com.rye.core.ClientOptions
 import com.rye.services.async.BetaServiceAsync
-import com.rye.services.async.BillingServiceAsync
 import com.rye.services.async.BrandServiceAsync
 import com.rye.services.async.CheckoutIntentServiceAsync
 import com.rye.services.async.ProductServiceAsync
@@ -54,8 +53,6 @@ interface CheckoutIntentsClientAsync {
 
     fun products(): ProductServiceAsync
 
-    fun billing(): BillingServiceAsync
-
     /**
      * Closes this client, relinquishing any underlying resources.
      *
@@ -91,7 +88,5 @@ interface CheckoutIntentsClientAsync {
         fun brands(): BrandServiceAsync.WithRawResponse
 
         fun products(): ProductServiceAsync.WithRawResponse
-
-        fun billing(): BillingServiceAsync.WithRawResponse
     }
 }
