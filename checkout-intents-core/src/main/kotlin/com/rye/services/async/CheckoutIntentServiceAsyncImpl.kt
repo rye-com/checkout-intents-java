@@ -29,6 +29,8 @@ import com.rye.models.checkoutintents.CheckoutIntentPurchaseParams
 import com.rye.models.checkoutintents.CheckoutIntentRetrieveParams
 import com.rye.models.checkoutintents.PollOptions
 import java.time.Duration
+import com.rye.services.async.checkoutintents.ShipmentServiceAsync
+import com.rye.services.async.checkoutintents.ShipmentServiceAsyncImpl
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 import java.util.logging.Logger
@@ -41,12 +43,16 @@ internal constructor(private val clientOptions: ClientOptions) : CheckoutIntentS
         WithRawResponseImpl(clientOptions)
     }
 
+    private val shipments: ShipmentServiceAsync by lazy { ShipmentServiceAsyncImpl(clientOptions) }
+
     override fun withRawResponse(): CheckoutIntentServiceAsync.WithRawResponse = withRawResponse
 
     override fun withOptions(
         modifier: Consumer<ClientOptions.Builder>
     ): CheckoutIntentServiceAsync =
         CheckoutIntentServiceAsyncImpl(clientOptions.toBuilder().apply(modifier::accept).build())
+
+    override fun shipments(): ShipmentServiceAsync = shipments
 
     override fun create(
         params: CheckoutIntentCreateParams,
@@ -272,12 +278,18 @@ internal constructor(private val clientOptions: ClientOptions) : CheckoutIntentS
         private val errorHandler: Handler<HttpResponse> =
             errorHandler(errorBodyHandler(clientOptions.jsonMapper))
 
+        private val shipments: ShipmentServiceAsync.WithRawResponse by lazy {
+            ShipmentServiceAsyncImpl.WithRawResponseImpl(clientOptions)
+        }
+
         override fun withOptions(
             modifier: Consumer<ClientOptions.Builder>
         ): CheckoutIntentServiceAsync.WithRawResponse =
             CheckoutIntentServiceAsyncImpl.WithRawResponseImpl(
                 clientOptions.toBuilder().apply(modifier::accept).build()
             )
+
+        override fun shipments(): ShipmentServiceAsync.WithRawResponse = shipments
 
         private val createHandler: Handler<CheckoutIntent> =
             jsonHandler<CheckoutIntent>(clientOptions.jsonMapper)
