@@ -6,6 +6,8 @@ import com.rye.core.ClientOptions
 import com.rye.core.getPackageVersion
 import com.rye.services.blocking.BetaService
 import com.rye.services.blocking.BetaServiceImpl
+import com.rye.services.blocking.BillingService
+import com.rye.services.blocking.BillingServiceImpl
 import com.rye.services.blocking.BrandService
 import com.rye.services.blocking.BrandServiceImpl
 import com.rye.services.blocking.CheckoutIntentService
@@ -43,6 +45,8 @@ class CheckoutIntentsClientImpl(private val clientOptions: ClientOptions) : Chec
 
     private val products: ProductService by lazy { ProductServiceImpl(clientOptionsWithUserAgent) }
 
+    private val billing: BillingService by lazy { BillingServiceImpl(clientOptionsWithUserAgent) }
+
     override fun async(): CheckoutIntentsClientAsync = async
 
     override fun withRawResponse(): CheckoutIntentsClient.WithRawResponse = withRawResponse
@@ -57,6 +61,8 @@ class CheckoutIntentsClientImpl(private val clientOptions: ClientOptions) : Chec
     override fun brands(): BrandService = brands
 
     override fun products(): ProductService = products
+
+    override fun billing(): BillingService = billing
 
     override fun close() = clientOptions.close()
 
@@ -79,6 +85,10 @@ class CheckoutIntentsClientImpl(private val clientOptions: ClientOptions) : Chec
             ProductServiceImpl.WithRawResponseImpl(clientOptions)
         }
 
+        private val billing: BillingService.WithRawResponse by lazy {
+            BillingServiceImpl.WithRawResponseImpl(clientOptions)
+        }
+
         override fun withOptions(
             modifier: Consumer<ClientOptions.Builder>
         ): CheckoutIntentsClient.WithRawResponse =
@@ -93,5 +103,7 @@ class CheckoutIntentsClientImpl(private val clientOptions: ClientOptions) : Chec
         override fun brands(): BrandService.WithRawResponse = brands
 
         override fun products(): ProductService.WithRawResponse = products
+
+        override fun billing(): BillingService.WithRawResponse = billing
     }
 }
