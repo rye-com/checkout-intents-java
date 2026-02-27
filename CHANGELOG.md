@@ -1,5 +1,29 @@
 # Changelog
 
+## 0.4.0 (2026-02-27)
+
+Full Changelog: [v0.3.0...v0.4.0](https://github.com/rye-com/checkout-intents-java/compare/v0.3.0...v0.4.0)
+
+### Features
+
+* Add hidden billing API endpoints for drawdown balance and transactions ([bff6f21](https://github.com/rye-com/checkout-intents-java/commit/bff6f215eca87901197630b7c52862994e531727))
+* Added new shipments endpoint for tracking Amazon orders ([9cdd369](https://github.com/rye-com/checkout-intents-java/commit/9cdd3690b379fdebd5e71b7f0265551dd0a5c167))
+* proxy product images through Rye domain ([18c28fd](https://github.com/rye-com/checkout-intents-java/commit/18c28fd4392a36d4561e1fb1589bcce99948bd57))
+* Store estimated delivery date on completed checkout intent ([b88a66a](https://github.com/rye-com/checkout-intents-java/commit/b88a66adb4dafbf8d466e987a482de3ce17df2a8))
+
+
+### Bug Fixes
+
+* **internal:** formatting ([06999cb](https://github.com/rye-com/checkout-intents-java/commit/06999cba028a2a5136a514c3fb3c059bb682ba0b))
+
+
+### Chores
+
+* drop apache dependency ([c36e23e](https://github.com/rye-com/checkout-intents-java/commit/c36e23ee1b6972835d2c603982d3728a94994e7b))
+* **internal:** expand imports ([393502d](https://github.com/rye-com/checkout-intents-java/commit/393502d8d77d4c30c12e0173386056c1118ab1d8))
+* **internal:** improvements ([9845b45](https://github.com/rye-com/checkout-intents-java/commit/9845b456019ac052089e5d9e948f21acdb03b48d))
+* make `Properties` more resilient to `null` ([993d946](https://github.com/rye-com/checkout-intents-java/commit/993d946d8be260a0a22a91251c739f049adfab29))
+
 ## 0.3.0 (2026-02-23)
 
 Full Changelog: [v0.2.1...v0.3.0](https://github.com/rye-com/checkout-intents-java/compare/v0.2.1...v0.3.0)
