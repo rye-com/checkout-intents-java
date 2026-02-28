@@ -518,6 +518,8 @@ private constructor(
         fun createdAt(): OffsetDateTime = createdAt.getRequired("createdAt")
 
         /**
+         * The external ID is provided by the marketplace and matches the shipment to their system.
+         *
          * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type or
          *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
          *   value).
@@ -744,6 +746,10 @@ private constructor(
                 this.createdAt = createdAt
             }
 
+            /**
+             * The external ID is provided by the marketplace and matches the shipment to their
+             * system.
+             */
             fun externalId(externalId: String) = externalId(JsonField.of(externalId))
 
             /**
@@ -1055,9 +1061,8 @@ private constructor(
         @JsonCreator(mode = JsonCreator.Mode.DISABLED)
         private constructor(
             private val description: JsonField<String>,
-            private val displayDate: JsonField<String>,
-            private val displayTime: JsonField<String>,
             private val location: JsonField<Location>,
+            private val timestamp: JsonField<Timestamp>,
             private val additionalProperties: MutableMap<String, JsonValue>,
         ) {
 
@@ -1066,16 +1071,13 @@ private constructor(
                 @JsonProperty("description")
                 @ExcludeMissing
                 description: JsonField<String> = JsonMissing.of(),
-                @JsonProperty("displayDate")
-                @ExcludeMissing
-                displayDate: JsonField<String> = JsonMissing.of(),
-                @JsonProperty("displayTime")
-                @ExcludeMissing
-                displayTime: JsonField<String> = JsonMissing.of(),
                 @JsonProperty("location")
                 @ExcludeMissing
                 location: JsonField<Location> = JsonMissing.of(),
-            ) : this(description, displayDate, displayTime, location, mutableMapOf())
+                @JsonProperty("timestamp")
+                @ExcludeMissing
+                timestamp: JsonField<Timestamp> = JsonMissing.of(),
+            ) : this(description, location, timestamp, mutableMapOf())
 
             /**
              * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type
@@ -1085,22 +1087,16 @@ private constructor(
 
             /**
              * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type
-             *   (e.g. if the server responded with an unexpected value).
-             */
-            fun displayDate(): Optional<String> = displayDate.getOptional("displayDate")
-
-            /**
-             * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type
-             *   (e.g. if the server responded with an unexpected value).
-             */
-            fun displayTime(): Optional<String> = displayTime.getOptional("displayTime")
-
-            /**
-             * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type
              *   or is unexpectedly missing or null (e.g. if the server responded with an unexpected
              *   value).
              */
             fun location(): Location = location.getRequired("location")
+
+            /**
+             * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type
+             *   (e.g. if the server responded with an unexpected value).
+             */
+            fun timestamp(): Optional<Timestamp> = timestamp.getOptional("timestamp")
 
             /**
              * Returns the raw JSON value of [description].
@@ -1113,26 +1109,6 @@ private constructor(
             fun _description(): JsonField<String> = description
 
             /**
-             * Returns the raw JSON value of [displayDate].
-             *
-             * Unlike [displayDate], this method doesn't throw if the JSON field has an unexpected
-             * type.
-             */
-            @JsonProperty("displayDate")
-            @ExcludeMissing
-            fun _displayDate(): JsonField<String> = displayDate
-
-            /**
-             * Returns the raw JSON value of [displayTime].
-             *
-             * Unlike [displayTime], this method doesn't throw if the JSON field has an unexpected
-             * type.
-             */
-            @JsonProperty("displayTime")
-            @ExcludeMissing
-            fun _displayTime(): JsonField<String> = displayTime
-
-            /**
              * Returns the raw JSON value of [location].
              *
              * Unlike [location], this method doesn't throw if the JSON field has an unexpected
@@ -1141,6 +1117,16 @@ private constructor(
             @JsonProperty("location")
             @ExcludeMissing
             fun _location(): JsonField<Location> = location
+
+            /**
+             * Returns the raw JSON value of [timestamp].
+             *
+             * Unlike [timestamp], this method doesn't throw if the JSON field has an unexpected
+             * type.
+             */
+            @JsonProperty("timestamp")
+            @ExcludeMissing
+            fun _timestamp(): JsonField<Timestamp> = timestamp
 
             @JsonAnySetter
             private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -1162,9 +1148,8 @@ private constructor(
                  * The following fields are required:
                  * ```java
                  * .description()
-                 * .displayDate()
-                 * .displayTime()
                  * .location()
+                 * .timestamp()
                  * ```
                  */
                 @JvmStatic fun builder() = Builder()
@@ -1174,17 +1159,15 @@ private constructor(
             class Builder internal constructor() {
 
                 private var description: JsonField<String>? = null
-                private var displayDate: JsonField<String>? = null
-                private var displayTime: JsonField<String>? = null
                 private var location: JsonField<Location>? = null
+                private var timestamp: JsonField<Timestamp>? = null
                 private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
                 @JvmSynthetic
                 internal fun from(trackingEvent: TrackingEvent) = apply {
                     description = trackingEvent.description
-                    displayDate = trackingEvent.displayDate
-                    displayTime = trackingEvent.displayTime
                     location = trackingEvent.location
+                    timestamp = trackingEvent.timestamp
                     additionalProperties = trackingEvent.additionalProperties.toMutableMap()
                 }
 
@@ -1206,42 +1189,6 @@ private constructor(
                     this.description = description
                 }
 
-                fun displayDate(displayDate: String?) =
-                    displayDate(JsonField.ofNullable(displayDate))
-
-                /** Alias for calling [Builder.displayDate] with `displayDate.orElse(null)`. */
-                fun displayDate(displayDate: Optional<String>) =
-                    displayDate(displayDate.getOrNull())
-
-                /**
-                 * Sets [Builder.displayDate] to an arbitrary JSON value.
-                 *
-                 * You should usually call [Builder.displayDate] with a well-typed [String] value
-                 * instead. This method is primarily for setting the field to an undocumented or not
-                 * yet supported value.
-                 */
-                fun displayDate(displayDate: JsonField<String>) = apply {
-                    this.displayDate = displayDate
-                }
-
-                fun displayTime(displayTime: String?) =
-                    displayTime(JsonField.ofNullable(displayTime))
-
-                /** Alias for calling [Builder.displayTime] with `displayTime.orElse(null)`. */
-                fun displayTime(displayTime: Optional<String>) =
-                    displayTime(displayTime.getOrNull())
-
-                /**
-                 * Sets [Builder.displayTime] to an arbitrary JSON value.
-                 *
-                 * You should usually call [Builder.displayTime] with a well-typed [String] value
-                 * instead. This method is primarily for setting the field to an undocumented or not
-                 * yet supported value.
-                 */
-                fun displayTime(displayTime: JsonField<String>) = apply {
-                    this.displayTime = displayTime
-                }
-
                 fun location(location: Location) = location(JsonField.of(location))
 
                 /**
@@ -1252,6 +1199,22 @@ private constructor(
                  * yet supported value.
                  */
                 fun location(location: JsonField<Location>) = apply { this.location = location }
+
+                fun timestamp(timestamp: Timestamp?) = timestamp(JsonField.ofNullable(timestamp))
+
+                /** Alias for calling [Builder.timestamp] with `timestamp.orElse(null)`. */
+                fun timestamp(timestamp: Optional<Timestamp>) = timestamp(timestamp.getOrNull())
+
+                /**
+                 * Sets [Builder.timestamp] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.timestamp] with a well-typed [Timestamp] value
+                 * instead. This method is primarily for setting the field to an undocumented or not
+                 * yet supported value.
+                 */
+                fun timestamp(timestamp: JsonField<Timestamp>) = apply {
+                    this.timestamp = timestamp
+                }
 
                 fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                     this.additionalProperties.clear()
@@ -1283,9 +1246,8 @@ private constructor(
                  * The following fields are required:
                  * ```java
                  * .description()
-                 * .displayDate()
-                 * .displayTime()
                  * .location()
+                 * .timestamp()
                  * ```
                  *
                  * @throws IllegalStateException if any required field is unset.
@@ -1293,9 +1255,8 @@ private constructor(
                 fun build(): TrackingEvent =
                     TrackingEvent(
                         checkRequired("description", description),
-                        checkRequired("displayDate", displayDate),
-                        checkRequired("displayTime", displayTime),
                         checkRequired("location", location),
+                        checkRequired("timestamp", timestamp),
                         additionalProperties.toMutableMap(),
                     )
             }
@@ -1308,9 +1269,8 @@ private constructor(
                 }
 
                 description()
-                displayDate()
-                displayTime()
                 location().validate()
+                timestamp().ifPresent { it.validate() }
                 validated = true
             }
 
@@ -1331,9 +1291,8 @@ private constructor(
             @JvmSynthetic
             internal fun validity(): Int =
                 (if (description.asKnown().isPresent) 1 else 0) +
-                    (if (displayDate.asKnown().isPresent) 1 else 0) +
-                    (if (displayTime.asKnown().isPresent) 1 else 0) +
-                    (location.asKnown().getOrNull()?.validity() ?: 0)
+                    (location.asKnown().getOrNull()?.validity() ?: 0) +
+                    (timestamp.asKnown().getOrNull()?.validity() ?: 0)
 
             class Location
             @JsonCreator(mode = JsonCreator.Mode.DISABLED)
@@ -1563,6 +1522,216 @@ private constructor(
                     "Location{city=$city, country=$country, province=$province, additionalProperties=$additionalProperties}"
             }
 
+            class Timestamp
+            @JsonCreator(mode = JsonCreator.Mode.DISABLED)
+            private constructor(
+                private val local: JsonField<String>,
+                private val utc: JsonField<OffsetDateTime>,
+                private val additionalProperties: MutableMap<String, JsonValue>,
+            ) {
+
+                @JsonCreator
+                private constructor(
+                    @JsonProperty("local")
+                    @ExcludeMissing
+                    local: JsonField<String> = JsonMissing.of(),
+                    @JsonProperty("utc")
+                    @ExcludeMissing
+                    utc: JsonField<OffsetDateTime> = JsonMissing.of(),
+                ) : this(local, utc, mutableMapOf())
+
+                /**
+                 * ISO 8601 string with timezone offset, e.g. "2025-02-05T17:02:00.000-05:00"
+                 *
+                 * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected
+                 *   type or is unexpectedly missing or null (e.g. if the server responded with an
+                 *   unexpected value).
+                 */
+                fun local(): String = local.getRequired("local")
+
+                /**
+                 * UTC timestamp
+                 *
+                 * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected
+                 *   type or is unexpectedly missing or null (e.g. if the server responded with an
+                 *   unexpected value).
+                 */
+                fun utc(): OffsetDateTime = utc.getRequired("utc")
+
+                /**
+                 * Returns the raw JSON value of [local].
+                 *
+                 * Unlike [local], this method doesn't throw if the JSON field has an unexpected
+                 * type.
+                 */
+                @JsonProperty("local") @ExcludeMissing fun _local(): JsonField<String> = local
+
+                /**
+                 * Returns the raw JSON value of [utc].
+                 *
+                 * Unlike [utc], this method doesn't throw if the JSON field has an unexpected type.
+                 */
+                @JsonProperty("utc") @ExcludeMissing fun _utc(): JsonField<OffsetDateTime> = utc
+
+                @JsonAnySetter
+                private fun putAdditionalProperty(key: String, value: JsonValue) {
+                    additionalProperties.put(key, value)
+                }
+
+                @JsonAnyGetter
+                @ExcludeMissing
+                fun _additionalProperties(): Map<String, JsonValue> =
+                    Collections.unmodifiableMap(additionalProperties)
+
+                fun toBuilder() = Builder().from(this)
+
+                companion object {
+
+                    /**
+                     * Returns a mutable builder for constructing an instance of [Timestamp].
+                     *
+                     * The following fields are required:
+                     * ```java
+                     * .local()
+                     * .utc()
+                     * ```
+                     */
+                    @JvmStatic fun builder() = Builder()
+                }
+
+                /** A builder for [Timestamp]. */
+                class Builder internal constructor() {
+
+                    private var local: JsonField<String>? = null
+                    private var utc: JsonField<OffsetDateTime>? = null
+                    private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
+
+                    @JvmSynthetic
+                    internal fun from(timestamp: Timestamp) = apply {
+                        local = timestamp.local
+                        utc = timestamp.utc
+                        additionalProperties = timestamp.additionalProperties.toMutableMap()
+                    }
+
+                    /**
+                     * ISO 8601 string with timezone offset, e.g. "2025-02-05T17:02:00.000-05:00"
+                     */
+                    fun local(local: String) = local(JsonField.of(local))
+
+                    /**
+                     * Sets [Builder.local] to an arbitrary JSON value.
+                     *
+                     * You should usually call [Builder.local] with a well-typed [String] value
+                     * instead. This method is primarily for setting the field to an undocumented or
+                     * not yet supported value.
+                     */
+                    fun local(local: JsonField<String>) = apply { this.local = local }
+
+                    /** UTC timestamp */
+                    fun utc(utc: OffsetDateTime) = utc(JsonField.of(utc))
+
+                    /**
+                     * Sets [Builder.utc] to an arbitrary JSON value.
+                     *
+                     * You should usually call [Builder.utc] with a well-typed [OffsetDateTime]
+                     * value instead. This method is primarily for setting the field to an
+                     * undocumented or not yet supported value.
+                     */
+                    fun utc(utc: JsonField<OffsetDateTime>) = apply { this.utc = utc }
+
+                    fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                        this.additionalProperties.clear()
+                        putAllAdditionalProperties(additionalProperties)
+                    }
+
+                    fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+                        additionalProperties.put(key, value)
+                    }
+
+                    fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+                        apply {
+                            this.additionalProperties.putAll(additionalProperties)
+                        }
+
+                    fun removeAdditionalProperty(key: String) = apply {
+                        additionalProperties.remove(key)
+                    }
+
+                    fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                        keys.forEach(::removeAdditionalProperty)
+                    }
+
+                    /**
+                     * Returns an immutable instance of [Timestamp].
+                     *
+                     * Further updates to this [Builder] will not mutate the returned instance.
+                     *
+                     * The following fields are required:
+                     * ```java
+                     * .local()
+                     * .utc()
+                     * ```
+                     *
+                     * @throws IllegalStateException if any required field is unset.
+                     */
+                    fun build(): Timestamp =
+                        Timestamp(
+                            checkRequired("local", local),
+                            checkRequired("utc", utc),
+                            additionalProperties.toMutableMap(),
+                        )
+                }
+
+                private var validated: Boolean = false
+
+                fun validate(): Timestamp = apply {
+                    if (validated) {
+                        return@apply
+                    }
+
+                    local()
+                    utc()
+                    validated = true
+                }
+
+                fun isValid(): Boolean =
+                    try {
+                        validate()
+                        true
+                    } catch (e: CheckoutIntentsInvalidDataException) {
+                        false
+                    }
+
+                /**
+                 * Returns a score indicating how many valid values are contained in this object
+                 * recursively.
+                 *
+                 * Used for best match union deserialization.
+                 */
+                @JvmSynthetic
+                internal fun validity(): Int =
+                    (if (local.asKnown().isPresent) 1 else 0) +
+                        (if (utc.asKnown().isPresent) 1 else 0)
+
+                override fun equals(other: Any?): Boolean {
+                    if (this === other) {
+                        return true
+                    }
+
+                    return other is Timestamp &&
+                        local == other.local &&
+                        utc == other.utc &&
+                        additionalProperties == other.additionalProperties
+                }
+
+                private val hashCode: Int by lazy { Objects.hash(local, utc, additionalProperties) }
+
+                override fun hashCode(): Int = hashCode
+
+                override fun toString() =
+                    "Timestamp{local=$local, utc=$utc, additionalProperties=$additionalProperties}"
+            }
+
             override fun equals(other: Any?): Boolean {
                 if (this === other) {
                     return true
@@ -1570,20 +1739,19 @@ private constructor(
 
                 return other is TrackingEvent &&
                     description == other.description &&
-                    displayDate == other.displayDate &&
-                    displayTime == other.displayTime &&
                     location == other.location &&
+                    timestamp == other.timestamp &&
                     additionalProperties == other.additionalProperties
             }
 
             private val hashCode: Int by lazy {
-                Objects.hash(description, displayDate, displayTime, location, additionalProperties)
+                Objects.hash(description, location, timestamp, additionalProperties)
             }
 
             override fun hashCode(): Int = hashCode
 
             override fun toString() =
-                "TrackingEvent{description=$description, displayDate=$displayDate, displayTime=$displayTime, location=$location, additionalProperties=$additionalProperties}"
+                "TrackingEvent{description=$description, location=$location, timestamp=$timestamp, additionalProperties=$additionalProperties}"
         }
 
         override fun equals(other: Any?): Boolean {
@@ -1712,6 +1880,8 @@ private constructor(
         fun deliveredAt(): OffsetDateTime = deliveredAt.getRequired("deliveredAt")
 
         /**
+         * The external ID is provided by the marketplace and matches the shipment to their system.
+         *
          * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type or
          *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
          *   value).
@@ -1956,6 +2126,10 @@ private constructor(
                 this.deliveredAt = deliveredAt
             }
 
+            /**
+             * The external ID is provided by the marketplace and matches the shipment to their
+             * system.
+             */
             fun externalId(externalId: String) = externalId(JsonField.of(externalId))
 
             /**
@@ -2271,9 +2445,8 @@ private constructor(
         @JsonCreator(mode = JsonCreator.Mode.DISABLED)
         private constructor(
             private val description: JsonField<String>,
-            private val displayDate: JsonField<String>,
-            private val displayTime: JsonField<String>,
             private val location: JsonField<Location>,
+            private val timestamp: JsonField<Timestamp>,
             private val additionalProperties: MutableMap<String, JsonValue>,
         ) {
 
@@ -2282,16 +2455,13 @@ private constructor(
                 @JsonProperty("description")
                 @ExcludeMissing
                 description: JsonField<String> = JsonMissing.of(),
-                @JsonProperty("displayDate")
-                @ExcludeMissing
-                displayDate: JsonField<String> = JsonMissing.of(),
-                @JsonProperty("displayTime")
-                @ExcludeMissing
-                displayTime: JsonField<String> = JsonMissing.of(),
                 @JsonProperty("location")
                 @ExcludeMissing
                 location: JsonField<Location> = JsonMissing.of(),
-            ) : this(description, displayDate, displayTime, location, mutableMapOf())
+                @JsonProperty("timestamp")
+                @ExcludeMissing
+                timestamp: JsonField<Timestamp> = JsonMissing.of(),
+            ) : this(description, location, timestamp, mutableMapOf())
 
             /**
              * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type
@@ -2301,22 +2471,16 @@ private constructor(
 
             /**
              * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type
-             *   (e.g. if the server responded with an unexpected value).
-             */
-            fun displayDate(): Optional<String> = displayDate.getOptional("displayDate")
-
-            /**
-             * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type
-             *   (e.g. if the server responded with an unexpected value).
-             */
-            fun displayTime(): Optional<String> = displayTime.getOptional("displayTime")
-
-            /**
-             * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type
              *   or is unexpectedly missing or null (e.g. if the server responded with an unexpected
              *   value).
              */
             fun location(): Location = location.getRequired("location")
+
+            /**
+             * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type
+             *   (e.g. if the server responded with an unexpected value).
+             */
+            fun timestamp(): Optional<Timestamp> = timestamp.getOptional("timestamp")
 
             /**
              * Returns the raw JSON value of [description].
@@ -2329,26 +2493,6 @@ private constructor(
             fun _description(): JsonField<String> = description
 
             /**
-             * Returns the raw JSON value of [displayDate].
-             *
-             * Unlike [displayDate], this method doesn't throw if the JSON field has an unexpected
-             * type.
-             */
-            @JsonProperty("displayDate")
-            @ExcludeMissing
-            fun _displayDate(): JsonField<String> = displayDate
-
-            /**
-             * Returns the raw JSON value of [displayTime].
-             *
-             * Unlike [displayTime], this method doesn't throw if the JSON field has an unexpected
-             * type.
-             */
-            @JsonProperty("displayTime")
-            @ExcludeMissing
-            fun _displayTime(): JsonField<String> = displayTime
-
-            /**
              * Returns the raw JSON value of [location].
              *
              * Unlike [location], this method doesn't throw if the JSON field has an unexpected
@@ -2357,6 +2501,16 @@ private constructor(
             @JsonProperty("location")
             @ExcludeMissing
             fun _location(): JsonField<Location> = location
+
+            /**
+             * Returns the raw JSON value of [timestamp].
+             *
+             * Unlike [timestamp], this method doesn't throw if the JSON field has an unexpected
+             * type.
+             */
+            @JsonProperty("timestamp")
+            @ExcludeMissing
+            fun _timestamp(): JsonField<Timestamp> = timestamp
 
             @JsonAnySetter
             private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -2378,9 +2532,8 @@ private constructor(
                  * The following fields are required:
                  * ```java
                  * .description()
-                 * .displayDate()
-                 * .displayTime()
                  * .location()
+                 * .timestamp()
                  * ```
                  */
                 @JvmStatic fun builder() = Builder()
@@ -2390,17 +2543,15 @@ private constructor(
             class Builder internal constructor() {
 
                 private var description: JsonField<String>? = null
-                private var displayDate: JsonField<String>? = null
-                private var displayTime: JsonField<String>? = null
                 private var location: JsonField<Location>? = null
+                private var timestamp: JsonField<Timestamp>? = null
                 private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
                 @JvmSynthetic
                 internal fun from(trackingEvent: TrackingEvent) = apply {
                     description = trackingEvent.description
-                    displayDate = trackingEvent.displayDate
-                    displayTime = trackingEvent.displayTime
                     location = trackingEvent.location
+                    timestamp = trackingEvent.timestamp
                     additionalProperties = trackingEvent.additionalProperties.toMutableMap()
                 }
 
@@ -2422,42 +2573,6 @@ private constructor(
                     this.description = description
                 }
 
-                fun displayDate(displayDate: String?) =
-                    displayDate(JsonField.ofNullable(displayDate))
-
-                /** Alias for calling [Builder.displayDate] with `displayDate.orElse(null)`. */
-                fun displayDate(displayDate: Optional<String>) =
-                    displayDate(displayDate.getOrNull())
-
-                /**
-                 * Sets [Builder.displayDate] to an arbitrary JSON value.
-                 *
-                 * You should usually call [Builder.displayDate] with a well-typed [String] value
-                 * instead. This method is primarily for setting the field to an undocumented or not
-                 * yet supported value.
-                 */
-                fun displayDate(displayDate: JsonField<String>) = apply {
-                    this.displayDate = displayDate
-                }
-
-                fun displayTime(displayTime: String?) =
-                    displayTime(JsonField.ofNullable(displayTime))
-
-                /** Alias for calling [Builder.displayTime] with `displayTime.orElse(null)`. */
-                fun displayTime(displayTime: Optional<String>) =
-                    displayTime(displayTime.getOrNull())
-
-                /**
-                 * Sets [Builder.displayTime] to an arbitrary JSON value.
-                 *
-                 * You should usually call [Builder.displayTime] with a well-typed [String] value
-                 * instead. This method is primarily for setting the field to an undocumented or not
-                 * yet supported value.
-                 */
-                fun displayTime(displayTime: JsonField<String>) = apply {
-                    this.displayTime = displayTime
-                }
-
                 fun location(location: Location) = location(JsonField.of(location))
 
                 /**
@@ -2468,6 +2583,22 @@ private constructor(
                  * yet supported value.
                  */
                 fun location(location: JsonField<Location>) = apply { this.location = location }
+
+                fun timestamp(timestamp: Timestamp?) = timestamp(JsonField.ofNullable(timestamp))
+
+                /** Alias for calling [Builder.timestamp] with `timestamp.orElse(null)`. */
+                fun timestamp(timestamp: Optional<Timestamp>) = timestamp(timestamp.getOrNull())
+
+                /**
+                 * Sets [Builder.timestamp] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.timestamp] with a well-typed [Timestamp] value
+                 * instead. This method is primarily for setting the field to an undocumented or not
+                 * yet supported value.
+                 */
+                fun timestamp(timestamp: JsonField<Timestamp>) = apply {
+                    this.timestamp = timestamp
+                }
 
                 fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                     this.additionalProperties.clear()
@@ -2499,9 +2630,8 @@ private constructor(
                  * The following fields are required:
                  * ```java
                  * .description()
-                 * .displayDate()
-                 * .displayTime()
                  * .location()
+                 * .timestamp()
                  * ```
                  *
                  * @throws IllegalStateException if any required field is unset.
@@ -2509,9 +2639,8 @@ private constructor(
                 fun build(): TrackingEvent =
                     TrackingEvent(
                         checkRequired("description", description),
-                        checkRequired("displayDate", displayDate),
-                        checkRequired("displayTime", displayTime),
                         checkRequired("location", location),
+                        checkRequired("timestamp", timestamp),
                         additionalProperties.toMutableMap(),
                     )
             }
@@ -2524,9 +2653,8 @@ private constructor(
                 }
 
                 description()
-                displayDate()
-                displayTime()
                 location().validate()
+                timestamp().ifPresent { it.validate() }
                 validated = true
             }
 
@@ -2547,9 +2675,8 @@ private constructor(
             @JvmSynthetic
             internal fun validity(): Int =
                 (if (description.asKnown().isPresent) 1 else 0) +
-                    (if (displayDate.asKnown().isPresent) 1 else 0) +
-                    (if (displayTime.asKnown().isPresent) 1 else 0) +
-                    (location.asKnown().getOrNull()?.validity() ?: 0)
+                    (location.asKnown().getOrNull()?.validity() ?: 0) +
+                    (timestamp.asKnown().getOrNull()?.validity() ?: 0)
 
             class Location
             @JsonCreator(mode = JsonCreator.Mode.DISABLED)
@@ -2779,6 +2906,216 @@ private constructor(
                     "Location{city=$city, country=$country, province=$province, additionalProperties=$additionalProperties}"
             }
 
+            class Timestamp
+            @JsonCreator(mode = JsonCreator.Mode.DISABLED)
+            private constructor(
+                private val local: JsonField<String>,
+                private val utc: JsonField<OffsetDateTime>,
+                private val additionalProperties: MutableMap<String, JsonValue>,
+            ) {
+
+                @JsonCreator
+                private constructor(
+                    @JsonProperty("local")
+                    @ExcludeMissing
+                    local: JsonField<String> = JsonMissing.of(),
+                    @JsonProperty("utc")
+                    @ExcludeMissing
+                    utc: JsonField<OffsetDateTime> = JsonMissing.of(),
+                ) : this(local, utc, mutableMapOf())
+
+                /**
+                 * ISO 8601 string with timezone offset, e.g. "2025-02-05T17:02:00.000-05:00"
+                 *
+                 * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected
+                 *   type or is unexpectedly missing or null (e.g. if the server responded with an
+                 *   unexpected value).
+                 */
+                fun local(): String = local.getRequired("local")
+
+                /**
+                 * UTC timestamp
+                 *
+                 * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected
+                 *   type or is unexpectedly missing or null (e.g. if the server responded with an
+                 *   unexpected value).
+                 */
+                fun utc(): OffsetDateTime = utc.getRequired("utc")
+
+                /**
+                 * Returns the raw JSON value of [local].
+                 *
+                 * Unlike [local], this method doesn't throw if the JSON field has an unexpected
+                 * type.
+                 */
+                @JsonProperty("local") @ExcludeMissing fun _local(): JsonField<String> = local
+
+                /**
+                 * Returns the raw JSON value of [utc].
+                 *
+                 * Unlike [utc], this method doesn't throw if the JSON field has an unexpected type.
+                 */
+                @JsonProperty("utc") @ExcludeMissing fun _utc(): JsonField<OffsetDateTime> = utc
+
+                @JsonAnySetter
+                private fun putAdditionalProperty(key: String, value: JsonValue) {
+                    additionalProperties.put(key, value)
+                }
+
+                @JsonAnyGetter
+                @ExcludeMissing
+                fun _additionalProperties(): Map<String, JsonValue> =
+                    Collections.unmodifiableMap(additionalProperties)
+
+                fun toBuilder() = Builder().from(this)
+
+                companion object {
+
+                    /**
+                     * Returns a mutable builder for constructing an instance of [Timestamp].
+                     *
+                     * The following fields are required:
+                     * ```java
+                     * .local()
+                     * .utc()
+                     * ```
+                     */
+                    @JvmStatic fun builder() = Builder()
+                }
+
+                /** A builder for [Timestamp]. */
+                class Builder internal constructor() {
+
+                    private var local: JsonField<String>? = null
+                    private var utc: JsonField<OffsetDateTime>? = null
+                    private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
+
+                    @JvmSynthetic
+                    internal fun from(timestamp: Timestamp) = apply {
+                        local = timestamp.local
+                        utc = timestamp.utc
+                        additionalProperties = timestamp.additionalProperties.toMutableMap()
+                    }
+
+                    /**
+                     * ISO 8601 string with timezone offset, e.g. "2025-02-05T17:02:00.000-05:00"
+                     */
+                    fun local(local: String) = local(JsonField.of(local))
+
+                    /**
+                     * Sets [Builder.local] to an arbitrary JSON value.
+                     *
+                     * You should usually call [Builder.local] with a well-typed [String] value
+                     * instead. This method is primarily for setting the field to an undocumented or
+                     * not yet supported value.
+                     */
+                    fun local(local: JsonField<String>) = apply { this.local = local }
+
+                    /** UTC timestamp */
+                    fun utc(utc: OffsetDateTime) = utc(JsonField.of(utc))
+
+                    /**
+                     * Sets [Builder.utc] to an arbitrary JSON value.
+                     *
+                     * You should usually call [Builder.utc] with a well-typed [OffsetDateTime]
+                     * value instead. This method is primarily for setting the field to an
+                     * undocumented or not yet supported value.
+                     */
+                    fun utc(utc: JsonField<OffsetDateTime>) = apply { this.utc = utc }
+
+                    fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                        this.additionalProperties.clear()
+                        putAllAdditionalProperties(additionalProperties)
+                    }
+
+                    fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+                        additionalProperties.put(key, value)
+                    }
+
+                    fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+                        apply {
+                            this.additionalProperties.putAll(additionalProperties)
+                        }
+
+                    fun removeAdditionalProperty(key: String) = apply {
+                        additionalProperties.remove(key)
+                    }
+
+                    fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                        keys.forEach(::removeAdditionalProperty)
+                    }
+
+                    /**
+                     * Returns an immutable instance of [Timestamp].
+                     *
+                     * Further updates to this [Builder] will not mutate the returned instance.
+                     *
+                     * The following fields are required:
+                     * ```java
+                     * .local()
+                     * .utc()
+                     * ```
+                     *
+                     * @throws IllegalStateException if any required field is unset.
+                     */
+                    fun build(): Timestamp =
+                        Timestamp(
+                            checkRequired("local", local),
+                            checkRequired("utc", utc),
+                            additionalProperties.toMutableMap(),
+                        )
+                }
+
+                private var validated: Boolean = false
+
+                fun validate(): Timestamp = apply {
+                    if (validated) {
+                        return@apply
+                    }
+
+                    local()
+                    utc()
+                    validated = true
+                }
+
+                fun isValid(): Boolean =
+                    try {
+                        validate()
+                        true
+                    } catch (e: CheckoutIntentsInvalidDataException) {
+                        false
+                    }
+
+                /**
+                 * Returns a score indicating how many valid values are contained in this object
+                 * recursively.
+                 *
+                 * Used for best match union deserialization.
+                 */
+                @JvmSynthetic
+                internal fun validity(): Int =
+                    (if (local.asKnown().isPresent) 1 else 0) +
+                        (if (utc.asKnown().isPresent) 1 else 0)
+
+                override fun equals(other: Any?): Boolean {
+                    if (this === other) {
+                        return true
+                    }
+
+                    return other is Timestamp &&
+                        local == other.local &&
+                        utc == other.utc &&
+                        additionalProperties == other.additionalProperties
+                }
+
+                private val hashCode: Int by lazy { Objects.hash(local, utc, additionalProperties) }
+
+                override fun hashCode(): Int = hashCode
+
+                override fun toString() =
+                    "Timestamp{local=$local, utc=$utc, additionalProperties=$additionalProperties}"
+            }
+
             override fun equals(other: Any?): Boolean {
                 if (this === other) {
                     return true
@@ -2786,20 +3123,19 @@ private constructor(
 
                 return other is TrackingEvent &&
                     description == other.description &&
-                    displayDate == other.displayDate &&
-                    displayTime == other.displayTime &&
                     location == other.location &&
+                    timestamp == other.timestamp &&
                     additionalProperties == other.additionalProperties
             }
 
             private val hashCode: Int by lazy {
-                Objects.hash(description, displayDate, displayTime, location, additionalProperties)
+                Objects.hash(description, location, timestamp, additionalProperties)
             }
 
             override fun hashCode(): Int = hashCode
 
             override fun toString() =
-                "TrackingEvent{description=$description, displayDate=$displayDate, displayTime=$displayTime, location=$location, additionalProperties=$additionalProperties}"
+                "TrackingEvent{description=$description, location=$location, timestamp=$timestamp, additionalProperties=$additionalProperties}"
         }
 
         override fun equals(other: Any?): Boolean {
@@ -2918,6 +3254,8 @@ private constructor(
         fun createdAt(): OffsetDateTime = createdAt.getRequired("createdAt")
 
         /**
+         * The external ID is provided by the marketplace and matches the shipment to their system.
+         *
          * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type or
          *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
          *   value).
@@ -3144,6 +3482,10 @@ private constructor(
                 this.createdAt = createdAt
             }
 
+            /**
+             * The external ID is provided by the marketplace and matches the shipment to their
+             * system.
+             */
             fun externalId(externalId: String) = externalId(JsonField.of(externalId))
 
             /**
@@ -3455,9 +3797,8 @@ private constructor(
         @JsonCreator(mode = JsonCreator.Mode.DISABLED)
         private constructor(
             private val description: JsonField<String>,
-            private val displayDate: JsonField<String>,
-            private val displayTime: JsonField<String>,
             private val location: JsonField<Location>,
+            private val timestamp: JsonField<Timestamp>,
             private val additionalProperties: MutableMap<String, JsonValue>,
         ) {
 
@@ -3466,16 +3807,13 @@ private constructor(
                 @JsonProperty("description")
                 @ExcludeMissing
                 description: JsonField<String> = JsonMissing.of(),
-                @JsonProperty("displayDate")
-                @ExcludeMissing
-                displayDate: JsonField<String> = JsonMissing.of(),
-                @JsonProperty("displayTime")
-                @ExcludeMissing
-                displayTime: JsonField<String> = JsonMissing.of(),
                 @JsonProperty("location")
                 @ExcludeMissing
                 location: JsonField<Location> = JsonMissing.of(),
-            ) : this(description, displayDate, displayTime, location, mutableMapOf())
+                @JsonProperty("timestamp")
+                @ExcludeMissing
+                timestamp: JsonField<Timestamp> = JsonMissing.of(),
+            ) : this(description, location, timestamp, mutableMapOf())
 
             /**
              * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type
@@ -3485,22 +3823,16 @@ private constructor(
 
             /**
              * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type
-             *   (e.g. if the server responded with an unexpected value).
-             */
-            fun displayDate(): Optional<String> = displayDate.getOptional("displayDate")
-
-            /**
-             * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type
-             *   (e.g. if the server responded with an unexpected value).
-             */
-            fun displayTime(): Optional<String> = displayTime.getOptional("displayTime")
-
-            /**
-             * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type
              *   or is unexpectedly missing or null (e.g. if the server responded with an unexpected
              *   value).
              */
             fun location(): Location = location.getRequired("location")
+
+            /**
+             * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type
+             *   (e.g. if the server responded with an unexpected value).
+             */
+            fun timestamp(): Optional<Timestamp> = timestamp.getOptional("timestamp")
 
             /**
              * Returns the raw JSON value of [description].
@@ -3513,26 +3845,6 @@ private constructor(
             fun _description(): JsonField<String> = description
 
             /**
-             * Returns the raw JSON value of [displayDate].
-             *
-             * Unlike [displayDate], this method doesn't throw if the JSON field has an unexpected
-             * type.
-             */
-            @JsonProperty("displayDate")
-            @ExcludeMissing
-            fun _displayDate(): JsonField<String> = displayDate
-
-            /**
-             * Returns the raw JSON value of [displayTime].
-             *
-             * Unlike [displayTime], this method doesn't throw if the JSON field has an unexpected
-             * type.
-             */
-            @JsonProperty("displayTime")
-            @ExcludeMissing
-            fun _displayTime(): JsonField<String> = displayTime
-
-            /**
              * Returns the raw JSON value of [location].
              *
              * Unlike [location], this method doesn't throw if the JSON field has an unexpected
@@ -3541,6 +3853,16 @@ private constructor(
             @JsonProperty("location")
             @ExcludeMissing
             fun _location(): JsonField<Location> = location
+
+            /**
+             * Returns the raw JSON value of [timestamp].
+             *
+             * Unlike [timestamp], this method doesn't throw if the JSON field has an unexpected
+             * type.
+             */
+            @JsonProperty("timestamp")
+            @ExcludeMissing
+            fun _timestamp(): JsonField<Timestamp> = timestamp
 
             @JsonAnySetter
             private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -3562,9 +3884,8 @@ private constructor(
                  * The following fields are required:
                  * ```java
                  * .description()
-                 * .displayDate()
-                 * .displayTime()
                  * .location()
+                 * .timestamp()
                  * ```
                  */
                 @JvmStatic fun builder() = Builder()
@@ -3574,17 +3895,15 @@ private constructor(
             class Builder internal constructor() {
 
                 private var description: JsonField<String>? = null
-                private var displayDate: JsonField<String>? = null
-                private var displayTime: JsonField<String>? = null
                 private var location: JsonField<Location>? = null
+                private var timestamp: JsonField<Timestamp>? = null
                 private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
                 @JvmSynthetic
                 internal fun from(trackingEvent: TrackingEvent) = apply {
                     description = trackingEvent.description
-                    displayDate = trackingEvent.displayDate
-                    displayTime = trackingEvent.displayTime
                     location = trackingEvent.location
+                    timestamp = trackingEvent.timestamp
                     additionalProperties = trackingEvent.additionalProperties.toMutableMap()
                 }
 
@@ -3606,42 +3925,6 @@ private constructor(
                     this.description = description
                 }
 
-                fun displayDate(displayDate: String?) =
-                    displayDate(JsonField.ofNullable(displayDate))
-
-                /** Alias for calling [Builder.displayDate] with `displayDate.orElse(null)`. */
-                fun displayDate(displayDate: Optional<String>) =
-                    displayDate(displayDate.getOrNull())
-
-                /**
-                 * Sets [Builder.displayDate] to an arbitrary JSON value.
-                 *
-                 * You should usually call [Builder.displayDate] with a well-typed [String] value
-                 * instead. This method is primarily for setting the field to an undocumented or not
-                 * yet supported value.
-                 */
-                fun displayDate(displayDate: JsonField<String>) = apply {
-                    this.displayDate = displayDate
-                }
-
-                fun displayTime(displayTime: String?) =
-                    displayTime(JsonField.ofNullable(displayTime))
-
-                /** Alias for calling [Builder.displayTime] with `displayTime.orElse(null)`. */
-                fun displayTime(displayTime: Optional<String>) =
-                    displayTime(displayTime.getOrNull())
-
-                /**
-                 * Sets [Builder.displayTime] to an arbitrary JSON value.
-                 *
-                 * You should usually call [Builder.displayTime] with a well-typed [String] value
-                 * instead. This method is primarily for setting the field to an undocumented or not
-                 * yet supported value.
-                 */
-                fun displayTime(displayTime: JsonField<String>) = apply {
-                    this.displayTime = displayTime
-                }
-
                 fun location(location: Location) = location(JsonField.of(location))
 
                 /**
@@ -3652,6 +3935,22 @@ private constructor(
                  * yet supported value.
                  */
                 fun location(location: JsonField<Location>) = apply { this.location = location }
+
+                fun timestamp(timestamp: Timestamp?) = timestamp(JsonField.ofNullable(timestamp))
+
+                /** Alias for calling [Builder.timestamp] with `timestamp.orElse(null)`. */
+                fun timestamp(timestamp: Optional<Timestamp>) = timestamp(timestamp.getOrNull())
+
+                /**
+                 * Sets [Builder.timestamp] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.timestamp] with a well-typed [Timestamp] value
+                 * instead. This method is primarily for setting the field to an undocumented or not
+                 * yet supported value.
+                 */
+                fun timestamp(timestamp: JsonField<Timestamp>) = apply {
+                    this.timestamp = timestamp
+                }
 
                 fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                     this.additionalProperties.clear()
@@ -3683,9 +3982,8 @@ private constructor(
                  * The following fields are required:
                  * ```java
                  * .description()
-                 * .displayDate()
-                 * .displayTime()
                  * .location()
+                 * .timestamp()
                  * ```
                  *
                  * @throws IllegalStateException if any required field is unset.
@@ -3693,9 +3991,8 @@ private constructor(
                 fun build(): TrackingEvent =
                     TrackingEvent(
                         checkRequired("description", description),
-                        checkRequired("displayDate", displayDate),
-                        checkRequired("displayTime", displayTime),
                         checkRequired("location", location),
+                        checkRequired("timestamp", timestamp),
                         additionalProperties.toMutableMap(),
                     )
             }
@@ -3708,9 +4005,8 @@ private constructor(
                 }
 
                 description()
-                displayDate()
-                displayTime()
                 location().validate()
+                timestamp().ifPresent { it.validate() }
                 validated = true
             }
 
@@ -3731,9 +4027,8 @@ private constructor(
             @JvmSynthetic
             internal fun validity(): Int =
                 (if (description.asKnown().isPresent) 1 else 0) +
-                    (if (displayDate.asKnown().isPresent) 1 else 0) +
-                    (if (displayTime.asKnown().isPresent) 1 else 0) +
-                    (location.asKnown().getOrNull()?.validity() ?: 0)
+                    (location.asKnown().getOrNull()?.validity() ?: 0) +
+                    (timestamp.asKnown().getOrNull()?.validity() ?: 0)
 
             class Location
             @JsonCreator(mode = JsonCreator.Mode.DISABLED)
@@ -3963,6 +4258,216 @@ private constructor(
                     "Location{city=$city, country=$country, province=$province, additionalProperties=$additionalProperties}"
             }
 
+            class Timestamp
+            @JsonCreator(mode = JsonCreator.Mode.DISABLED)
+            private constructor(
+                private val local: JsonField<String>,
+                private val utc: JsonField<OffsetDateTime>,
+                private val additionalProperties: MutableMap<String, JsonValue>,
+            ) {
+
+                @JsonCreator
+                private constructor(
+                    @JsonProperty("local")
+                    @ExcludeMissing
+                    local: JsonField<String> = JsonMissing.of(),
+                    @JsonProperty("utc")
+                    @ExcludeMissing
+                    utc: JsonField<OffsetDateTime> = JsonMissing.of(),
+                ) : this(local, utc, mutableMapOf())
+
+                /**
+                 * ISO 8601 string with timezone offset, e.g. "2025-02-05T17:02:00.000-05:00"
+                 *
+                 * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected
+                 *   type or is unexpectedly missing or null (e.g. if the server responded with an
+                 *   unexpected value).
+                 */
+                fun local(): String = local.getRequired("local")
+
+                /**
+                 * UTC timestamp
+                 *
+                 * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected
+                 *   type or is unexpectedly missing or null (e.g. if the server responded with an
+                 *   unexpected value).
+                 */
+                fun utc(): OffsetDateTime = utc.getRequired("utc")
+
+                /**
+                 * Returns the raw JSON value of [local].
+                 *
+                 * Unlike [local], this method doesn't throw if the JSON field has an unexpected
+                 * type.
+                 */
+                @JsonProperty("local") @ExcludeMissing fun _local(): JsonField<String> = local
+
+                /**
+                 * Returns the raw JSON value of [utc].
+                 *
+                 * Unlike [utc], this method doesn't throw if the JSON field has an unexpected type.
+                 */
+                @JsonProperty("utc") @ExcludeMissing fun _utc(): JsonField<OffsetDateTime> = utc
+
+                @JsonAnySetter
+                private fun putAdditionalProperty(key: String, value: JsonValue) {
+                    additionalProperties.put(key, value)
+                }
+
+                @JsonAnyGetter
+                @ExcludeMissing
+                fun _additionalProperties(): Map<String, JsonValue> =
+                    Collections.unmodifiableMap(additionalProperties)
+
+                fun toBuilder() = Builder().from(this)
+
+                companion object {
+
+                    /**
+                     * Returns a mutable builder for constructing an instance of [Timestamp].
+                     *
+                     * The following fields are required:
+                     * ```java
+                     * .local()
+                     * .utc()
+                     * ```
+                     */
+                    @JvmStatic fun builder() = Builder()
+                }
+
+                /** A builder for [Timestamp]. */
+                class Builder internal constructor() {
+
+                    private var local: JsonField<String>? = null
+                    private var utc: JsonField<OffsetDateTime>? = null
+                    private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
+
+                    @JvmSynthetic
+                    internal fun from(timestamp: Timestamp) = apply {
+                        local = timestamp.local
+                        utc = timestamp.utc
+                        additionalProperties = timestamp.additionalProperties.toMutableMap()
+                    }
+
+                    /**
+                     * ISO 8601 string with timezone offset, e.g. "2025-02-05T17:02:00.000-05:00"
+                     */
+                    fun local(local: String) = local(JsonField.of(local))
+
+                    /**
+                     * Sets [Builder.local] to an arbitrary JSON value.
+                     *
+                     * You should usually call [Builder.local] with a well-typed [String] value
+                     * instead. This method is primarily for setting the field to an undocumented or
+                     * not yet supported value.
+                     */
+                    fun local(local: JsonField<String>) = apply { this.local = local }
+
+                    /** UTC timestamp */
+                    fun utc(utc: OffsetDateTime) = utc(JsonField.of(utc))
+
+                    /**
+                     * Sets [Builder.utc] to an arbitrary JSON value.
+                     *
+                     * You should usually call [Builder.utc] with a well-typed [OffsetDateTime]
+                     * value instead. This method is primarily for setting the field to an
+                     * undocumented or not yet supported value.
+                     */
+                    fun utc(utc: JsonField<OffsetDateTime>) = apply { this.utc = utc }
+
+                    fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                        this.additionalProperties.clear()
+                        putAllAdditionalProperties(additionalProperties)
+                    }
+
+                    fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+                        additionalProperties.put(key, value)
+                    }
+
+                    fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+                        apply {
+                            this.additionalProperties.putAll(additionalProperties)
+                        }
+
+                    fun removeAdditionalProperty(key: String) = apply {
+                        additionalProperties.remove(key)
+                    }
+
+                    fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                        keys.forEach(::removeAdditionalProperty)
+                    }
+
+                    /**
+                     * Returns an immutable instance of [Timestamp].
+                     *
+                     * Further updates to this [Builder] will not mutate the returned instance.
+                     *
+                     * The following fields are required:
+                     * ```java
+                     * .local()
+                     * .utc()
+                     * ```
+                     *
+                     * @throws IllegalStateException if any required field is unset.
+                     */
+                    fun build(): Timestamp =
+                        Timestamp(
+                            checkRequired("local", local),
+                            checkRequired("utc", utc),
+                            additionalProperties.toMutableMap(),
+                        )
+                }
+
+                private var validated: Boolean = false
+
+                fun validate(): Timestamp = apply {
+                    if (validated) {
+                        return@apply
+                    }
+
+                    local()
+                    utc()
+                    validated = true
+                }
+
+                fun isValid(): Boolean =
+                    try {
+                        validate()
+                        true
+                    } catch (e: CheckoutIntentsInvalidDataException) {
+                        false
+                    }
+
+                /**
+                 * Returns a score indicating how many valid values are contained in this object
+                 * recursively.
+                 *
+                 * Used for best match union deserialization.
+                 */
+                @JvmSynthetic
+                internal fun validity(): Int =
+                    (if (local.asKnown().isPresent) 1 else 0) +
+                        (if (utc.asKnown().isPresent) 1 else 0)
+
+                override fun equals(other: Any?): Boolean {
+                    if (this === other) {
+                        return true
+                    }
+
+                    return other is Timestamp &&
+                        local == other.local &&
+                        utc == other.utc &&
+                        additionalProperties == other.additionalProperties
+                }
+
+                private val hashCode: Int by lazy { Objects.hash(local, utc, additionalProperties) }
+
+                override fun hashCode(): Int = hashCode
+
+                override fun toString() =
+                    "Timestamp{local=$local, utc=$utc, additionalProperties=$additionalProperties}"
+            }
+
             override fun equals(other: Any?): Boolean {
                 if (this === other) {
                     return true
@@ -3970,20 +4475,19 @@ private constructor(
 
                 return other is TrackingEvent &&
                     description == other.description &&
-                    displayDate == other.displayDate &&
-                    displayTime == other.displayTime &&
                     location == other.location &&
+                    timestamp == other.timestamp &&
                     additionalProperties == other.additionalProperties
             }
 
             private val hashCode: Int by lazy {
-                Objects.hash(description, displayDate, displayTime, location, additionalProperties)
+                Objects.hash(description, location, timestamp, additionalProperties)
             }
 
             override fun hashCode(): Int = hashCode
 
             override fun toString() =
-                "TrackingEvent{description=$description, displayDate=$displayDate, displayTime=$displayTime, location=$location, additionalProperties=$additionalProperties}"
+                "TrackingEvent{description=$description, location=$location, timestamp=$timestamp, additionalProperties=$additionalProperties}"
         }
 
         override fun equals(other: Any?): Boolean {
@@ -4100,6 +4604,8 @@ private constructor(
         fun createdAt(): OffsetDateTime = createdAt.getRequired("createdAt")
 
         /**
+         * The external ID is provided by the marketplace and matches the shipment to their system.
+         *
          * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type or
          *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
          *   value).
@@ -4328,6 +4834,10 @@ private constructor(
                 this.createdAt = createdAt
             }
 
+            /**
+             * The external ID is provided by the marketplace and matches the shipment to their
+             * system.
+             */
             fun externalId(externalId: String) = externalId(JsonField.of(externalId))
 
             /**
@@ -4639,9 +5149,8 @@ private constructor(
         @JsonCreator(mode = JsonCreator.Mode.DISABLED)
         private constructor(
             private val description: JsonField<String>,
-            private val displayDate: JsonField<String>,
-            private val displayTime: JsonField<String>,
             private val location: JsonField<Location>,
+            private val timestamp: JsonField<Timestamp>,
             private val additionalProperties: MutableMap<String, JsonValue>,
         ) {
 
@@ -4650,16 +5159,13 @@ private constructor(
                 @JsonProperty("description")
                 @ExcludeMissing
                 description: JsonField<String> = JsonMissing.of(),
-                @JsonProperty("displayDate")
-                @ExcludeMissing
-                displayDate: JsonField<String> = JsonMissing.of(),
-                @JsonProperty("displayTime")
-                @ExcludeMissing
-                displayTime: JsonField<String> = JsonMissing.of(),
                 @JsonProperty("location")
                 @ExcludeMissing
                 location: JsonField<Location> = JsonMissing.of(),
-            ) : this(description, displayDate, displayTime, location, mutableMapOf())
+                @JsonProperty("timestamp")
+                @ExcludeMissing
+                timestamp: JsonField<Timestamp> = JsonMissing.of(),
+            ) : this(description, location, timestamp, mutableMapOf())
 
             /**
              * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type
@@ -4669,22 +5175,16 @@ private constructor(
 
             /**
              * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type
-             *   (e.g. if the server responded with an unexpected value).
-             */
-            fun displayDate(): Optional<String> = displayDate.getOptional("displayDate")
-
-            /**
-             * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type
-             *   (e.g. if the server responded with an unexpected value).
-             */
-            fun displayTime(): Optional<String> = displayTime.getOptional("displayTime")
-
-            /**
-             * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type
              *   or is unexpectedly missing or null (e.g. if the server responded with an unexpected
              *   value).
              */
             fun location(): Location = location.getRequired("location")
+
+            /**
+             * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type
+             *   (e.g. if the server responded with an unexpected value).
+             */
+            fun timestamp(): Optional<Timestamp> = timestamp.getOptional("timestamp")
 
             /**
              * Returns the raw JSON value of [description].
@@ -4697,26 +5197,6 @@ private constructor(
             fun _description(): JsonField<String> = description
 
             /**
-             * Returns the raw JSON value of [displayDate].
-             *
-             * Unlike [displayDate], this method doesn't throw if the JSON field has an unexpected
-             * type.
-             */
-            @JsonProperty("displayDate")
-            @ExcludeMissing
-            fun _displayDate(): JsonField<String> = displayDate
-
-            /**
-             * Returns the raw JSON value of [displayTime].
-             *
-             * Unlike [displayTime], this method doesn't throw if the JSON field has an unexpected
-             * type.
-             */
-            @JsonProperty("displayTime")
-            @ExcludeMissing
-            fun _displayTime(): JsonField<String> = displayTime
-
-            /**
              * Returns the raw JSON value of [location].
              *
              * Unlike [location], this method doesn't throw if the JSON field has an unexpected
@@ -4725,6 +5205,16 @@ private constructor(
             @JsonProperty("location")
             @ExcludeMissing
             fun _location(): JsonField<Location> = location
+
+            /**
+             * Returns the raw JSON value of [timestamp].
+             *
+             * Unlike [timestamp], this method doesn't throw if the JSON field has an unexpected
+             * type.
+             */
+            @JsonProperty("timestamp")
+            @ExcludeMissing
+            fun _timestamp(): JsonField<Timestamp> = timestamp
 
             @JsonAnySetter
             private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -4746,9 +5236,8 @@ private constructor(
                  * The following fields are required:
                  * ```java
                  * .description()
-                 * .displayDate()
-                 * .displayTime()
                  * .location()
+                 * .timestamp()
                  * ```
                  */
                 @JvmStatic fun builder() = Builder()
@@ -4758,17 +5247,15 @@ private constructor(
             class Builder internal constructor() {
 
                 private var description: JsonField<String>? = null
-                private var displayDate: JsonField<String>? = null
-                private var displayTime: JsonField<String>? = null
                 private var location: JsonField<Location>? = null
+                private var timestamp: JsonField<Timestamp>? = null
                 private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
                 @JvmSynthetic
                 internal fun from(trackingEvent: TrackingEvent) = apply {
                     description = trackingEvent.description
-                    displayDate = trackingEvent.displayDate
-                    displayTime = trackingEvent.displayTime
                     location = trackingEvent.location
+                    timestamp = trackingEvent.timestamp
                     additionalProperties = trackingEvent.additionalProperties.toMutableMap()
                 }
 
@@ -4790,42 +5277,6 @@ private constructor(
                     this.description = description
                 }
 
-                fun displayDate(displayDate: String?) =
-                    displayDate(JsonField.ofNullable(displayDate))
-
-                /** Alias for calling [Builder.displayDate] with `displayDate.orElse(null)`. */
-                fun displayDate(displayDate: Optional<String>) =
-                    displayDate(displayDate.getOrNull())
-
-                /**
-                 * Sets [Builder.displayDate] to an arbitrary JSON value.
-                 *
-                 * You should usually call [Builder.displayDate] with a well-typed [String] value
-                 * instead. This method is primarily for setting the field to an undocumented or not
-                 * yet supported value.
-                 */
-                fun displayDate(displayDate: JsonField<String>) = apply {
-                    this.displayDate = displayDate
-                }
-
-                fun displayTime(displayTime: String?) =
-                    displayTime(JsonField.ofNullable(displayTime))
-
-                /** Alias for calling [Builder.displayTime] with `displayTime.orElse(null)`. */
-                fun displayTime(displayTime: Optional<String>) =
-                    displayTime(displayTime.getOrNull())
-
-                /**
-                 * Sets [Builder.displayTime] to an arbitrary JSON value.
-                 *
-                 * You should usually call [Builder.displayTime] with a well-typed [String] value
-                 * instead. This method is primarily for setting the field to an undocumented or not
-                 * yet supported value.
-                 */
-                fun displayTime(displayTime: JsonField<String>) = apply {
-                    this.displayTime = displayTime
-                }
-
                 fun location(location: Location) = location(JsonField.of(location))
 
                 /**
@@ -4836,6 +5287,22 @@ private constructor(
                  * yet supported value.
                  */
                 fun location(location: JsonField<Location>) = apply { this.location = location }
+
+                fun timestamp(timestamp: Timestamp?) = timestamp(JsonField.ofNullable(timestamp))
+
+                /** Alias for calling [Builder.timestamp] with `timestamp.orElse(null)`. */
+                fun timestamp(timestamp: Optional<Timestamp>) = timestamp(timestamp.getOrNull())
+
+                /**
+                 * Sets [Builder.timestamp] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.timestamp] with a well-typed [Timestamp] value
+                 * instead. This method is primarily for setting the field to an undocumented or not
+                 * yet supported value.
+                 */
+                fun timestamp(timestamp: JsonField<Timestamp>) = apply {
+                    this.timestamp = timestamp
+                }
 
                 fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                     this.additionalProperties.clear()
@@ -4867,9 +5334,8 @@ private constructor(
                  * The following fields are required:
                  * ```java
                  * .description()
-                 * .displayDate()
-                 * .displayTime()
                  * .location()
+                 * .timestamp()
                  * ```
                  *
                  * @throws IllegalStateException if any required field is unset.
@@ -4877,9 +5343,8 @@ private constructor(
                 fun build(): TrackingEvent =
                     TrackingEvent(
                         checkRequired("description", description),
-                        checkRequired("displayDate", displayDate),
-                        checkRequired("displayTime", displayTime),
                         checkRequired("location", location),
+                        checkRequired("timestamp", timestamp),
                         additionalProperties.toMutableMap(),
                     )
             }
@@ -4892,9 +5357,8 @@ private constructor(
                 }
 
                 description()
-                displayDate()
-                displayTime()
                 location().validate()
+                timestamp().ifPresent { it.validate() }
                 validated = true
             }
 
@@ -4915,9 +5379,8 @@ private constructor(
             @JvmSynthetic
             internal fun validity(): Int =
                 (if (description.asKnown().isPresent) 1 else 0) +
-                    (if (displayDate.asKnown().isPresent) 1 else 0) +
-                    (if (displayTime.asKnown().isPresent) 1 else 0) +
-                    (location.asKnown().getOrNull()?.validity() ?: 0)
+                    (location.asKnown().getOrNull()?.validity() ?: 0) +
+                    (timestamp.asKnown().getOrNull()?.validity() ?: 0)
 
             class Location
             @JsonCreator(mode = JsonCreator.Mode.DISABLED)
@@ -5147,6 +5610,216 @@ private constructor(
                     "Location{city=$city, country=$country, province=$province, additionalProperties=$additionalProperties}"
             }
 
+            class Timestamp
+            @JsonCreator(mode = JsonCreator.Mode.DISABLED)
+            private constructor(
+                private val local: JsonField<String>,
+                private val utc: JsonField<OffsetDateTime>,
+                private val additionalProperties: MutableMap<String, JsonValue>,
+            ) {
+
+                @JsonCreator
+                private constructor(
+                    @JsonProperty("local")
+                    @ExcludeMissing
+                    local: JsonField<String> = JsonMissing.of(),
+                    @JsonProperty("utc")
+                    @ExcludeMissing
+                    utc: JsonField<OffsetDateTime> = JsonMissing.of(),
+                ) : this(local, utc, mutableMapOf())
+
+                /**
+                 * ISO 8601 string with timezone offset, e.g. "2025-02-05T17:02:00.000-05:00"
+                 *
+                 * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected
+                 *   type or is unexpectedly missing or null (e.g. if the server responded with an
+                 *   unexpected value).
+                 */
+                fun local(): String = local.getRequired("local")
+
+                /**
+                 * UTC timestamp
+                 *
+                 * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected
+                 *   type or is unexpectedly missing or null (e.g. if the server responded with an
+                 *   unexpected value).
+                 */
+                fun utc(): OffsetDateTime = utc.getRequired("utc")
+
+                /**
+                 * Returns the raw JSON value of [local].
+                 *
+                 * Unlike [local], this method doesn't throw if the JSON field has an unexpected
+                 * type.
+                 */
+                @JsonProperty("local") @ExcludeMissing fun _local(): JsonField<String> = local
+
+                /**
+                 * Returns the raw JSON value of [utc].
+                 *
+                 * Unlike [utc], this method doesn't throw if the JSON field has an unexpected type.
+                 */
+                @JsonProperty("utc") @ExcludeMissing fun _utc(): JsonField<OffsetDateTime> = utc
+
+                @JsonAnySetter
+                private fun putAdditionalProperty(key: String, value: JsonValue) {
+                    additionalProperties.put(key, value)
+                }
+
+                @JsonAnyGetter
+                @ExcludeMissing
+                fun _additionalProperties(): Map<String, JsonValue> =
+                    Collections.unmodifiableMap(additionalProperties)
+
+                fun toBuilder() = Builder().from(this)
+
+                companion object {
+
+                    /**
+                     * Returns a mutable builder for constructing an instance of [Timestamp].
+                     *
+                     * The following fields are required:
+                     * ```java
+                     * .local()
+                     * .utc()
+                     * ```
+                     */
+                    @JvmStatic fun builder() = Builder()
+                }
+
+                /** A builder for [Timestamp]. */
+                class Builder internal constructor() {
+
+                    private var local: JsonField<String>? = null
+                    private var utc: JsonField<OffsetDateTime>? = null
+                    private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
+
+                    @JvmSynthetic
+                    internal fun from(timestamp: Timestamp) = apply {
+                        local = timestamp.local
+                        utc = timestamp.utc
+                        additionalProperties = timestamp.additionalProperties.toMutableMap()
+                    }
+
+                    /**
+                     * ISO 8601 string with timezone offset, e.g. "2025-02-05T17:02:00.000-05:00"
+                     */
+                    fun local(local: String) = local(JsonField.of(local))
+
+                    /**
+                     * Sets [Builder.local] to an arbitrary JSON value.
+                     *
+                     * You should usually call [Builder.local] with a well-typed [String] value
+                     * instead. This method is primarily for setting the field to an undocumented or
+                     * not yet supported value.
+                     */
+                    fun local(local: JsonField<String>) = apply { this.local = local }
+
+                    /** UTC timestamp */
+                    fun utc(utc: OffsetDateTime) = utc(JsonField.of(utc))
+
+                    /**
+                     * Sets [Builder.utc] to an arbitrary JSON value.
+                     *
+                     * You should usually call [Builder.utc] with a well-typed [OffsetDateTime]
+                     * value instead. This method is primarily for setting the field to an
+                     * undocumented or not yet supported value.
+                     */
+                    fun utc(utc: JsonField<OffsetDateTime>) = apply { this.utc = utc }
+
+                    fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                        this.additionalProperties.clear()
+                        putAllAdditionalProperties(additionalProperties)
+                    }
+
+                    fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+                        additionalProperties.put(key, value)
+                    }
+
+                    fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+                        apply {
+                            this.additionalProperties.putAll(additionalProperties)
+                        }
+
+                    fun removeAdditionalProperty(key: String) = apply {
+                        additionalProperties.remove(key)
+                    }
+
+                    fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                        keys.forEach(::removeAdditionalProperty)
+                    }
+
+                    /**
+                     * Returns an immutable instance of [Timestamp].
+                     *
+                     * Further updates to this [Builder] will not mutate the returned instance.
+                     *
+                     * The following fields are required:
+                     * ```java
+                     * .local()
+                     * .utc()
+                     * ```
+                     *
+                     * @throws IllegalStateException if any required field is unset.
+                     */
+                    fun build(): Timestamp =
+                        Timestamp(
+                            checkRequired("local", local),
+                            checkRequired("utc", utc),
+                            additionalProperties.toMutableMap(),
+                        )
+                }
+
+                private var validated: Boolean = false
+
+                fun validate(): Timestamp = apply {
+                    if (validated) {
+                        return@apply
+                    }
+
+                    local()
+                    utc()
+                    validated = true
+                }
+
+                fun isValid(): Boolean =
+                    try {
+                        validate()
+                        true
+                    } catch (e: CheckoutIntentsInvalidDataException) {
+                        false
+                    }
+
+                /**
+                 * Returns a score indicating how many valid values are contained in this object
+                 * recursively.
+                 *
+                 * Used for best match union deserialization.
+                 */
+                @JvmSynthetic
+                internal fun validity(): Int =
+                    (if (local.asKnown().isPresent) 1 else 0) +
+                        (if (utc.asKnown().isPresent) 1 else 0)
+
+                override fun equals(other: Any?): Boolean {
+                    if (this === other) {
+                        return true
+                    }
+
+                    return other is Timestamp &&
+                        local == other.local &&
+                        utc == other.utc &&
+                        additionalProperties == other.additionalProperties
+                }
+
+                private val hashCode: Int by lazy { Objects.hash(local, utc, additionalProperties) }
+
+                override fun hashCode(): Int = hashCode
+
+                override fun toString() =
+                    "Timestamp{local=$local, utc=$utc, additionalProperties=$additionalProperties}"
+            }
+
             override fun equals(other: Any?): Boolean {
                 if (this === other) {
                     return true
@@ -5154,20 +5827,19 @@ private constructor(
 
                 return other is TrackingEvent &&
                     description == other.description &&
-                    displayDate == other.displayDate &&
-                    displayTime == other.displayTime &&
                     location == other.location &&
+                    timestamp == other.timestamp &&
                     additionalProperties == other.additionalProperties
             }
 
             private val hashCode: Int by lazy {
-                Objects.hash(description, displayDate, displayTime, location, additionalProperties)
+                Objects.hash(description, location, timestamp, additionalProperties)
             }
 
             override fun hashCode(): Int = hashCode
 
             override fun toString() =
-                "TrackingEvent{description=$description, displayDate=$displayDate, displayTime=$displayTime, location=$location, additionalProperties=$additionalProperties}"
+                "TrackingEvent{description=$description, location=$location, timestamp=$timestamp, additionalProperties=$additionalProperties}"
         }
 
         override fun equals(other: Any?): Boolean {

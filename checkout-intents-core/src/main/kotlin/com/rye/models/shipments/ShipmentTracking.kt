@@ -23,7 +23,7 @@ class ShipmentTracking
 private constructor(
     private val number: JsonField<String>,
     private val carrierName: JsonField<String>,
-    private val estimatedDeliveryDate: JsonField<OffsetDateTime>,
+    private val deliveryDate: JsonField<DeliveryDate>,
     private val url: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
@@ -34,11 +34,11 @@ private constructor(
         @JsonProperty("carrierName")
         @ExcludeMissing
         carrierName: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("estimatedDeliveryDate")
+        @JsonProperty("deliveryDate")
         @ExcludeMissing
-        estimatedDeliveryDate: JsonField<OffsetDateTime> = JsonMissing.of(),
+        deliveryDate: JsonField<DeliveryDate> = JsonMissing.of(),
         @JsonProperty("url") @ExcludeMissing url: JsonField<String> = JsonMissing.of(),
-    ) : this(number, carrierName, estimatedDeliveryDate, url, mutableMapOf())
+    ) : this(number, carrierName, deliveryDate, url, mutableMapOf())
 
     /**
      * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type (e.g. if
@@ -56,8 +56,7 @@ private constructor(
      * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type (e.g. if
      *   the server responded with an unexpected value).
      */
-    fun estimatedDeliveryDate(): Optional<OffsetDateTime> =
-        estimatedDeliveryDate.getOptional("estimatedDeliveryDate")
+    fun deliveryDate(): Optional<DeliveryDate> = deliveryDate.getOptional("deliveryDate")
 
     /**
      * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type (e.g. if
@@ -80,14 +79,13 @@ private constructor(
     @JsonProperty("carrierName") @ExcludeMissing fun _carrierName(): JsonField<String> = carrierName
 
     /**
-     * Returns the raw JSON value of [estimatedDeliveryDate].
+     * Returns the raw JSON value of [deliveryDate].
      *
-     * Unlike [estimatedDeliveryDate], this method doesn't throw if the JSON field has an unexpected
-     * type.
+     * Unlike [deliveryDate], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("estimatedDeliveryDate")
+    @JsonProperty("deliveryDate")
     @ExcludeMissing
-    fun _estimatedDeliveryDate(): JsonField<OffsetDateTime> = estimatedDeliveryDate
+    fun _deliveryDate(): JsonField<DeliveryDate> = deliveryDate
 
     /**
      * Returns the raw JSON value of [url].
@@ -126,7 +124,7 @@ private constructor(
 
         private var number: JsonField<String>? = null
         private var carrierName: JsonField<String> = JsonMissing.of()
-        private var estimatedDeliveryDate: JsonField<OffsetDateTime> = JsonMissing.of()
+        private var deliveryDate: JsonField<DeliveryDate> = JsonMissing.of()
         private var url: JsonField<String> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
@@ -134,7 +132,7 @@ private constructor(
         internal fun from(shipmentTracking: ShipmentTracking) = apply {
             number = shipmentTracking.number
             carrierName = shipmentTracking.carrierName
-            estimatedDeliveryDate = shipmentTracking.estimatedDeliveryDate
+            deliveryDate = shipmentTracking.deliveryDate
             url = shipmentTracking.url
             additionalProperties = shipmentTracking.additionalProperties.toMutableMap()
         }
@@ -166,25 +164,22 @@ private constructor(
          */
         fun carrierName(carrierName: JsonField<String>) = apply { this.carrierName = carrierName }
 
-        fun estimatedDeliveryDate(estimatedDeliveryDate: OffsetDateTime?) =
-            estimatedDeliveryDate(JsonField.ofNullable(estimatedDeliveryDate))
+        fun deliveryDate(deliveryDate: DeliveryDate?) =
+            deliveryDate(JsonField.ofNullable(deliveryDate))
+
+        /** Alias for calling [Builder.deliveryDate] with `deliveryDate.orElse(null)`. */
+        fun deliveryDate(deliveryDate: Optional<DeliveryDate>) =
+            deliveryDate(deliveryDate.getOrNull())
 
         /**
-         * Alias for calling [Builder.estimatedDeliveryDate] with
-         * `estimatedDeliveryDate.orElse(null)`.
-         */
-        fun estimatedDeliveryDate(estimatedDeliveryDate: Optional<OffsetDateTime>) =
-            estimatedDeliveryDate(estimatedDeliveryDate.getOrNull())
-
-        /**
-         * Sets [Builder.estimatedDeliveryDate] to an arbitrary JSON value.
+         * Sets [Builder.deliveryDate] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.estimatedDeliveryDate] with a well-typed
-         * [OffsetDateTime] value instead. This method is primarily for setting the field to an
-         * undocumented or not yet supported value.
+         * You should usually call [Builder.deliveryDate] with a well-typed [DeliveryDate] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun estimatedDeliveryDate(estimatedDeliveryDate: JsonField<OffsetDateTime>) = apply {
-            this.estimatedDeliveryDate = estimatedDeliveryDate
+        fun deliveryDate(deliveryDate: JsonField<DeliveryDate>) = apply {
+            this.deliveryDate = deliveryDate
         }
 
         fun url(url: String?) = url(JsonField.ofNullable(url))
@@ -235,7 +230,7 @@ private constructor(
             ShipmentTracking(
                 checkRequired("number", number),
                 carrierName,
-                estimatedDeliveryDate,
+                deliveryDate,
                 url,
                 additionalProperties.toMutableMap(),
             )
@@ -250,7 +245,7 @@ private constructor(
 
         number()
         carrierName()
-        estimatedDeliveryDate()
+        deliveryDate().ifPresent { it.validate() }
         url()
         validated = true
     }
@@ -272,8 +267,171 @@ private constructor(
     internal fun validity(): Int =
         (if (number.asKnown().isPresent) 1 else 0) +
             (if (carrierName.asKnown().isPresent) 1 else 0) +
-            (if (estimatedDeliveryDate.asKnown().isPresent) 1 else 0) +
+            (deliveryDate.asKnown().getOrNull()?.validity() ?: 0) +
             (if (url.asKnown().isPresent) 1 else 0)
+
+    class DeliveryDate
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
+    private constructor(
+        private val estimated: JsonField<OffsetDateTime>,
+        private val additionalProperties: MutableMap<String, JsonValue>,
+    ) {
+
+        @JsonCreator
+        private constructor(
+            @JsonProperty("estimated")
+            @ExcludeMissing
+            estimated: JsonField<OffsetDateTime> = JsonMissing.of()
+        ) : this(estimated, mutableMapOf())
+
+        /**
+         * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type or
+         *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
+         *   value).
+         */
+        fun estimated(): OffsetDateTime = estimated.getRequired("estimated")
+
+        /**
+         * Returns the raw JSON value of [estimated].
+         *
+         * Unlike [estimated], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("estimated")
+        @ExcludeMissing
+        fun _estimated(): JsonField<OffsetDateTime> = estimated
+
+        @JsonAnySetter
+        private fun putAdditionalProperty(key: String, value: JsonValue) {
+            additionalProperties.put(key, value)
+        }
+
+        @JsonAnyGetter
+        @ExcludeMissing
+        fun _additionalProperties(): Map<String, JsonValue> =
+            Collections.unmodifiableMap(additionalProperties)
+
+        fun toBuilder() = Builder().from(this)
+
+        companion object {
+
+            /**
+             * Returns a mutable builder for constructing an instance of [DeliveryDate].
+             *
+             * The following fields are required:
+             * ```java
+             * .estimated()
+             * ```
+             */
+            @JvmStatic fun builder() = Builder()
+        }
+
+        /** A builder for [DeliveryDate]. */
+        class Builder internal constructor() {
+
+            private var estimated: JsonField<OffsetDateTime>? = null
+            private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
+
+            @JvmSynthetic
+            internal fun from(deliveryDate: DeliveryDate) = apply {
+                estimated = deliveryDate.estimated
+                additionalProperties = deliveryDate.additionalProperties.toMutableMap()
+            }
+
+            fun estimated(estimated: OffsetDateTime) = estimated(JsonField.of(estimated))
+
+            /**
+             * Sets [Builder.estimated] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.estimated] with a well-typed [OffsetDateTime] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun estimated(estimated: JsonField<OffsetDateTime>) = apply {
+                this.estimated = estimated
+            }
+
+            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                this.additionalProperties.clear()
+                putAllAdditionalProperties(additionalProperties)
+            }
+
+            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+                additionalProperties.put(key, value)
+            }
+
+            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                this.additionalProperties.putAll(additionalProperties)
+            }
+
+            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+
+            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                keys.forEach(::removeAdditionalProperty)
+            }
+
+            /**
+             * Returns an immutable instance of [DeliveryDate].
+             *
+             * Further updates to this [Builder] will not mutate the returned instance.
+             *
+             * The following fields are required:
+             * ```java
+             * .estimated()
+             * ```
+             *
+             * @throws IllegalStateException if any required field is unset.
+             */
+            fun build(): DeliveryDate =
+                DeliveryDate(
+                    checkRequired("estimated", estimated),
+                    additionalProperties.toMutableMap(),
+                )
+        }
+
+        private var validated: Boolean = false
+
+        fun validate(): DeliveryDate = apply {
+            if (validated) {
+                return@apply
+            }
+
+            estimated()
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: CheckoutIntentsInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic internal fun validity(): Int = (if (estimated.asKnown().isPresent) 1 else 0)
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is DeliveryDate &&
+                estimated == other.estimated &&
+                additionalProperties == other.additionalProperties
+        }
+
+        private val hashCode: Int by lazy { Objects.hash(estimated, additionalProperties) }
+
+        override fun hashCode(): Int = hashCode
+
+        override fun toString() =
+            "DeliveryDate{estimated=$estimated, additionalProperties=$additionalProperties}"
+    }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
@@ -283,17 +441,17 @@ private constructor(
         return other is ShipmentTracking &&
             number == other.number &&
             carrierName == other.carrierName &&
-            estimatedDeliveryDate == other.estimatedDeliveryDate &&
+            deliveryDate == other.deliveryDate &&
             url == other.url &&
             additionalProperties == other.additionalProperties
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(number, carrierName, estimatedDeliveryDate, url, additionalProperties)
+        Objects.hash(number, carrierName, deliveryDate, url, additionalProperties)
     }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "ShipmentTracking{number=$number, carrierName=$carrierName, estimatedDeliveryDate=$estimatedDeliveryDate, url=$url, additionalProperties=$additionalProperties}"
+        "ShipmentTracking{number=$number, carrierName=$carrierName, deliveryDate=$deliveryDate, url=$url, additionalProperties=$additionalProperties}"
 }
