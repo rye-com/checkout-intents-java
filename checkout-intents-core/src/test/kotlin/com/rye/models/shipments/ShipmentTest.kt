@@ -29,15 +29,17 @@ internal class ShipmentTest {
                     ShipmentTracking.builder()
                         .number("number")
                         .carrierName("carrierName")
-                        .estimatedDeliveryDate(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .deliveryDate(
+                            ShipmentTracking.DeliveryDate.builder()
+                                .estimated(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                .build()
+                        )
                         .url("url")
                         .build()
                 )
                 .addTrackingEvent(
                     Shipment.WithStatusBaseShipmentWithTrackingShipped.TrackingEvent.builder()
                         .description("description")
-                        .displayDate("displayDate")
-                        .displayTime("displayTime")
                         .location(
                             Shipment.WithStatusBaseShipmentWithTrackingShipped.TrackingEvent
                                 .Location
@@ -45,6 +47,14 @@ internal class ShipmentTest {
                                 .city("city")
                                 .country("country")
                                 .province("province")
+                                .build()
+                        )
+                        .timestamp(
+                            Shipment.WithStatusBaseShipmentWithTrackingShipped.TrackingEvent
+                                .Timestamp
+                                .builder()
+                                .local("local")
+                                .utc(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                                 .build()
                         )
                         .build()
@@ -82,15 +92,17 @@ internal class ShipmentTest {
                         ShipmentTracking.builder()
                             .number("number")
                             .carrierName("carrierName")
-                            .estimatedDeliveryDate(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .deliveryDate(
+                                ShipmentTracking.DeliveryDate.builder()
+                                    .estimated(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                    .build()
+                            )
                             .url("url")
                             .build()
                     )
                     .addTrackingEvent(
                         Shipment.WithStatusBaseShipmentWithTrackingShipped.TrackingEvent.builder()
                             .description("description")
-                            .displayDate("displayDate")
-                            .displayTime("displayTime")
                             .location(
                                 Shipment.WithStatusBaseShipmentWithTrackingShipped.TrackingEvent
                                     .Location
@@ -98,6 +110,14 @@ internal class ShipmentTest {
                                     .city("city")
                                     .country("country")
                                     .province("province")
+                                    .build()
+                            )
+                            .timestamp(
+                                Shipment.WithStatusBaseShipmentWithTrackingShipped.TrackingEvent
+                                    .Timestamp
+                                    .builder()
+                                    .local("local")
+                                    .utc(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                                     .build()
                             )
                             .build()
@@ -130,20 +150,28 @@ internal class ShipmentTest {
                     ShipmentTracking.builder()
                         .number("number")
                         .carrierName("carrierName")
-                        .estimatedDeliveryDate(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .deliveryDate(
+                            ShipmentTracking.DeliveryDate.builder()
+                                .estimated(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                .build()
+                        )
                         .url("url")
                         .build()
                 )
                 .addTrackingEvent(
                     Shipment.DeliveredShipment.TrackingEvent.builder()
                         .description("description")
-                        .displayDate("displayDate")
-                        .displayTime("displayTime")
                         .location(
                             Shipment.DeliveredShipment.TrackingEvent.Location.builder()
                                 .city("city")
                                 .country("country")
                                 .province("province")
+                                .build()
+                        )
+                        .timestamp(
+                            Shipment.DeliveredShipment.TrackingEvent.Timestamp.builder()
+                                .local("local")
+                                .utc(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                                 .build()
                         )
                         .build()
@@ -178,20 +206,28 @@ internal class ShipmentTest {
                         ShipmentTracking.builder()
                             .number("number")
                             .carrierName("carrierName")
-                            .estimatedDeliveryDate(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .deliveryDate(
+                                ShipmentTracking.DeliveryDate.builder()
+                                    .estimated(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                    .build()
+                            )
                             .url("url")
                             .build()
                     )
                     .addTrackingEvent(
                         Shipment.DeliveredShipment.TrackingEvent.builder()
                             .description("description")
-                            .displayDate("displayDate")
-                            .displayTime("displayTime")
                             .location(
                                 Shipment.DeliveredShipment.TrackingEvent.Location.builder()
                                     .city("city")
                                     .country("country")
                                     .province("province")
+                                    .build()
+                            )
+                            .timestamp(
+                                Shipment.DeliveredShipment.TrackingEvent.Timestamp.builder()
+                                    .local("local")
+                                    .utc(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                                     .build()
                             )
                             .build()
@@ -223,15 +259,17 @@ internal class ShipmentTest {
                     ShipmentTracking.builder()
                         .number("number")
                         .carrierName("carrierName")
-                        .estimatedDeliveryDate(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .deliveryDate(
+                            ShipmentTracking.DeliveryDate.builder()
+                                .estimated(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                .build()
+                        )
                         .url("url")
                         .build()
                 )
                 .addTrackingEvent(
                     Shipment.WithStatusBaseShipmentWithTrackingDelayed.TrackingEvent.builder()
                         .description("description")
-                        .displayDate("displayDate")
-                        .displayTime("displayTime")
                         .location(
                             Shipment.WithStatusBaseShipmentWithTrackingDelayed.TrackingEvent
                                 .Location
@@ -239,6 +277,14 @@ internal class ShipmentTest {
                                 .city("city")
                                 .country("country")
                                 .province("province")
+                                .build()
+                        )
+                        .timestamp(
+                            Shipment.WithStatusBaseShipmentWithTrackingDelayed.TrackingEvent
+                                .Timestamp
+                                .builder()
+                                .local("local")
+                                .utc(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                                 .build()
                         )
                         .build()
@@ -276,15 +322,17 @@ internal class ShipmentTest {
                         ShipmentTracking.builder()
                             .number("number")
                             .carrierName("carrierName")
-                            .estimatedDeliveryDate(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .deliveryDate(
+                                ShipmentTracking.DeliveryDate.builder()
+                                    .estimated(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                    .build()
+                            )
                             .url("url")
                             .build()
                     )
                     .addTrackingEvent(
                         Shipment.WithStatusBaseShipmentWithTrackingDelayed.TrackingEvent.builder()
                             .description("description")
-                            .displayDate("displayDate")
-                            .displayTime("displayTime")
                             .location(
                                 Shipment.WithStatusBaseShipmentWithTrackingDelayed.TrackingEvent
                                     .Location
@@ -292,6 +340,14 @@ internal class ShipmentTest {
                                     .city("city")
                                     .country("country")
                                     .province("province")
+                                    .build()
+                            )
+                            .timestamp(
+                                Shipment.WithStatusBaseShipmentWithTrackingDelayed.TrackingEvent
+                                    .Timestamp
+                                    .builder()
+                                    .local("local")
+                                    .utc(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                                     .build()
                             )
                             .build()
@@ -326,7 +382,11 @@ internal class ShipmentTest {
                     ShipmentTracking.builder()
                         .number("number")
                         .carrierName("carrierName")
-                        .estimatedDeliveryDate(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .deliveryDate(
+                            ShipmentTracking.DeliveryDate.builder()
+                                .estimated(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                .build()
+                        )
                         .url("url")
                         .build()
                 )
@@ -334,8 +394,6 @@ internal class ShipmentTest {
                     Shipment.WithStatusBaseShipmentWithTrackingOutForDelivery.TrackingEvent
                         .builder()
                         .description("description")
-                        .displayDate("displayDate")
-                        .displayTime("displayTime")
                         .location(
                             Shipment.WithStatusBaseShipmentWithTrackingOutForDelivery.TrackingEvent
                                 .Location
@@ -343,6 +401,14 @@ internal class ShipmentTest {
                                 .city("city")
                                 .country("country")
                                 .province("province")
+                                .build()
+                        )
+                        .timestamp(
+                            Shipment.WithStatusBaseShipmentWithTrackingOutForDelivery.TrackingEvent
+                                .Timestamp
+                                .builder()
+                                .local("local")
+                                .utc(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                                 .build()
                         )
                         .build()
@@ -383,7 +449,11 @@ internal class ShipmentTest {
                         ShipmentTracking.builder()
                             .number("number")
                             .carrierName("carrierName")
-                            .estimatedDeliveryDate(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .deliveryDate(
+                                ShipmentTracking.DeliveryDate.builder()
+                                    .estimated(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                    .build()
+                            )
                             .url("url")
                             .build()
                     )
@@ -391,8 +461,6 @@ internal class ShipmentTest {
                         Shipment.WithStatusBaseShipmentWithTrackingOutForDelivery.TrackingEvent
                             .builder()
                             .description("description")
-                            .displayDate("displayDate")
-                            .displayTime("displayTime")
                             .location(
                                 Shipment.WithStatusBaseShipmentWithTrackingOutForDelivery
                                     .TrackingEvent
@@ -401,6 +469,15 @@ internal class ShipmentTest {
                                     .city("city")
                                     .country("country")
                                     .province("province")
+                                    .build()
+                            )
+                            .timestamp(
+                                Shipment.WithStatusBaseShipmentWithTrackingOutForDelivery
+                                    .TrackingEvent
+                                    .Timestamp
+                                    .builder()
+                                    .local("local")
+                                    .utc(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                                     .build()
                             )
                             .build()

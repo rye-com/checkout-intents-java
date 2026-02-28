@@ -16,14 +16,22 @@ internal class ShipmentTrackingTest {
             ShipmentTracking.builder()
                 .number("number")
                 .carrierName("carrierName")
-                .estimatedDeliveryDate(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .deliveryDate(
+                    ShipmentTracking.DeliveryDate.builder()
+                        .estimated(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .build()
+                )
                 .url("url")
                 .build()
 
         assertThat(shipmentTracking.number()).contains("number")
         assertThat(shipmentTracking.carrierName()).contains("carrierName")
-        assertThat(shipmentTracking.estimatedDeliveryDate())
-            .contains(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+        assertThat(shipmentTracking.deliveryDate())
+            .contains(
+                ShipmentTracking.DeliveryDate.builder()
+                    .estimated(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .build()
+            )
         assertThat(shipmentTracking.url()).contains("url")
     }
 
@@ -34,7 +42,11 @@ internal class ShipmentTrackingTest {
             ShipmentTracking.builder()
                 .number("number")
                 .carrierName("carrierName")
-                .estimatedDeliveryDate(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .deliveryDate(
+                    ShipmentTracking.DeliveryDate.builder()
+                        .estimated(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .build()
+                )
                 .url("url")
                 .build()
 
