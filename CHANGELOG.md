@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.4.1 (2026-02-28)
+
+Full Changelog: [v0.4.0...v0.4.1](https://github.com/rye-com/checkout-intents-java/compare/v0.4.0...v0.4.1)
+
+### Chores
+
+* **internal:** improvements ([ffa4360](https://github.com/rye-com/checkout-intents-java/commit/ffa43601e5702847d22f7e87e35a2a844a3fd402))
+
 ## 0.4.0 (2026-02-27)
 
 Full Changelog: [v0.3.0...v0.4.0](https://github.com/rye-com/checkout-intents-java/compare/v0.3.0...v0.4.0)
