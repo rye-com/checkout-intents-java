@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.5.0 (2026-03-02)
+
+Full Changelog: [v0.4.1...v0.5.0](https://github.com/rye-com/checkout-intents-java/compare/v0.4.1...v0.5.0)
+
+### Features
+
+* add variant types and wire through extraction pipeline (RYE-6876) ([a88692b](https://github.com/rye-com/checkout-intents-java/commit/a88692b88db64238f0d2b4696d73f2e01afc44c6))
+
 ## 0.4.1 (2026-02-28)
 
 Full Changelog: [v0.4.0...v0.4.1](https://github.com/rye-com/checkout-intents-java/compare/v0.4.0...v0.4.1)
