@@ -14,8 +14,6 @@ import com.rye.services.async.CheckoutIntentServiceAsync
 import com.rye.services.async.CheckoutIntentServiceAsyncImpl
 import com.rye.services.async.ProductServiceAsync
 import com.rye.services.async.ProductServiceAsyncImpl
-import com.rye.services.async.ShipmentServiceAsync
-import com.rye.services.async.ShipmentServiceAsyncImpl
 import java.util.function.Consumer
 
 class CheckoutIntentsClientAsyncImpl(private val clientOptions: ClientOptions) :
@@ -50,10 +48,6 @@ class CheckoutIntentsClientAsyncImpl(private val clientOptions: ClientOptions) :
         ProductServiceAsyncImpl(clientOptionsWithUserAgent)
     }
 
-    private val shipments: ShipmentServiceAsync by lazy {
-        ShipmentServiceAsyncImpl(clientOptionsWithUserAgent)
-    }
-
     private val billing: BillingServiceAsync by lazy {
         BillingServiceAsyncImpl(clientOptionsWithUserAgent)
     }
@@ -74,8 +68,6 @@ class CheckoutIntentsClientAsyncImpl(private val clientOptions: ClientOptions) :
     override fun brands(): BrandServiceAsync = brands
 
     override fun products(): ProductServiceAsync = products
-
-    override fun shipments(): ShipmentServiceAsync = shipments
 
     override fun billing(): BillingServiceAsync = billing
 
@@ -100,10 +92,6 @@ class CheckoutIntentsClientAsyncImpl(private val clientOptions: ClientOptions) :
             ProductServiceAsyncImpl.WithRawResponseImpl(clientOptions)
         }
 
-        private val shipments: ShipmentServiceAsync.WithRawResponse by lazy {
-            ShipmentServiceAsyncImpl.WithRawResponseImpl(clientOptions)
-        }
-
         private val billing: BillingServiceAsync.WithRawResponse by lazy {
             BillingServiceAsyncImpl.WithRawResponseImpl(clientOptions)
         }
@@ -122,8 +110,6 @@ class CheckoutIntentsClientAsyncImpl(private val clientOptions: ClientOptions) :
         override fun brands(): BrandServiceAsync.WithRawResponse = brands
 
         override fun products(): ProductServiceAsync.WithRawResponse = products
-
-        override fun shipments(): ShipmentServiceAsync.WithRawResponse = shipments
 
         override fun billing(): BillingServiceAsync.WithRawResponse = billing
     }

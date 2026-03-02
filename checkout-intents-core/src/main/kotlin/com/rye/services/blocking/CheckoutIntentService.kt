@@ -15,7 +15,6 @@ import com.rye.models.checkoutintents.CheckoutIntentListParams
 import com.rye.models.checkoutintents.CheckoutIntentPurchaseParams
 import com.rye.models.checkoutintents.CheckoutIntentRetrieveParams
 import com.rye.models.checkoutintents.PollOptions
-import com.rye.services.blocking.checkoutintents.ShipmentService
 import java.util.function.Consumer
 
 interface CheckoutIntentService {
@@ -31,8 +30,6 @@ interface CheckoutIntentService {
      * The original service is not modified.
      */
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): CheckoutIntentService
-
-    fun shipments(): ShipmentService
 
     /** Create a checkout intent with the given request body. */
     fun create(params: CheckoutIntentCreateParams): CheckoutIntent =
@@ -283,8 +280,6 @@ interface CheckoutIntentService {
         fun withOptions(
             modifier: Consumer<ClientOptions.Builder>
         ): CheckoutIntentService.WithRawResponse
-
-        fun shipments(): ShipmentService.WithRawResponse
 
         /**
          * Returns a raw HTTP response for `post /api/v1/checkout-intents`, but is otherwise the
