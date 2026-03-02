@@ -8,7 +8,6 @@ import com.rye.services.blocking.BillingService
 import com.rye.services.blocking.BrandService
 import com.rye.services.blocking.CheckoutIntentService
 import com.rye.services.blocking.ProductService
-import com.rye.services.blocking.ShipmentService
 import java.util.function.Consumer
 
 /**
@@ -55,8 +54,6 @@ interface CheckoutIntentsClient {
 
     fun products(): ProductService
 
-    fun shipments(): ShipmentService
-
     fun billing(): BillingService
 
     /**
@@ -93,8 +90,6 @@ interface CheckoutIntentsClient {
         fun brands(): BrandService.WithRawResponse
 
         fun products(): ProductService.WithRawResponse
-
-        fun shipments(): ShipmentService.WithRawResponse
 
         fun billing(): BillingService.WithRawResponse
     }
