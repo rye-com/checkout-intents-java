@@ -3,10 +3,8 @@
 package com.rye.models.products
 
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
-import com.rye.core.JsonValue
 import com.rye.core.jsonMapper
 import com.rye.models.checkoutintents.Money
-import kotlin.jvm.optionals.getOrNull
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -31,28 +29,6 @@ internal class ProductTest {
                 .price(Money.builder().amountSubunits(1500).currencyCode("USD").build())
                 .sku("SKU-12345")
                 .url("https://example.com/products/widget-pro")
-                .addVariantDimension(
-                    Product.VariantDimension.builder().name("name").addValue("string").build()
-                )
-                .addVariant(
-                    Product.Variant.builder()
-                        .attributes(
-                            Product.Variant.Attributes.builder()
-                                .putAdditionalProperty("foo", JsonValue.from("string"))
-                                .build()
-                        )
-                        .availability(ProductAvailability.IN_STOCK)
-                        .addImage(
-                            ProductImage.builder()
-                                .isFeatured(true)
-                                .url("https://example.com/images/product-123.jpg")
-                                .build()
-                        )
-                        .name("name")
-                        .price(Money.builder().amountSubunits(1500).currencyCode("USD").build())
-                        .sku("sku")
-                        .build()
-                )
                 .build()
 
         assertThat(product.id()).isEqualTo("amazon.com:B0DFC9MT8Q")
@@ -73,30 +49,6 @@ internal class ProductTest {
             .isEqualTo(Money.builder().amountSubunits(1500).currencyCode("USD").build())
         assertThat(product.sku()).contains("SKU-12345")
         assertThat(product.url()).isEqualTo("https://example.com/products/widget-pro")
-        assertThat(product.variantDimensions().getOrNull())
-            .containsExactly(
-                Product.VariantDimension.builder().name("name").addValue("string").build()
-            )
-        assertThat(product.variants().getOrNull())
-            .containsExactly(
-                Product.Variant.builder()
-                    .attributes(
-                        Product.Variant.Attributes.builder()
-                            .putAdditionalProperty("foo", JsonValue.from("string"))
-                            .build()
-                    )
-                    .availability(ProductAvailability.IN_STOCK)
-                    .addImage(
-                        ProductImage.builder()
-                            .isFeatured(true)
-                            .url("https://example.com/images/product-123.jpg")
-                            .build()
-                    )
-                    .name("name")
-                    .price(Money.builder().amountSubunits(1500).currencyCode("USD").build())
-                    .sku("sku")
-                    .build()
-            )
     }
 
     @Test
@@ -119,28 +71,6 @@ internal class ProductTest {
                 .price(Money.builder().amountSubunits(1500).currencyCode("USD").build())
                 .sku("SKU-12345")
                 .url("https://example.com/products/widget-pro")
-                .addVariantDimension(
-                    Product.VariantDimension.builder().name("name").addValue("string").build()
-                )
-                .addVariant(
-                    Product.Variant.builder()
-                        .attributes(
-                            Product.Variant.Attributes.builder()
-                                .putAdditionalProperty("foo", JsonValue.from("string"))
-                                .build()
-                        )
-                        .availability(ProductAvailability.IN_STOCK)
-                        .addImage(
-                            ProductImage.builder()
-                                .isFeatured(true)
-                                .url("https://example.com/images/product-123.jpg")
-                                .build()
-                        )
-                        .name("name")
-                        .price(Money.builder().amountSubunits(1500).currencyCode("USD").build())
-                        .sku("sku")
-                        .build()
-                )
                 .build()
 
         val roundtrippedProduct =
