@@ -25,8 +25,6 @@ import com.rye.models.checkoutintents.CheckoutIntentListPageResponse
 import com.rye.models.checkoutintents.CheckoutIntentListParams
 import com.rye.models.checkoutintents.CheckoutIntentPurchaseParams
 import com.rye.models.checkoutintents.CheckoutIntentRetrieveParams
-import com.rye.services.blocking.checkoutintents.ShipmentService
-import com.rye.services.blocking.checkoutintents.ShipmentServiceImpl
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 
@@ -37,14 +35,10 @@ class CheckoutIntentServiceImpl internal constructor(private val clientOptions: 
         WithRawResponseImpl(clientOptions)
     }
 
-    private val shipments: ShipmentService by lazy { ShipmentServiceImpl(clientOptions) }
-
     override fun withRawResponse(): CheckoutIntentService.WithRawResponse = withRawResponse
 
     override fun withOptions(modifier: Consumer<ClientOptions.Builder>): CheckoutIntentService =
         CheckoutIntentServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
-
-    override fun shipments(): ShipmentService = shipments
 
     override fun create(
         params: CheckoutIntentCreateParams,
@@ -94,18 +88,12 @@ class CheckoutIntentServiceImpl internal constructor(private val clientOptions: 
         private val errorHandler: Handler<HttpResponse> =
             errorHandler(errorBodyHandler(clientOptions.jsonMapper))
 
-        private val shipments: ShipmentService.WithRawResponse by lazy {
-            ShipmentServiceImpl.WithRawResponseImpl(clientOptions)
-        }
-
         override fun withOptions(
             modifier: Consumer<ClientOptions.Builder>
         ): CheckoutIntentService.WithRawResponse =
             CheckoutIntentServiceImpl.WithRawResponseImpl(
                 clientOptions.toBuilder().apply(modifier::accept).build()
             )
-
-        override fun shipments(): ShipmentService.WithRawResponse = shipments
 
         private val createHandler: Handler<CheckoutIntent> =
             jsonHandler<CheckoutIntent>(clientOptions.jsonMapper)
