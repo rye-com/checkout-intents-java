@@ -13,6 +13,7 @@ import com.rye.models.checkoutintents.CheckoutIntentListPageAsync
 import com.rye.models.checkoutintents.CheckoutIntentListParams
 import com.rye.models.checkoutintents.CheckoutIntentPurchaseParams
 import com.rye.models.checkoutintents.CheckoutIntentRetrieveParams
+import com.rye.services.async.checkoutintents.ShipmentServiceAsync
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 
@@ -29,6 +30,8 @@ interface CheckoutIntentServiceAsync {
      * The original service is not modified.
      */
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): CheckoutIntentServiceAsync
+
+    fun shipments(): ShipmentServiceAsync
 
     /** Create a checkout intent with the given request body. */
     fun create(params: CheckoutIntentCreateParams): CompletableFuture<CheckoutIntent> =
@@ -183,6 +186,8 @@ interface CheckoutIntentServiceAsync {
         fun withOptions(
             modifier: Consumer<ClientOptions.Builder>
         ): CheckoutIntentServiceAsync.WithRawResponse
+
+        fun shipments(): ShipmentServiceAsync.WithRawResponse
 
         /**
          * Returns a raw HTTP response for `post /api/v1/checkout-intents`, but is otherwise the
