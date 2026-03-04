@@ -459,8 +459,12 @@ private constructor(
          */
         fun url(url: JsonField<String>) = apply { this.url = url }
 
-        fun variantDimensions(variantDimensions: List<VariantDimension>) =
-            variantDimensions(JsonField.of(variantDimensions))
+        fun variantDimensions(variantDimensions: List<VariantDimension>?) =
+            variantDimensions(JsonField.ofNullable(variantDimensions))
+
+        /** Alias for calling [Builder.variantDimensions] with `variantDimensions.orElse(null)`. */
+        fun variantDimensions(variantDimensions: Optional<List<VariantDimension>>) =
+            variantDimensions(variantDimensions.getOrNull())
 
         /**
          * Sets [Builder.variantDimensions] to an arbitrary JSON value.
@@ -485,7 +489,10 @@ private constructor(
                 }
         }
 
-        fun variants(variants: List<Variant>) = variants(JsonField.of(variants))
+        fun variants(variants: List<Variant>?) = variants(JsonField.ofNullable(variants))
+
+        /** Alias for calling [Builder.variants] with `variants.orElse(null)`. */
+        fun variants(variants: Optional<List<Variant>>) = variants(variants.getOrNull())
 
         /**
          * Sets [Builder.variants] to an arbitrary JSON value.
