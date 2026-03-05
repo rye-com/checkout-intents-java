@@ -32,7 +32,7 @@ internal class ProductTest {
                 .sku("SKU-12345")
                 .url("https://example.com/products/widget-pro")
                 .addVariantDimension(
-                    Product.VariantDimension.builder().name("name").addValue("string").build()
+                    Product.VariantDimension.builder().label("label").addValue("string").build()
                 )
                 .addVariant(
                     Product.Variant.builder()
@@ -76,7 +76,7 @@ internal class ProductTest {
         assertThat(product.url()).isEqualTo("https://example.com/products/widget-pro")
         assertThat(product.variantDimensions().getOrNull())
             .containsExactly(
-                Product.VariantDimension.builder().name("name").addValue("string").build()
+                Product.VariantDimension.builder().label("label").addValue("string").build()
             )
         assertThat(product.variants().getOrNull())
             .containsExactly(
@@ -122,7 +122,7 @@ internal class ProductTest {
                 .sku("SKU-12345")
                 .url("https://example.com/products/widget-pro")
                 .addVariantDimension(
-                    Product.VariantDimension.builder().name("name").addValue("string").build()
+                    Product.VariantDimension.builder().label("label").addValue("string").build()
                 )
                 .addVariant(
                     Product.Variant.builder()

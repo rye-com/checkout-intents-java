@@ -629,25 +629,25 @@ private constructor(
     class VariantDimension
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
-        private val name: JsonField<String>,
+        private val label: JsonField<String>,
         private val values: JsonField<List<String>>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
 
         @JsonCreator
         private constructor(
-            @JsonProperty("name") @ExcludeMissing name: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("label") @ExcludeMissing label: JsonField<String> = JsonMissing.of(),
             @JsonProperty("values")
             @ExcludeMissing
             values: JsonField<List<String>> = JsonMissing.of(),
-        ) : this(name, values, mutableMapOf())
+        ) : this(label, values, mutableMapOf())
 
         /**
          * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type or
          *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
          *   value).
          */
-        fun name(): String = name.getRequired("name")
+        fun label(): String = label.getRequired("label")
 
         /**
          * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type or
@@ -657,11 +657,11 @@ private constructor(
         fun values(): List<String> = values.getRequired("values")
 
         /**
-         * Returns the raw JSON value of [name].
+         * Returns the raw JSON value of [label].
          *
-         * Unlike [name], this method doesn't throw if the JSON field has an unexpected type.
+         * Unlike [label], this method doesn't throw if the JSON field has an unexpected type.
          */
-        @JsonProperty("name") @ExcludeMissing fun _name(): JsonField<String> = name
+        @JsonProperty("label") @ExcludeMissing fun _label(): JsonField<String> = label
 
         /**
          * Returns the raw JSON value of [values].
@@ -689,7 +689,7 @@ private constructor(
              *
              * The following fields are required:
              * ```java
-             * .name()
+             * .label()
              * .values()
              * ```
              */
@@ -699,27 +699,27 @@ private constructor(
         /** A builder for [VariantDimension]. */
         class Builder internal constructor() {
 
-            private var name: JsonField<String>? = null
+            private var label: JsonField<String>? = null
             private var values: JsonField<MutableList<String>>? = null
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
             internal fun from(variantDimension: VariantDimension) = apply {
-                name = variantDimension.name
+                label = variantDimension.label
                 values = variantDimension.values.map { it.toMutableList() }
                 additionalProperties = variantDimension.additionalProperties.toMutableMap()
             }
 
-            fun name(name: String) = name(JsonField.of(name))
+            fun label(label: String) = label(JsonField.of(label))
 
             /**
-             * Sets [Builder.name] to an arbitrary JSON value.
+             * Sets [Builder.label] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.name] with a well-typed [String] value instead. This
-             * method is primarily for setting the field to an undocumented or not yet supported
-             * value.
+             * You should usually call [Builder.label] with a well-typed [String] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
              */
-            fun name(name: JsonField<String>) = apply { this.name = name }
+            fun label(label: JsonField<String>) = apply { this.label = label }
 
             fun values(values: List<String>) = values(JsonField.of(values))
 
@@ -772,7 +772,7 @@ private constructor(
              *
              * The following fields are required:
              * ```java
-             * .name()
+             * .label()
              * .values()
              * ```
              *
@@ -780,7 +780,7 @@ private constructor(
              */
             fun build(): VariantDimension =
                 VariantDimension(
-                    checkRequired("name", name),
+                    checkRequired("label", label),
                     checkRequired("values", values).map { it.toImmutable() },
                     additionalProperties.toMutableMap(),
                 )
@@ -793,7 +793,7 @@ private constructor(
                 return@apply
             }
 
-            name()
+            label()
             values()
             validated = true
         }
@@ -814,7 +814,7 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            (if (name.asKnown().isPresent) 1 else 0) + (values.asKnown().getOrNull()?.size ?: 0)
+            (if (label.asKnown().isPresent) 1 else 0) + (values.asKnown().getOrNull()?.size ?: 0)
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -822,17 +822,17 @@ private constructor(
             }
 
             return other is VariantDimension &&
-                name == other.name &&
+                label == other.label &&
                 values == other.values &&
                 additionalProperties == other.additionalProperties
         }
 
-        private val hashCode: Int by lazy { Objects.hash(name, values, additionalProperties) }
+        private val hashCode: Int by lazy { Objects.hash(label, values, additionalProperties) }
 
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "VariantDimension{name=$name, values=$values, additionalProperties=$additionalProperties}"
+            "VariantDimension{label=$label, values=$values, additionalProperties=$additionalProperties}"
     }
 
     class Variant
