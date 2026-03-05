@@ -3,9 +3,9 @@
 package com.rye.models.products
 
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
-import com.rye.core.JsonValue
 import com.rye.core.jsonMapper
 import com.rye.models.checkoutintents.Money
+import com.rye.models.checkoutintents.VariantSelection
 import kotlin.jvm.optionals.getOrNull
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -36,12 +36,13 @@ internal class ProductTest {
                 )
                 .addVariant(
                     Product.Variant.builder()
-                        .attributes(
-                            Product.Variant.Attributes.builder()
-                                .putAdditionalProperty("foo", JsonValue.from("string"))
+                        .availability(ProductAvailability.IN_STOCK)
+                        .addDimension(
+                            VariantSelection.builder()
+                                .label("Size, Color, etc.")
+                                .value("Small, Red, XS, L, etc.")
                                 .build()
                         )
-                        .availability(ProductAvailability.IN_STOCK)
                         .addImage(
                             ProductImage.builder()
                                 .isFeatured(true)
@@ -80,12 +81,13 @@ internal class ProductTest {
         assertThat(product.variants().getOrNull())
             .containsExactly(
                 Product.Variant.builder()
-                    .attributes(
-                        Product.Variant.Attributes.builder()
-                            .putAdditionalProperty("foo", JsonValue.from("string"))
+                    .availability(ProductAvailability.IN_STOCK)
+                    .addDimension(
+                        VariantSelection.builder()
+                            .label("Size, Color, etc.")
+                            .value("Small, Red, XS, L, etc.")
                             .build()
                     )
-                    .availability(ProductAvailability.IN_STOCK)
                     .addImage(
                         ProductImage.builder()
                             .isFeatured(true)
@@ -124,12 +126,13 @@ internal class ProductTest {
                 )
                 .addVariant(
                     Product.Variant.builder()
-                        .attributes(
-                            Product.Variant.Attributes.builder()
-                                .putAdditionalProperty("foo", JsonValue.from("string"))
+                        .availability(ProductAvailability.IN_STOCK)
+                        .addDimension(
+                            VariantSelection.builder()
+                                .label("Size, Color, etc.")
+                                .value("Small, Red, XS, L, etc.")
                                 .build()
                         )
-                        .availability(ProductAvailability.IN_STOCK)
                         .addImage(
                             ProductImage.builder()
                                 .isFeatured(true)
