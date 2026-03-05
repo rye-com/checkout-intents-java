@@ -15,6 +15,7 @@ import com.rye.core.checkRequired
 import com.rye.core.toImmutable
 import com.rye.errors.CheckoutIntentsInvalidDataException
 import com.rye.models.checkoutintents.Money
+import com.rye.models.checkoutintents.VariantSelection
 import java.util.Collections
 import java.util.Objects
 import java.util.Optional
@@ -837,8 +838,8 @@ private constructor(
     class Variant
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
-        private val attributes: JsonField<Attributes>,
         private val availability: JsonField<ProductAvailability>,
+        private val dimensions: JsonField<List<VariantSelection>>,
         private val images: JsonField<List<ProductImage>>,
         private val name: JsonField<String>,
         private val price: JsonField<Money>,
@@ -848,28 +849,19 @@ private constructor(
 
         @JsonCreator
         private constructor(
-            @JsonProperty("attributes")
-            @ExcludeMissing
-            attributes: JsonField<Attributes> = JsonMissing.of(),
             @JsonProperty("availability")
             @ExcludeMissing
             availability: JsonField<ProductAvailability> = JsonMissing.of(),
+            @JsonProperty("dimensions")
+            @ExcludeMissing
+            dimensions: JsonField<List<VariantSelection>> = JsonMissing.of(),
             @JsonProperty("images")
             @ExcludeMissing
             images: JsonField<List<ProductImage>> = JsonMissing.of(),
             @JsonProperty("name") @ExcludeMissing name: JsonField<String> = JsonMissing.of(),
             @JsonProperty("price") @ExcludeMissing price: JsonField<Money> = JsonMissing.of(),
             @JsonProperty("sku") @ExcludeMissing sku: JsonField<String> = JsonMissing.of(),
-        ) : this(attributes, availability, images, name, price, sku, mutableMapOf())
-
-        /**
-         * Construct a type with a set of properties K of type T
-         *
-         * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type or
-         *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
-         *   value).
-         */
-        fun attributes(): Attributes = attributes.getRequired("attributes")
+        ) : this(availability, dimensions, images, name, price, sku, mutableMapOf())
 
         /**
          * The availability status of a product.
@@ -884,6 +876,13 @@ private constructor(
          *   value).
          */
         fun availability(): ProductAvailability = availability.getRequired("availability")
+
+        /**
+         * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type or
+         *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
+         *   value).
+         */
+        fun dimensions(): List<VariantSelection> = dimensions.getRequired("dimensions")
 
         /**
          * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type or
@@ -912,15 +911,6 @@ private constructor(
         fun sku(): Optional<String> = sku.getOptional("sku")
 
         /**
-         * Returns the raw JSON value of [attributes].
-         *
-         * Unlike [attributes], this method doesn't throw if the JSON field has an unexpected type.
-         */
-        @JsonProperty("attributes")
-        @ExcludeMissing
-        fun _attributes(): JsonField<Attributes> = attributes
-
-        /**
          * Returns the raw JSON value of [availability].
          *
          * Unlike [availability], this method doesn't throw if the JSON field has an unexpected
@@ -929,6 +919,15 @@ private constructor(
         @JsonProperty("availability")
         @ExcludeMissing
         fun _availability(): JsonField<ProductAvailability> = availability
+
+        /**
+         * Returns the raw JSON value of [dimensions].
+         *
+         * Unlike [dimensions], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("dimensions")
+        @ExcludeMissing
+        fun _dimensions(): JsonField<List<VariantSelection>> = dimensions
 
         /**
          * Returns the raw JSON value of [images].
@@ -979,8 +978,8 @@ private constructor(
              *
              * The following fields are required:
              * ```java
-             * .attributes()
              * .availability()
+             * .dimensions()
              * .images()
              * .name()
              * .price()
@@ -993,8 +992,8 @@ private constructor(
         /** A builder for [Variant]. */
         class Builder internal constructor() {
 
-            private var attributes: JsonField<Attributes>? = null
             private var availability: JsonField<ProductAvailability>? = null
+            private var dimensions: JsonField<MutableList<VariantSelection>>? = null
             private var images: JsonField<MutableList<ProductImage>>? = null
             private var name: JsonField<String>? = null
             private var price: JsonField<Money>? = null
@@ -1003,27 +1002,13 @@ private constructor(
 
             @JvmSynthetic
             internal fun from(variant: Variant) = apply {
-                attributes = variant.attributes
                 availability = variant.availability
+                dimensions = variant.dimensions.map { it.toMutableList() }
                 images = variant.images.map { it.toMutableList() }
                 name = variant.name
                 price = variant.price
                 sku = variant.sku
                 additionalProperties = variant.additionalProperties.toMutableMap()
-            }
-
-            /** Construct a type with a set of properties K of type T */
-            fun attributes(attributes: Attributes) = attributes(JsonField.of(attributes))
-
-            /**
-             * Sets [Builder.attributes] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.attributes] with a well-typed [Attributes] value
-             * instead. This method is primarily for setting the field to an undocumented or not yet
-             * supported value.
-             */
-            fun attributes(attributes: JsonField<Attributes>) = apply {
-                this.attributes = attributes
             }
 
             /**
@@ -1046,6 +1031,32 @@ private constructor(
              */
             fun availability(availability: JsonField<ProductAvailability>) = apply {
                 this.availability = availability
+            }
+
+            fun dimensions(dimensions: List<VariantSelection>) =
+                dimensions(JsonField.of(dimensions))
+
+            /**
+             * Sets [Builder.dimensions] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.dimensions] with a well-typed
+             * `List<VariantSelection>` value instead. This method is primarily for setting the
+             * field to an undocumented or not yet supported value.
+             */
+            fun dimensions(dimensions: JsonField<List<VariantSelection>>) = apply {
+                this.dimensions = dimensions.map { it.toMutableList() }
+            }
+
+            /**
+             * Adds a single [VariantSelection] to [dimensions].
+             *
+             * @throws IllegalStateException if the field was previously set to a non-list.
+             */
+            fun addDimension(dimension: VariantSelection) = apply {
+                dimensions =
+                    (dimensions ?: JsonField.of(mutableListOf())).also {
+                        checkKnown("dimensions", it).add(dimension)
+                    }
             }
 
             fun images(images: List<ProductImage>) = images(JsonField.of(images))
@@ -1138,8 +1149,8 @@ private constructor(
              *
              * The following fields are required:
              * ```java
-             * .attributes()
              * .availability()
+             * .dimensions()
              * .images()
              * .name()
              * .price()
@@ -1150,8 +1161,8 @@ private constructor(
              */
             fun build(): Variant =
                 Variant(
-                    checkRequired("attributes", attributes),
                     checkRequired("availability", availability),
+                    checkRequired("dimensions", dimensions).map { it.toImmutable() },
                     checkRequired("images", images).map { it.toImmutable() },
                     checkRequired("name", name),
                     checkRequired("price", price),
@@ -1167,8 +1178,8 @@ private constructor(
                 return@apply
             }
 
-            attributes().validate()
             availability().validate()
+            dimensions().forEach { it.validate() }
             images().forEach { it.validate() }
             name()
             price().validate()
@@ -1192,115 +1203,12 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            (attributes.asKnown().getOrNull()?.validity() ?: 0) +
-                (availability.asKnown().getOrNull()?.validity() ?: 0) +
+            (availability.asKnown().getOrNull()?.validity() ?: 0) +
+                (dimensions.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
                 (images.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
                 (if (name.asKnown().isPresent) 1 else 0) +
                 (price.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (sku.asKnown().isPresent) 1 else 0)
-
-        /** Construct a type with a set of properties K of type T */
-        class Attributes
-        @JsonCreator
-        private constructor(
-            @com.fasterxml.jackson.annotation.JsonValue
-            private val additionalProperties: Map<String, JsonValue>
-        ) {
-
-            @JsonAnyGetter
-            @ExcludeMissing
-            fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
-
-            fun toBuilder() = Builder().from(this)
-
-            companion object {
-
-                /** Returns a mutable builder for constructing an instance of [Attributes]. */
-                @JvmStatic fun builder() = Builder()
-            }
-
-            /** A builder for [Attributes]. */
-            class Builder internal constructor() {
-
-                private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
-
-                @JvmSynthetic
-                internal fun from(attributes: Attributes) = apply {
-                    additionalProperties = attributes.additionalProperties.toMutableMap()
-                }
-
-                fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                    this.additionalProperties.clear()
-                    putAllAdditionalProperties(additionalProperties)
-                }
-
-                fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-                    additionalProperties.put(key, value)
-                }
-
-                fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
-                    apply {
-                        this.additionalProperties.putAll(additionalProperties)
-                    }
-
-                fun removeAdditionalProperty(key: String) = apply {
-                    additionalProperties.remove(key)
-                }
-
-                fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-                    keys.forEach(::removeAdditionalProperty)
-                }
-
-                /**
-                 * Returns an immutable instance of [Attributes].
-                 *
-                 * Further updates to this [Builder] will not mutate the returned instance.
-                 */
-                fun build(): Attributes = Attributes(additionalProperties.toImmutable())
-            }
-
-            private var validated: Boolean = false
-
-            fun validate(): Attributes = apply {
-                if (validated) {
-                    return@apply
-                }
-
-                validated = true
-            }
-
-            fun isValid(): Boolean =
-                try {
-                    validate()
-                    true
-                } catch (e: CheckoutIntentsInvalidDataException) {
-                    false
-                }
-
-            /**
-             * Returns a score indicating how many valid values are contained in this object
-             * recursively.
-             *
-             * Used for best match union deserialization.
-             */
-            @JvmSynthetic
-            internal fun validity(): Int =
-                additionalProperties.count { (_, value) -> !value.isNull() && !value.isMissing() }
-
-            override fun equals(other: Any?): Boolean {
-                if (this === other) {
-                    return true
-                }
-
-                return other is Attributes && additionalProperties == other.additionalProperties
-            }
-
-            private val hashCode: Int by lazy { Objects.hash(additionalProperties) }
-
-            override fun hashCode(): Int = hashCode
-
-            override fun toString() = "Attributes{additionalProperties=$additionalProperties}"
-        }
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -1308,8 +1216,8 @@ private constructor(
             }
 
             return other is Variant &&
-                attributes == other.attributes &&
                 availability == other.availability &&
+                dimensions == other.dimensions &&
                 images == other.images &&
                 name == other.name &&
                 price == other.price &&
@@ -1318,13 +1226,13 @@ private constructor(
         }
 
         private val hashCode: Int by lazy {
-            Objects.hash(attributes, availability, images, name, price, sku, additionalProperties)
+            Objects.hash(availability, dimensions, images, name, price, sku, additionalProperties)
         }
 
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Variant{attributes=$attributes, availability=$availability, images=$images, name=$name, price=$price, sku=$sku, additionalProperties=$additionalProperties}"
+            "Variant{availability=$availability, dimensions=$dimensions, images=$images, name=$name, price=$price, sku=$sku, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {
