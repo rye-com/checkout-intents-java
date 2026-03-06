@@ -32,10 +32,10 @@ internal class ProductTest {
                 .sku("SKU-12345")
                 .url("https://example.com/products/widget-pro")
                 .addVariantDimension(
-                    Product.VariantDimension.builder().label("label").addValue("string").build()
+                    VariantDimension.builder().label("label").addValue("string").build()
                 )
                 .addVariant(
-                    Product.Variant.builder()
+                    ProductVariant.builder()
                         .availability(ProductAvailability.IN_STOCK)
                         .addDimension(
                             VariantSelection.builder()
@@ -75,12 +75,10 @@ internal class ProductTest {
         assertThat(product.sku()).contains("SKU-12345")
         assertThat(product.url()).isEqualTo("https://example.com/products/widget-pro")
         assertThat(product.variantDimensions().getOrNull())
-            .containsExactly(
-                Product.VariantDimension.builder().label("label").addValue("string").build()
-            )
+            .containsExactly(VariantDimension.builder().label("label").addValue("string").build())
         assertThat(product.variants().getOrNull())
             .containsExactly(
-                Product.Variant.builder()
+                ProductVariant.builder()
                     .availability(ProductAvailability.IN_STOCK)
                     .addDimension(
                         VariantSelection.builder()
@@ -122,10 +120,10 @@ internal class ProductTest {
                 .sku("SKU-12345")
                 .url("https://example.com/products/widget-pro")
                 .addVariantDimension(
-                    Product.VariantDimension.builder().label("label").addValue("string").build()
+                    VariantDimension.builder().label("label").addValue("string").build()
                 )
                 .addVariant(
-                    Product.Variant.builder()
+                    ProductVariant.builder()
                         .availability(ProductAvailability.IN_STOCK)
                         .addDimension(
                             VariantSelection.builder()
