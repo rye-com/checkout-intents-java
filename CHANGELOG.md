@@ -1,5 +1,31 @@
 # Changelog
 
+## 0.5.0 (2026-03-06)
+
+Full Changelog: [v0.4.1...v0.5.0](https://github.com/rye-com/checkout-intents-java/compare/v0.4.1...v0.5.0)
+
+### Features
+
+* Add variant models to Stainless SDK config ([495a420](https://github.com/rye-com/checkout-intents-java/commit/495a420eaf8e18f20354d133bdd11de4cebf54ea))
+* add variant types and wire through extraction pipeline (RYE-6876) ([a88692b](https://github.com/rye-com/checkout-intents-java/commit/a88692b88db64238f0d2b4696d73f2e01afc44c6))
+* Cut 1x Firestore read from offer retrieval ([ef8dc0b](https://github.com/rye-com/checkout-intents-java/commit/ef8dc0b5d531e4d52a7c025eb552a71acf0560a3))
+* expose Shopify variants and extract ProductGroup variants from JSON-LD (RYE-6878) ([c2f45aa](https://github.com/rye-com/checkout-intents-java/commit/c2f45aa577c3348b75a74d8429bc07e8e351780c))
+* rename ProductVariant.attributes to dimensions ([a92c28b](https://github.com/rye-com/checkout-intents-java/commit/a92c28b801266093a24279d77af77f2dfdacfeb8))
+
+
+### Bug Fixes
+
+* handle [@type](https://github.com/type) array and AggregateOffer array in JSON-LD parser ([4256ba4](https://github.com/rye-com/checkout-intents-java/commit/4256ba4c2c614ea8376e4da16d2536fdb7eba1c8))
+* **internal:** formatting ([e693b89](https://github.com/rye-com/checkout-intents-java/commit/e693b89a9260ea5746fa53cc42e6dfd1267f1a48))
+* rename VariantDimension.name to label for consistency with VariantSelection ([09e7c5f](https://github.com/rye-com/checkout-intents-java/commit/09e7c5fa41465e7a8503c8b99d4cba01987df6e2))
+
+
+### Chores
+
+* **internal:** bump palantir-java-format ([32cb5c9](https://github.com/rye-com/checkout-intents-java/commit/32cb5c96593d0588575919e9e82b888cade500b8))
+* **internal:** codegen related update ([c4faf24](https://github.com/rye-com/checkout-intents-java/commit/c4faf24f6f7cdea7574072014e994de8147dddc7))
+* **internal:** improvements ([b396721](https://github.com/rye-com/checkout-intents-java/commit/b396721eb8599a7ebe9ba9342770839674713283))
+
 ## 0.4.1 (2026-02-28)
 
 Full Changelog: [v0.4.0...v0.4.1](https://github.com/rye-com/checkout-intents-java/compare/v0.4.0...v0.4.1)
