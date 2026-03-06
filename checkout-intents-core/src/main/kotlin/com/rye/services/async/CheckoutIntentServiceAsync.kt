@@ -14,7 +14,6 @@ import com.rye.models.checkoutintents.CheckoutIntentListParams
 import com.rye.models.checkoutintents.CheckoutIntentPurchaseParams
 import com.rye.models.checkoutintents.CheckoutIntentRetrieveParams
 import com.rye.models.checkoutintents.PollOptions
-
 import com.rye.services.async.checkoutintents.ShipmentServiceAsync
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
