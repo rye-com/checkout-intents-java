@@ -15,7 +15,6 @@ import com.rye.core.checkRequired
 import com.rye.core.toImmutable
 import com.rye.errors.CheckoutIntentsInvalidDataException
 import com.rye.models.checkoutintents.Money
-import com.rye.models.checkoutintents.VariantSelection
 import java.util.Collections
 import java.util.Objects
 import java.util.Optional
@@ -35,7 +34,7 @@ private constructor(
     private val sku: JsonField<String>,
     private val url: JsonField<String>,
     private val variantDimensions: JsonField<List<VariantDimension>>,
-    private val variants: JsonField<List<Variant>>,
+    private val variants: JsonField<List<ProductVariant>>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -64,7 +63,7 @@ private constructor(
         variantDimensions: JsonField<List<VariantDimension>> = JsonMissing.of(),
         @JsonProperty("variants")
         @ExcludeMissing
-        variants: JsonField<List<Variant>> = JsonMissing.of(),
+        variants: JsonField<List<ProductVariant>> = JsonMissing.of(),
     ) : this(
         id,
         availability,
@@ -159,7 +158,7 @@ private constructor(
      * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type (e.g. if
      *   the server responded with an unexpected value).
      */
-    fun variants(): Optional<List<Variant>> = variants.getOptional("variants")
+    fun variants(): Optional<List<ProductVariant>> = variants.getOptional("variants")
 
     /**
      * Returns the raw JSON value of [id].
@@ -250,7 +249,9 @@ private constructor(
      *
      * Unlike [variants], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("variants") @ExcludeMissing fun _variants(): JsonField<List<Variant>> = variants
+    @JsonProperty("variants")
+    @ExcludeMissing
+    fun _variants(): JsonField<List<ProductVariant>> = variants
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -300,7 +301,7 @@ private constructor(
         private var sku: JsonField<String>? = null
         private var url: JsonField<String>? = null
         private var variantDimensions: JsonField<MutableList<VariantDimension>>? = null
-        private var variants: JsonField<MutableList<Variant>>? = null
+        private var variants: JsonField<MutableList<ProductVariant>>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -490,28 +491,28 @@ private constructor(
                 }
         }
 
-        fun variants(variants: List<Variant>?) = variants(JsonField.ofNullable(variants))
+        fun variants(variants: List<ProductVariant>?) = variants(JsonField.ofNullable(variants))
 
         /** Alias for calling [Builder.variants] with `variants.orElse(null)`. */
-        fun variants(variants: Optional<List<Variant>>) = variants(variants.getOrNull())
+        fun variants(variants: Optional<List<ProductVariant>>) = variants(variants.getOrNull())
 
         /**
          * Sets [Builder.variants] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.variants] with a well-typed `List<Variant>` value
+         * You should usually call [Builder.variants] with a well-typed `List<ProductVariant>` value
          * instead. This method is primarily for setting the field to an undocumented or not yet
          * supported value.
          */
-        fun variants(variants: JsonField<List<Variant>>) = apply {
+        fun variants(variants: JsonField<List<ProductVariant>>) = apply {
             this.variants = variants.map { it.toMutableList() }
         }
 
         /**
-         * Adds a single [Variant] to [variants].
+         * Adds a single [ProductVariant] to [variants].
          *
          * @throws IllegalStateException if the field was previously set to a non-list.
          */
-        fun addVariant(variant: Variant) = apply {
+        fun addVariant(variant: ProductVariant) = apply {
             variants =
                 (variants ?: JsonField.of(mutableListOf())).also {
                     checkKnown("variants", it).add(variant)
@@ -625,615 +626,6 @@ private constructor(
             (if (url.asKnown().isPresent) 1 else 0) +
             (variantDimensions.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
             (variants.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0)
-
-    class VariantDimension
-    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
-    private constructor(
-        private val label: JsonField<String>,
-        private val values: JsonField<List<String>>,
-        private val additionalProperties: MutableMap<String, JsonValue>,
-    ) {
-
-        @JsonCreator
-        private constructor(
-            @JsonProperty("label") @ExcludeMissing label: JsonField<String> = JsonMissing.of(),
-            @JsonProperty("values")
-            @ExcludeMissing
-            values: JsonField<List<String>> = JsonMissing.of(),
-        ) : this(label, values, mutableMapOf())
-
-        /**
-         * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type or
-         *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
-         *   value).
-         */
-        fun label(): String = label.getRequired("label")
-
-        /**
-         * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type or
-         *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
-         *   value).
-         */
-        fun values(): List<String> = values.getRequired("values")
-
-        /**
-         * Returns the raw JSON value of [label].
-         *
-         * Unlike [label], this method doesn't throw if the JSON field has an unexpected type.
-         */
-        @JsonProperty("label") @ExcludeMissing fun _label(): JsonField<String> = label
-
-        /**
-         * Returns the raw JSON value of [values].
-         *
-         * Unlike [values], this method doesn't throw if the JSON field has an unexpected type.
-         */
-        @JsonProperty("values") @ExcludeMissing fun _values(): JsonField<List<String>> = values
-
-        @JsonAnySetter
-        private fun putAdditionalProperty(key: String, value: JsonValue) {
-            additionalProperties.put(key, value)
-        }
-
-        @JsonAnyGetter
-        @ExcludeMissing
-        fun _additionalProperties(): Map<String, JsonValue> =
-            Collections.unmodifiableMap(additionalProperties)
-
-        fun toBuilder() = Builder().from(this)
-
-        companion object {
-
-            /**
-             * Returns a mutable builder for constructing an instance of [VariantDimension].
-             *
-             * The following fields are required:
-             * ```java
-             * .label()
-             * .values()
-             * ```
-             */
-            @JvmStatic fun builder() = Builder()
-        }
-
-        /** A builder for [VariantDimension]. */
-        class Builder internal constructor() {
-
-            private var label: JsonField<String>? = null
-            private var values: JsonField<MutableList<String>>? = null
-            private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
-
-            @JvmSynthetic
-            internal fun from(variantDimension: VariantDimension) = apply {
-                label = variantDimension.label
-                values = variantDimension.values.map { it.toMutableList() }
-                additionalProperties = variantDimension.additionalProperties.toMutableMap()
-            }
-
-            fun label(label: String) = label(JsonField.of(label))
-
-            /**
-             * Sets [Builder.label] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.label] with a well-typed [String] value instead.
-             * This method is primarily for setting the field to an undocumented or not yet
-             * supported value.
-             */
-            fun label(label: JsonField<String>) = apply { this.label = label }
-
-            fun values(values: List<String>) = values(JsonField.of(values))
-
-            /**
-             * Sets [Builder.values] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.values] with a well-typed `List<String>` value
-             * instead. This method is primarily for setting the field to an undocumented or not yet
-             * supported value.
-             */
-            fun values(values: JsonField<List<String>>) = apply {
-                this.values = values.map { it.toMutableList() }
-            }
-
-            /**
-             * Adds a single [String] to [values].
-             *
-             * @throws IllegalStateException if the field was previously set to a non-list.
-             */
-            fun addValue(value: String) = apply {
-                values =
-                    (values ?: JsonField.of(mutableListOf())).also {
-                        checkKnown("values", it).add(value)
-                    }
-            }
-
-            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.clear()
-                putAllAdditionalProperties(additionalProperties)
-            }
-
-            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-                additionalProperties.put(key, value)
-            }
-
-            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.putAll(additionalProperties)
-            }
-
-            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
-
-            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-                keys.forEach(::removeAdditionalProperty)
-            }
-
-            /**
-             * Returns an immutable instance of [VariantDimension].
-             *
-             * Further updates to this [Builder] will not mutate the returned instance.
-             *
-             * The following fields are required:
-             * ```java
-             * .label()
-             * .values()
-             * ```
-             *
-             * @throws IllegalStateException if any required field is unset.
-             */
-            fun build(): VariantDimension =
-                VariantDimension(
-                    checkRequired("label", label),
-                    checkRequired("values", values).map { it.toImmutable() },
-                    additionalProperties.toMutableMap(),
-                )
-        }
-
-        private var validated: Boolean = false
-
-        fun validate(): VariantDimension = apply {
-            if (validated) {
-                return@apply
-            }
-
-            label()
-            values()
-            validated = true
-        }
-
-        fun isValid(): Boolean =
-            try {
-                validate()
-                true
-            } catch (e: CheckoutIntentsInvalidDataException) {
-                false
-            }
-
-        /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
-         *
-         * Used for best match union deserialization.
-         */
-        @JvmSynthetic
-        internal fun validity(): Int =
-            (if (label.asKnown().isPresent) 1 else 0) + (values.asKnown().getOrNull()?.size ?: 0)
-
-        override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
-
-            return other is VariantDimension &&
-                label == other.label &&
-                values == other.values &&
-                additionalProperties == other.additionalProperties
-        }
-
-        private val hashCode: Int by lazy { Objects.hash(label, values, additionalProperties) }
-
-        override fun hashCode(): Int = hashCode
-
-        override fun toString() =
-            "VariantDimension{label=$label, values=$values, additionalProperties=$additionalProperties}"
-    }
-
-    class Variant
-    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
-    private constructor(
-        private val availability: JsonField<ProductAvailability>,
-        private val dimensions: JsonField<List<VariantSelection>>,
-        private val images: JsonField<List<ProductImage>>,
-        private val name: JsonField<String>,
-        private val price: JsonField<Money>,
-        private val sku: JsonField<String>,
-        private val additionalProperties: MutableMap<String, JsonValue>,
-    ) {
-
-        @JsonCreator
-        private constructor(
-            @JsonProperty("availability")
-            @ExcludeMissing
-            availability: JsonField<ProductAvailability> = JsonMissing.of(),
-            @JsonProperty("dimensions")
-            @ExcludeMissing
-            dimensions: JsonField<List<VariantSelection>> = JsonMissing.of(),
-            @JsonProperty("images")
-            @ExcludeMissing
-            images: JsonField<List<ProductImage>> = JsonMissing.of(),
-            @JsonProperty("name") @ExcludeMissing name: JsonField<String> = JsonMissing.of(),
-            @JsonProperty("price") @ExcludeMissing price: JsonField<Money> = JsonMissing.of(),
-            @JsonProperty("sku") @ExcludeMissing sku: JsonField<String> = JsonMissing.of(),
-        ) : this(availability, dimensions, images, name, price, sku, mutableMapOf())
-
-        /**
-         * The availability status of a product.
-         * - `in_stock`: Product is available for immediate purchase
-         * - `out_of_stock`: Product is currently unavailable
-         * - `preorder`: Product is available for pre-order before release
-         * - `backorder`: Product is temporarily out of stock but can be ordered
-         * - `unknown`: Availability could not be determined
-         *
-         * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type or
-         *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
-         *   value).
-         */
-        fun availability(): ProductAvailability = availability.getRequired("availability")
-
-        /**
-         * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type or
-         *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
-         *   value).
-         */
-        fun dimensions(): List<VariantSelection> = dimensions.getRequired("dimensions")
-
-        /**
-         * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type or
-         *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
-         *   value).
-         */
-        fun images(): List<ProductImage> = images.getRequired("images")
-
-        /**
-         * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type
-         *   (e.g. if the server responded with an unexpected value).
-         */
-        fun name(): Optional<String> = name.getOptional("name")
-
-        /**
-         * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type or
-         *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
-         *   value).
-         */
-        fun price(): Money = price.getRequired("price")
-
-        /**
-         * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type
-         *   (e.g. if the server responded with an unexpected value).
-         */
-        fun sku(): Optional<String> = sku.getOptional("sku")
-
-        /**
-         * Returns the raw JSON value of [availability].
-         *
-         * Unlike [availability], this method doesn't throw if the JSON field has an unexpected
-         * type.
-         */
-        @JsonProperty("availability")
-        @ExcludeMissing
-        fun _availability(): JsonField<ProductAvailability> = availability
-
-        /**
-         * Returns the raw JSON value of [dimensions].
-         *
-         * Unlike [dimensions], this method doesn't throw if the JSON field has an unexpected type.
-         */
-        @JsonProperty("dimensions")
-        @ExcludeMissing
-        fun _dimensions(): JsonField<List<VariantSelection>> = dimensions
-
-        /**
-         * Returns the raw JSON value of [images].
-         *
-         * Unlike [images], this method doesn't throw if the JSON field has an unexpected type.
-         */
-        @JsonProperty("images")
-        @ExcludeMissing
-        fun _images(): JsonField<List<ProductImage>> = images
-
-        /**
-         * Returns the raw JSON value of [name].
-         *
-         * Unlike [name], this method doesn't throw if the JSON field has an unexpected type.
-         */
-        @JsonProperty("name") @ExcludeMissing fun _name(): JsonField<String> = name
-
-        /**
-         * Returns the raw JSON value of [price].
-         *
-         * Unlike [price], this method doesn't throw if the JSON field has an unexpected type.
-         */
-        @JsonProperty("price") @ExcludeMissing fun _price(): JsonField<Money> = price
-
-        /**
-         * Returns the raw JSON value of [sku].
-         *
-         * Unlike [sku], this method doesn't throw if the JSON field has an unexpected type.
-         */
-        @JsonProperty("sku") @ExcludeMissing fun _sku(): JsonField<String> = sku
-
-        @JsonAnySetter
-        private fun putAdditionalProperty(key: String, value: JsonValue) {
-            additionalProperties.put(key, value)
-        }
-
-        @JsonAnyGetter
-        @ExcludeMissing
-        fun _additionalProperties(): Map<String, JsonValue> =
-            Collections.unmodifiableMap(additionalProperties)
-
-        fun toBuilder() = Builder().from(this)
-
-        companion object {
-
-            /**
-             * Returns a mutable builder for constructing an instance of [Variant].
-             *
-             * The following fields are required:
-             * ```java
-             * .availability()
-             * .dimensions()
-             * .images()
-             * .name()
-             * .price()
-             * .sku()
-             * ```
-             */
-            @JvmStatic fun builder() = Builder()
-        }
-
-        /** A builder for [Variant]. */
-        class Builder internal constructor() {
-
-            private var availability: JsonField<ProductAvailability>? = null
-            private var dimensions: JsonField<MutableList<VariantSelection>>? = null
-            private var images: JsonField<MutableList<ProductImage>>? = null
-            private var name: JsonField<String>? = null
-            private var price: JsonField<Money>? = null
-            private var sku: JsonField<String>? = null
-            private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
-
-            @JvmSynthetic
-            internal fun from(variant: Variant) = apply {
-                availability = variant.availability
-                dimensions = variant.dimensions.map { it.toMutableList() }
-                images = variant.images.map { it.toMutableList() }
-                name = variant.name
-                price = variant.price
-                sku = variant.sku
-                additionalProperties = variant.additionalProperties.toMutableMap()
-            }
-
-            /**
-             * The availability status of a product.
-             * - `in_stock`: Product is available for immediate purchase
-             * - `out_of_stock`: Product is currently unavailable
-             * - `preorder`: Product is available for pre-order before release
-             * - `backorder`: Product is temporarily out of stock but can be ordered
-             * - `unknown`: Availability could not be determined
-             */
-            fun availability(availability: ProductAvailability) =
-                availability(JsonField.of(availability))
-
-            /**
-             * Sets [Builder.availability] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.availability] with a well-typed
-             * [ProductAvailability] value instead. This method is primarily for setting the field
-             * to an undocumented or not yet supported value.
-             */
-            fun availability(availability: JsonField<ProductAvailability>) = apply {
-                this.availability = availability
-            }
-
-            fun dimensions(dimensions: List<VariantSelection>) =
-                dimensions(JsonField.of(dimensions))
-
-            /**
-             * Sets [Builder.dimensions] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.dimensions] with a well-typed
-             * `List<VariantSelection>` value instead. This method is primarily for setting the
-             * field to an undocumented or not yet supported value.
-             */
-            fun dimensions(dimensions: JsonField<List<VariantSelection>>) = apply {
-                this.dimensions = dimensions.map { it.toMutableList() }
-            }
-
-            /**
-             * Adds a single [VariantSelection] to [dimensions].
-             *
-             * @throws IllegalStateException if the field was previously set to a non-list.
-             */
-            fun addDimension(dimension: VariantSelection) = apply {
-                dimensions =
-                    (dimensions ?: JsonField.of(mutableListOf())).also {
-                        checkKnown("dimensions", it).add(dimension)
-                    }
-            }
-
-            fun images(images: List<ProductImage>) = images(JsonField.of(images))
-
-            /**
-             * Sets [Builder.images] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.images] with a well-typed `List<ProductImage>` value
-             * instead. This method is primarily for setting the field to an undocumented or not yet
-             * supported value.
-             */
-            fun images(images: JsonField<List<ProductImage>>) = apply {
-                this.images = images.map { it.toMutableList() }
-            }
-
-            /**
-             * Adds a single [ProductImage] to [images].
-             *
-             * @throws IllegalStateException if the field was previously set to a non-list.
-             */
-            fun addImage(image: ProductImage) = apply {
-                images =
-                    (images ?: JsonField.of(mutableListOf())).also {
-                        checkKnown("images", it).add(image)
-                    }
-            }
-
-            fun name(name: String?) = name(JsonField.ofNullable(name))
-
-            /** Alias for calling [Builder.name] with `name.orElse(null)`. */
-            fun name(name: Optional<String>) = name(name.getOrNull())
-
-            /**
-             * Sets [Builder.name] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.name] with a well-typed [String] value instead. This
-             * method is primarily for setting the field to an undocumented or not yet supported
-             * value.
-             */
-            fun name(name: JsonField<String>) = apply { this.name = name }
-
-            fun price(price: Money) = price(JsonField.of(price))
-
-            /**
-             * Sets [Builder.price] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.price] with a well-typed [Money] value instead. This
-             * method is primarily for setting the field to an undocumented or not yet supported
-             * value.
-             */
-            fun price(price: JsonField<Money>) = apply { this.price = price }
-
-            fun sku(sku: String?) = sku(JsonField.ofNullable(sku))
-
-            /** Alias for calling [Builder.sku] with `sku.orElse(null)`. */
-            fun sku(sku: Optional<String>) = sku(sku.getOrNull())
-
-            /**
-             * Sets [Builder.sku] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.sku] with a well-typed [String] value instead. This
-             * method is primarily for setting the field to an undocumented or not yet supported
-             * value.
-             */
-            fun sku(sku: JsonField<String>) = apply { this.sku = sku }
-
-            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.clear()
-                putAllAdditionalProperties(additionalProperties)
-            }
-
-            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-                additionalProperties.put(key, value)
-            }
-
-            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.putAll(additionalProperties)
-            }
-
-            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
-
-            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-                keys.forEach(::removeAdditionalProperty)
-            }
-
-            /**
-             * Returns an immutable instance of [Variant].
-             *
-             * Further updates to this [Builder] will not mutate the returned instance.
-             *
-             * The following fields are required:
-             * ```java
-             * .availability()
-             * .dimensions()
-             * .images()
-             * .name()
-             * .price()
-             * .sku()
-             * ```
-             *
-             * @throws IllegalStateException if any required field is unset.
-             */
-            fun build(): Variant =
-                Variant(
-                    checkRequired("availability", availability),
-                    checkRequired("dimensions", dimensions).map { it.toImmutable() },
-                    checkRequired("images", images).map { it.toImmutable() },
-                    checkRequired("name", name),
-                    checkRequired("price", price),
-                    checkRequired("sku", sku),
-                    additionalProperties.toMutableMap(),
-                )
-        }
-
-        private var validated: Boolean = false
-
-        fun validate(): Variant = apply {
-            if (validated) {
-                return@apply
-            }
-
-            availability().validate()
-            dimensions().forEach { it.validate() }
-            images().forEach { it.validate() }
-            name()
-            price().validate()
-            sku()
-            validated = true
-        }
-
-        fun isValid(): Boolean =
-            try {
-                validate()
-                true
-            } catch (e: CheckoutIntentsInvalidDataException) {
-                false
-            }
-
-        /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
-         *
-         * Used for best match union deserialization.
-         */
-        @JvmSynthetic
-        internal fun validity(): Int =
-            (availability.asKnown().getOrNull()?.validity() ?: 0) +
-                (dimensions.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
-                (images.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
-                (if (name.asKnown().isPresent) 1 else 0) +
-                (price.asKnown().getOrNull()?.validity() ?: 0) +
-                (if (sku.asKnown().isPresent) 1 else 0)
-
-        override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
-
-            return other is Variant &&
-                availability == other.availability &&
-                dimensions == other.dimensions &&
-                images == other.images &&
-                name == other.name &&
-                price == other.price &&
-                sku == other.sku &&
-                additionalProperties == other.additionalProperties
-        }
-
-        private val hashCode: Int by lazy {
-            Objects.hash(availability, dimensions, images, name, price, sku, additionalProperties)
-        }
-
-        override fun hashCode(): Int = hashCode
-
-        override fun toString() =
-            "Variant{availability=$availability, dimensions=$dimensions, images=$images, name=$name, price=$price, sku=$sku, additionalProperties=$additionalProperties}"
-    }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
