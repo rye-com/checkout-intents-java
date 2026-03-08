@@ -15,10 +15,12 @@ internal class BillingGetBalanceResponseTest {
         val billingGetBalanceResponse =
             BillingGetBalanceResponse.builder()
                 .balance(Money.builder().amountSubunits(1500).currencyCode("USD").build())
+                .drawdownEnabled(true)
                 .build()
 
         assertThat(billingGetBalanceResponse.balance())
             .isEqualTo(Money.builder().amountSubunits(1500).currencyCode("USD").build())
+        assertThat(billingGetBalanceResponse.drawdownEnabled()).isEqualTo(true)
     }
 
     @Test
@@ -27,6 +29,7 @@ internal class BillingGetBalanceResponseTest {
         val billingGetBalanceResponse =
             BillingGetBalanceResponse.builder()
                 .balance(Money.builder().amountSubunits(1500).currencyCode("USD").build())
+                .drawdownEnabled(true)
                 .build()
 
         val roundtrippedBillingGetBalanceResponse =
