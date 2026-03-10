@@ -14,7 +14,7 @@ internal class CheckoutIntentListParamsTest {
             .addId("string")
             .after("after")
             .before("before")
-            .limit(0.0)
+            .limit(1)
             .addState(CheckoutIntentListParams.State.COMPLETED)
             .build()
     }
@@ -26,7 +26,7 @@ internal class CheckoutIntentListParamsTest {
                 .addId("string")
                 .after("after")
                 .before("before")
-                .limit(0.0)
+                .limit(1)
                 .addState(CheckoutIntentListParams.State.COMPLETED)
                 .build()
 
@@ -38,7 +38,7 @@ internal class CheckoutIntentListParamsTest {
                     .put("id", listOf("string").joinToString(","))
                     .put("after", "after")
                     .put("before", "before")
-                    .put("limit", "0.0")
+                    .put("limit", "1")
                     .put("state", listOf("completed").joinToString(","))
                     .build()
             )

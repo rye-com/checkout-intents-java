@@ -42,8 +42,8 @@ configure<MavenPublishBaseExtension> {
     )
 
     pom {
-        name.set("checkout-intent-api")
-        description.set("HTTP REST API for checkout intents")
+        name.set("Universal Checkout API")
+        description.set("Turn any product URL into a completed checkout. Instantly retrieve price, tax,\nand shipping for any product, and let users buy without ever leaving your native\nAI experience.\n\nView the [Rye API docs](https://docs.rye.com).")
         url.set("https://docs.rye.com")
 
         licenses {

@@ -43,7 +43,7 @@ internal class BaseCheckoutIntentTest {
                         .build()
                 )
                 .discoverPromoCodes(true)
-                .addPromoCode("sqF12lZ1VlBb")
+                .addPromoCode("SAVE20")
                 .addVariantSelection(
                     VariantSelection.builder()
                         .label("Size, Color, etc.")
@@ -81,7 +81,7 @@ internal class BaseCheckoutIntentTest {
                     .build()
             )
         assertThat(baseCheckoutIntent.discoverPromoCodes()).contains(true)
-        assertThat(baseCheckoutIntent.promoCodes().getOrNull()).containsExactly("sqF12lZ1VlBb")
+        assertThat(baseCheckoutIntent.promoCodes().getOrNull()).containsExactly("SAVE20")
         assertThat(baseCheckoutIntent.variantSelections().getOrNull())
             .containsExactly(
                 VariantSelection.builder()
@@ -124,7 +124,7 @@ internal class BaseCheckoutIntentTest {
                         .build()
                 )
                 .discoverPromoCodes(true)
-                .addPromoCode("sqF12lZ1VlBb")
+                .addPromoCode("SAVE20")
                 .addVariantSelection(
                     VariantSelection.builder()
                         .label("Size, Color, etc.")
