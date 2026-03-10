@@ -119,10 +119,10 @@ CheckoutIntentsClient client = CheckoutIntentsOkHttpClient.builder()
 
 See this table for the available options:
 
-| Setter    | System property           | Environment variable        | Required | Default value                    |
-| --------- | ------------------------- | --------------------------- | -------- | -------------------------------- |
-| `apiKey`  | `checkoutintents.apiKey`  | `CHECKOUT_INTENTS_API_KEY`  | true     | -                                |
-| `baseUrl` | `checkoutintents.baseUrl` | `CHECKOUT_INTENTS_BASE_URL` | true     | `"https://staging.api.rye.com/"` |
+| Setter    | System property           | Environment variable        | Required | Default value                   |
+| --------- | ------------------------- | --------------------------- | -------- | ------------------------------- |
+| `apiKey`  | `checkoutintents.apiKey`  | `CHECKOUT_INTENTS_API_KEY`  | true     | -                               |
+| `baseUrl` | `checkoutintents.baseUrl` | `CHECKOUT_INTENTS_BASE_URL` | true     | `"https://staging.api.rye.com"` |
 
 System properties take precedence over environment variables.
 
