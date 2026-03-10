@@ -21,7 +21,7 @@ private constructor(
     private val after: String?,
     private val before: String?,
     private val ids: List<String>?,
-    private val limit: Double?,
+    private val limit: Int?,
     private val status: List<ShipmentStatus>?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
@@ -33,7 +33,8 @@ private constructor(
 
     fun ids(): Optional<List<String>> = Optional.ofNullable(ids)
 
-    fun limit(): Optional<Double> = Optional.ofNullable(limit)
+    /** Maximum number of results to return (default 100) */
+    fun limit(): Optional<Int> = Optional.ofNullable(limit)
 
     fun status(): Optional<List<ShipmentStatus>> = Optional.ofNullable(status)
 
@@ -59,7 +60,7 @@ private constructor(
         private var after: String? = null
         private var before: String? = null
         private var ids: MutableList<String>? = null
-        private var limit: Double? = null
+        private var limit: Int? = null
         private var status: MutableList<ShipmentStatus>? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
@@ -97,17 +98,18 @@ private constructor(
          */
         fun addId(id: String) = apply { ids = (ids ?: mutableListOf()).apply { add(id) } }
 
-        fun limit(limit: Double?) = apply { this.limit = limit }
+        /** Maximum number of results to return (default 100) */
+        fun limit(limit: Int?) = apply { this.limit = limit }
 
         /**
          * Alias for [Builder.limit].
          *
          * This unboxed primitive overload exists for backwards compatibility.
          */
-        fun limit(limit: Double) = limit(limit as Double?)
+        fun limit(limit: Int) = limit(limit as Int?)
 
         /** Alias for calling [Builder.limit] with `limit.orElse(null)`. */
-        fun limit(limit: Optional<Double>) = limit(limit.getOrNull())
+        fun limit(limit: Optional<Int>) = limit(limit.getOrNull())
 
         fun status(status: List<ShipmentStatus>?) = apply { this.status = status?.toMutableList() }
 

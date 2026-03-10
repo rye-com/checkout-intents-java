@@ -19,7 +19,7 @@ internal class CheckoutSessionServiceTest {
         val checkoutSession =
             checkoutSessionService.create(
                 CheckoutSessionCreateParams.builder()
-                    .productUrl("productUrl")
+                    .productUrl("https://www.amazon.com/dp/B0DFC9MT8Q")
                     .quantity(1)
                     .buyer(
                         CheckoutSessionCreateParams.Buyer.builder()

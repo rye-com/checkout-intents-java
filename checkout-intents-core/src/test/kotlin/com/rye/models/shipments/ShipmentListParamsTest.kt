@@ -14,7 +14,7 @@ internal class ShipmentListParamsTest {
             .after("after")
             .before("before")
             .addId("string")
-            .limit(0.0)
+            .limit(1)
             .addStatus(ShipmentStatus.OUT_FOR_DELIVERY)
             .build()
     }
@@ -26,7 +26,7 @@ internal class ShipmentListParamsTest {
                 .after("after")
                 .before("before")
                 .addId("string")
-                .limit(0.0)
+                .limit(1)
                 .addStatus(ShipmentStatus.OUT_FOR_DELIVERY)
                 .build()
 
@@ -38,7 +38,7 @@ internal class ShipmentListParamsTest {
                     .put("after", "after")
                     .put("before", "before")
                     .put("ids", listOf("string").joinToString(","))
-                    .put("limit", "0.0")
+                    .put("limit", "1")
                     .put("status", listOf("out_for_delivery").joinToString(","))
                     .build()
             )

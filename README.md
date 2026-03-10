@@ -712,7 +712,7 @@ CheckoutIntentPurchaseParams params = CheckoutIntentPurchaseParams.builder()
         .stripeToken("tok_1RkrWWHGDlstla3f1Fc7ZrhH")
         .type(PaymentMethod.StripeTokenPaymentMethod.Type.STRIPE_TOKEN)
         .build())
-    .productUrl("productUrl")
+    .productUrl("https://www.amazon.com/dp/B0DFC9MT8Q")
     .quantity(1)
     .buyer(JsonMissing.of())
     .build();

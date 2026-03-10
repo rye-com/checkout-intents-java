@@ -93,7 +93,7 @@ internal class ProGuardCompatibilityTest {
                         .build()
                 )
                 .discoverPromoCodes(true)
-                .addPromoCode("sqF12lZ1VlBb")
+                .addPromoCode("SAVE20")
                 .addVariantSelection(
                     VariantSelection.builder()
                         .label("Size, Color, etc.")
@@ -145,7 +145,7 @@ internal class ProGuardCompatibilityTest {
                             .build()
                     )
                     .discoverPromoCodes(true)
-                    .addPromoCode("sqF12lZ1VlBb")
+                    .addPromoCode("SAVE20")
                     .addVariantSelection(
                         VariantSelection.builder()
                             .label("Size, Color, etc.")

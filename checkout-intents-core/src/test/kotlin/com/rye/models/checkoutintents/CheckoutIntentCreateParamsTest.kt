@@ -25,7 +25,7 @@ internal class CheckoutIntentCreateParamsTest {
                     .address2("Apt 1")
                     .build()
             )
-            .productUrl("productUrl")
+            .productUrl("https://www.amazon.com/dp/B0DFC9MT8Q")
             .quantity(1)
             .constraints(
                 CheckoutIntentCreateParams.Constraints.builder()
@@ -37,7 +37,7 @@ internal class CheckoutIntentCreateParamsTest {
                     .build()
             )
             .discoverPromoCodes(true)
-            .addPromoCode("sqF12lZ1VlBb")
+            .addPromoCode("SAVE20")
             .addVariantSelection(
                 VariantSelection.builder()
                     .label("Size, Color, etc.")
@@ -65,7 +65,7 @@ internal class CheckoutIntentCreateParamsTest {
                         .address2("Apt 1")
                         .build()
                 )
-                .productUrl("productUrl")
+                .productUrl("https://www.amazon.com/dp/B0DFC9MT8Q")
                 .quantity(1)
                 .constraints(
                     CheckoutIntentCreateParams.Constraints.builder()
@@ -77,7 +77,7 @@ internal class CheckoutIntentCreateParamsTest {
                         .build()
                 )
                 .discoverPromoCodes(true)
-                .addPromoCode("sqF12lZ1VlBb")
+                .addPromoCode("SAVE20")
                 .addVariantSelection(
                     VariantSelection.builder()
                         .label("Size, Color, etc.")
@@ -103,7 +103,7 @@ internal class CheckoutIntentCreateParamsTest {
                     .address2("Apt 1")
                     .build()
             )
-        assertThat(body.productUrl()).isEqualTo("productUrl")
+        assertThat(body.productUrl()).isEqualTo("https://www.amazon.com/dp/B0DFC9MT8Q")
         assertThat(body.quantity()).isEqualTo(1)
         assertThat(body.constraints())
             .contains(
@@ -116,7 +116,7 @@ internal class CheckoutIntentCreateParamsTest {
                     .build()
             )
         assertThat(body.discoverPromoCodes()).contains(true)
-        assertThat(body.promoCodes().getOrNull()).containsExactly("sqF12lZ1VlBb")
+        assertThat(body.promoCodes().getOrNull()).containsExactly("SAVE20")
         assertThat(body.variantSelections().getOrNull())
             .containsExactly(
                 VariantSelection.builder()
@@ -143,7 +143,7 @@ internal class CheckoutIntentCreateParamsTest {
                         .province("NY")
                         .build()
                 )
-                .productUrl("productUrl")
+                .productUrl("https://www.amazon.com/dp/B0DFC9MT8Q")
                 .quantity(1)
                 .build()
 
@@ -163,7 +163,7 @@ internal class CheckoutIntentCreateParamsTest {
                     .province("NY")
                     .build()
             )
-        assertThat(body.productUrl()).isEqualTo("productUrl")
+        assertThat(body.productUrl()).isEqualTo("https://www.amazon.com/dp/B0DFC9MT8Q")
         assertThat(body.quantity()).isEqualTo(1)
     }
 }

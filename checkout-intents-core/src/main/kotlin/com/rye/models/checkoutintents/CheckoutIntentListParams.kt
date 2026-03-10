@@ -25,7 +25,7 @@ private constructor(
     private val id: List<String>?,
     private val after: String?,
     private val before: String?,
-    private val limit: Double?,
+    private val limit: Int?,
     private val state: List<State>?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
@@ -37,7 +37,8 @@ private constructor(
 
     fun before(): Optional<String> = Optional.ofNullable(before)
 
-    fun limit(): Optional<Double> = Optional.ofNullable(limit)
+    /** Maximum number of results to return (default 100) */
+    fun limit(): Optional<Int> = Optional.ofNullable(limit)
 
     fun state(): Optional<List<State>> = Optional.ofNullable(state)
 
@@ -63,7 +64,7 @@ private constructor(
         private var id: MutableList<String>? = null
         private var after: String? = null
         private var before: String? = null
-        private var limit: Double? = null
+        private var limit: Int? = null
         private var state: MutableList<State>? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
@@ -101,17 +102,18 @@ private constructor(
         /** Alias for calling [Builder.before] with `before.orElse(null)`. */
         fun before(before: Optional<String>) = before(before.getOrNull())
 
-        fun limit(limit: Double?) = apply { this.limit = limit }
+        /** Maximum number of results to return (default 100) */
+        fun limit(limit: Int?) = apply { this.limit = limit }
 
         /**
          * Alias for [Builder.limit].
          *
          * This unboxed primitive overload exists for backwards compatibility.
          */
-        fun limit(limit: Double) = limit(limit as Double?)
+        fun limit(limit: Int) = limit(limit as Int?)
 
         /** Alias for calling [Builder.limit] with `limit.orElse(null)`. */
-        fun limit(limit: Optional<Double>) = limit(limit.getOrNull())
+        fun limit(limit: Optional<Int>) = limit(limit.getOrNull())
 
         fun state(state: List<State>?) = apply { this.state = state?.toMutableList() }
 

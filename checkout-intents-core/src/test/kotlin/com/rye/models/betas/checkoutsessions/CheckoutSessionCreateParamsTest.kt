@@ -12,7 +12,7 @@ internal class CheckoutSessionCreateParamsTest {
     @Test
     fun create() {
         CheckoutSessionCreateParams.builder()
-            .productUrl("productUrl")
+            .productUrl("https://www.amazon.com/dp/B0DFC9MT8Q")
             .quantity(1)
             .buyer(
                 CheckoutSessionCreateParams.Buyer.builder()
@@ -53,7 +53,7 @@ internal class CheckoutSessionCreateParamsTest {
     fun body() {
         val params =
             CheckoutSessionCreateParams.builder()
-                .productUrl("productUrl")
+                .productUrl("https://www.amazon.com/dp/B0DFC9MT8Q")
                 .quantity(1)
                 .buyer(
                     CheckoutSessionCreateParams.Buyer.builder()
@@ -91,7 +91,7 @@ internal class CheckoutSessionCreateParamsTest {
 
         val body = params._body()
 
-        assertThat(body.productUrl()).isEqualTo("productUrl")
+        assertThat(body.productUrl()).isEqualTo("https://www.amazon.com/dp/B0DFC9MT8Q")
         assertThat(body.quantity()).isEqualTo(1)
         assertThat(body.buyer())
             .contains(
@@ -133,11 +133,14 @@ internal class CheckoutSessionCreateParamsTest {
     @Test
     fun bodyWithoutOptionalFields() {
         val params =
-            CheckoutSessionCreateParams.builder().productUrl("productUrl").quantity(1).build()
+            CheckoutSessionCreateParams.builder()
+                .productUrl("https://www.amazon.com/dp/B0DFC9MT8Q")
+                .quantity(1)
+                .build()
 
         val body = params._body()
 
-        assertThat(body.productUrl()).isEqualTo("productUrl")
+        assertThat(body.productUrl()).isEqualTo("https://www.amazon.com/dp/B0DFC9MT8Q")
         assertThat(body.quantity()).isEqualTo(1)
     }
 }
