@@ -222,17 +222,17 @@ class CheckoutIntentsOkHttpClientAsync private constructor() {
         /**
          * The base URL to use for every request.
          *
-         * Defaults to the staging environment: `https://staging.api.rye.com/`.
+         * Defaults to the staging environment: `https://staging.api.rye.com`.
          *
          * The following other environments, with dedicated builder methods, are available:
-         * - production: `https://api.rye.com/`
+         * - production: `https://api.rye.com`
          */
         fun baseUrl(baseUrl: String?) = apply { clientOptions.baseUrl(baseUrl) }
 
         /** Alias for calling [Builder.baseUrl] with `baseUrl.orElse(null)`. */
         fun baseUrl(baseUrl: Optional<String>) = baseUrl(baseUrl.getOrNull())
 
-        /** Sets [baseUrl] to `https://api.rye.com/`. */
+        /** Sets [baseUrl] to `https://api.rye.com`. */
         fun production() = apply { clientOptions.production() }
 
         /**
