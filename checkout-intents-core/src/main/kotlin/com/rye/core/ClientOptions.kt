@@ -120,10 +120,10 @@ private constructor(
     /**
      * The base URL to use for every request.
      *
-     * Defaults to the staging environment: `https://staging.api.rye.com/`.
+     * Defaults to the staging environment: `https://staging.api.rye.com`.
      *
      * The following other environments, with dedicated builder methods, are available:
-     * - production: `https://api.rye.com/`
+     * - production: `https://api.rye.com`
      */
     fun baseUrl(): String = baseUrl ?: STAGING_URL
 
@@ -131,9 +131,9 @@ private constructor(
 
     companion object {
 
-        const val STAGING_URL = "https://staging.api.rye.com/"
+        const val STAGING_URL = "https://staging.api.rye.com"
 
-        const val PRODUCTION_URL = "https://api.rye.com/"
+        const val PRODUCTION_URL = "https://api.rye.com"
 
         /**
          * Returns a mutable builder for constructing an instance of [ClientOptions].
@@ -255,17 +255,17 @@ private constructor(
         /**
          * The base URL to use for every request.
          *
-         * Defaults to the staging environment: `https://staging.api.rye.com/`.
+         * Defaults to the staging environment: `https://staging.api.rye.com`.
          *
          * The following other environments, with dedicated builder methods, are available:
-         * - production: `https://api.rye.com/`
+         * - production: `https://api.rye.com`
          */
         fun baseUrl(baseUrl: String?) = apply { this.baseUrl = baseUrl }
 
         /** Alias for calling [Builder.baseUrl] with `baseUrl.orElse(null)`. */
         fun baseUrl(baseUrl: Optional<String>) = baseUrl(baseUrl.getOrNull())
 
-        /** Sets [baseUrl] to `https://api.rye.com/`. */
+        /** Sets [baseUrl] to `https://api.rye.com`. */
         fun production() = baseUrl(PRODUCTION_URL)
 
         /**
@@ -402,10 +402,10 @@ private constructor(
          *
          * See this table for the available options:
          *
-         * |Setter   |System property          |Environment variable       |Required|Default value                   |
-         * |---------|-------------------------|---------------------------|--------|--------------------------------|
-         * |`apiKey` |`checkoutintents.apiKey` |`CHECKOUT_INTENTS_API_KEY` |true    |-                               |
-         * |`baseUrl`|`checkoutintents.baseUrl`|`CHECKOUT_INTENTS_BASE_URL`|true    |`"https://staging.api.rye.com/"`|
+         * |Setter   |System property          |Environment variable       |Required|Default value                  |
+         * |---------|-------------------------|---------------------------|--------|-------------------------------|
+         * |`apiKey` |`checkoutintents.apiKey` |`CHECKOUT_INTENTS_API_KEY` |true    |-                              |
+         * |`baseUrl`|`checkoutintents.baseUrl`|`CHECKOUT_INTENTS_BASE_URL`|true    |`"https://staging.api.rye.com"`|
          *
          * System properties take precedence over environment variables.
          */
