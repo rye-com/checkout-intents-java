@@ -31,7 +31,7 @@ internal class CheckoutIntentPurchaseParamsTest {
                     .type(PaymentMethod.StripeTokenPaymentMethod.Type.STRIPE_TOKEN)
                     .build()
             )
-            .productUrl("productUrl")
+            .productUrl("https://www.amazon.com/dp/B0DFC9MT8Q")
             .quantity(1)
             .constraints(
                 CheckoutIntentPurchaseParams.Constraints.builder()
@@ -43,7 +43,7 @@ internal class CheckoutIntentPurchaseParamsTest {
                     .build()
             )
             .discoverPromoCodes(true)
-            .addPromoCode("sqF12lZ1VlBb")
+            .addPromoCode("SAVE20")
             .addVariantSelection(
                 VariantSelection.builder()
                     .label("Size, Color, etc.")
@@ -77,7 +77,7 @@ internal class CheckoutIntentPurchaseParamsTest {
                         .type(PaymentMethod.StripeTokenPaymentMethod.Type.STRIPE_TOKEN)
                         .build()
                 )
-                .productUrl("productUrl")
+                .productUrl("https://www.amazon.com/dp/B0DFC9MT8Q")
                 .quantity(1)
                 .constraints(
                     CheckoutIntentPurchaseParams.Constraints.builder()
@@ -89,7 +89,7 @@ internal class CheckoutIntentPurchaseParamsTest {
                         .build()
                 )
                 .discoverPromoCodes(true)
-                .addPromoCode("sqF12lZ1VlBb")
+                .addPromoCode("SAVE20")
                 .addVariantSelection(
                     VariantSelection.builder()
                         .label("Size, Color, etc.")
@@ -124,7 +124,7 @@ internal class CheckoutIntentPurchaseParamsTest {
                         .build()
                 )
             )
-        assertThat(body.productUrl()).isEqualTo("productUrl")
+        assertThat(body.productUrl()).isEqualTo("https://www.amazon.com/dp/B0DFC9MT8Q")
         assertThat(body.quantity()).isEqualTo(1)
         assertThat(body.constraints())
             .contains(
@@ -137,7 +137,7 @@ internal class CheckoutIntentPurchaseParamsTest {
                     .build()
             )
         assertThat(body.discoverPromoCodes()).contains(true)
-        assertThat(body.promoCodes().getOrNull()).containsExactly("sqF12lZ1VlBb")
+        assertThat(body.promoCodes().getOrNull()).containsExactly("SAVE20")
         assertThat(body.variantSelections().getOrNull())
             .containsExactly(
                 VariantSelection.builder()
@@ -170,7 +170,7 @@ internal class CheckoutIntentPurchaseParamsTest {
                         .type(PaymentMethod.StripeTokenPaymentMethod.Type.STRIPE_TOKEN)
                         .build()
                 )
-                .productUrl("productUrl")
+                .productUrl("https://www.amazon.com/dp/B0DFC9MT8Q")
                 .quantity(1)
                 .build()
 
@@ -199,7 +199,7 @@ internal class CheckoutIntentPurchaseParamsTest {
                         .build()
                 )
             )
-        assertThat(body.productUrl()).isEqualTo("productUrl")
+        assertThat(body.productUrl()).isEqualTo("https://www.amazon.com/dp/B0DFC9MT8Q")
         assertThat(body.quantity()).isEqualTo(1)
     }
 }

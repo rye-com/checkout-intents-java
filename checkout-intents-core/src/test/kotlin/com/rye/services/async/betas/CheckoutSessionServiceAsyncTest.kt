@@ -19,7 +19,7 @@ internal class CheckoutSessionServiceAsyncTest {
         val checkoutSessionFuture =
             checkoutSessionServiceAsync.create(
                 CheckoutSessionCreateParams.builder()
-                    .productUrl("productUrl")
+                    .productUrl("https://www.amazon.com/dp/B0DFC9MT8Q")
                     .quantity(1)
                     .buyer(
                         CheckoutSessionCreateParams.Buyer.builder()

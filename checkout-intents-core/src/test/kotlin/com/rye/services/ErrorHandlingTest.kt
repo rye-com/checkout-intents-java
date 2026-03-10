@@ -88,7 +88,7 @@ internal class ErrorHandlingTest {
                                 .address2("Apt 1")
                                 .build()
                         )
-                        .productUrl("productUrl")
+                        .productUrl("https://www.amazon.com/dp/B0DFC9MT8Q")
                         .quantity(1)
                         .constraints(
                             CheckoutIntentCreateParams.Constraints.builder()
@@ -100,7 +100,7 @@ internal class ErrorHandlingTest {
                                 .build()
                         )
                         .discoverPromoCodes(true)
-                        .addPromoCode("sqF12lZ1VlBb")
+                        .addPromoCode("SAVE20")
                         .addVariantSelection(
                             VariantSelection.builder()
                                 .label("Size, Color, etc.")
@@ -144,7 +144,7 @@ internal class ErrorHandlingTest {
                                 .address2("Apt 1")
                                 .build()
                         )
-                        .productUrl("productUrl")
+                        .productUrl("https://www.amazon.com/dp/B0DFC9MT8Q")
                         .quantity(1)
                         .constraints(
                             CheckoutIntentCreateParams.Constraints.builder()
@@ -156,7 +156,7 @@ internal class ErrorHandlingTest {
                                 .build()
                         )
                         .discoverPromoCodes(true)
-                        .addPromoCode("sqF12lZ1VlBb")
+                        .addPromoCode("SAVE20")
                         .addVariantSelection(
                             VariantSelection.builder()
                                 .label("Size, Color, etc.")
@@ -200,7 +200,7 @@ internal class ErrorHandlingTest {
                                 .address2("Apt 1")
                                 .build()
                         )
-                        .productUrl("productUrl")
+                        .productUrl("https://www.amazon.com/dp/B0DFC9MT8Q")
                         .quantity(1)
                         .constraints(
                             CheckoutIntentCreateParams.Constraints.builder()
@@ -212,7 +212,7 @@ internal class ErrorHandlingTest {
                                 .build()
                         )
                         .discoverPromoCodes(true)
-                        .addPromoCode("sqF12lZ1VlBb")
+                        .addPromoCode("SAVE20")
                         .addVariantSelection(
                             VariantSelection.builder()
                                 .label("Size, Color, etc.")
@@ -256,7 +256,7 @@ internal class ErrorHandlingTest {
                                 .address2("Apt 1")
                                 .build()
                         )
-                        .productUrl("productUrl")
+                        .productUrl("https://www.amazon.com/dp/B0DFC9MT8Q")
                         .quantity(1)
                         .constraints(
                             CheckoutIntentCreateParams.Constraints.builder()
@@ -268,7 +268,7 @@ internal class ErrorHandlingTest {
                                 .build()
                         )
                         .discoverPromoCodes(true)
-                        .addPromoCode("sqF12lZ1VlBb")
+                        .addPromoCode("SAVE20")
                         .addVariantSelection(
                             VariantSelection.builder()
                                 .label("Size, Color, etc.")
@@ -312,7 +312,7 @@ internal class ErrorHandlingTest {
                                 .address2("Apt 1")
                                 .build()
                         )
-                        .productUrl("productUrl")
+                        .productUrl("https://www.amazon.com/dp/B0DFC9MT8Q")
                         .quantity(1)
                         .constraints(
                             CheckoutIntentCreateParams.Constraints.builder()
@@ -324,7 +324,7 @@ internal class ErrorHandlingTest {
                                 .build()
                         )
                         .discoverPromoCodes(true)
-                        .addPromoCode("sqF12lZ1VlBb")
+                        .addPromoCode("SAVE20")
                         .addVariantSelection(
                             VariantSelection.builder()
                                 .label("Size, Color, etc.")
@@ -368,7 +368,7 @@ internal class ErrorHandlingTest {
                                 .address2("Apt 1")
                                 .build()
                         )
-                        .productUrl("productUrl")
+                        .productUrl("https://www.amazon.com/dp/B0DFC9MT8Q")
                         .quantity(1)
                         .constraints(
                             CheckoutIntentCreateParams.Constraints.builder()
@@ -380,7 +380,7 @@ internal class ErrorHandlingTest {
                                 .build()
                         )
                         .discoverPromoCodes(true)
-                        .addPromoCode("sqF12lZ1VlBb")
+                        .addPromoCode("SAVE20")
                         .addVariantSelection(
                             VariantSelection.builder()
                                 .label("Size, Color, etc.")
@@ -424,7 +424,7 @@ internal class ErrorHandlingTest {
                                 .address2("Apt 1")
                                 .build()
                         )
-                        .productUrl("productUrl")
+                        .productUrl("https://www.amazon.com/dp/B0DFC9MT8Q")
                         .quantity(1)
                         .constraints(
                             CheckoutIntentCreateParams.Constraints.builder()
@@ -436,7 +436,7 @@ internal class ErrorHandlingTest {
                                 .build()
                         )
                         .discoverPromoCodes(true)
-                        .addPromoCode("sqF12lZ1VlBb")
+                        .addPromoCode("SAVE20")
                         .addVariantSelection(
                             VariantSelection.builder()
                                 .label("Size, Color, etc.")
@@ -480,7 +480,7 @@ internal class ErrorHandlingTest {
                                 .address2("Apt 1")
                                 .build()
                         )
-                        .productUrl("productUrl")
+                        .productUrl("https://www.amazon.com/dp/B0DFC9MT8Q")
                         .quantity(1)
                         .constraints(
                             CheckoutIntentCreateParams.Constraints.builder()
@@ -492,7 +492,7 @@ internal class ErrorHandlingTest {
                                 .build()
                         )
                         .discoverPromoCodes(true)
-                        .addPromoCode("sqF12lZ1VlBb")
+                        .addPromoCode("SAVE20")
                         .addVariantSelection(
                             VariantSelection.builder()
                                 .label("Size, Color, etc.")
@@ -536,7 +536,7 @@ internal class ErrorHandlingTest {
                                 .address2("Apt 1")
                                 .build()
                         )
-                        .productUrl("productUrl")
+                        .productUrl("https://www.amazon.com/dp/B0DFC9MT8Q")
                         .quantity(1)
                         .constraints(
                             CheckoutIntentCreateParams.Constraints.builder()
@@ -548,7 +548,7 @@ internal class ErrorHandlingTest {
                                 .build()
                         )
                         .discoverPromoCodes(true)
-                        .addPromoCode("sqF12lZ1VlBb")
+                        .addPromoCode("SAVE20")
                         .addVariantSelection(
                             VariantSelection.builder()
                                 .label("Size, Color, etc.")
@@ -592,7 +592,7 @@ internal class ErrorHandlingTest {
                                 .address2("Apt 1")
                                 .build()
                         )
-                        .productUrl("productUrl")
+                        .productUrl("https://www.amazon.com/dp/B0DFC9MT8Q")
                         .quantity(1)
                         .constraints(
                             CheckoutIntentCreateParams.Constraints.builder()
@@ -604,7 +604,7 @@ internal class ErrorHandlingTest {
                                 .build()
                         )
                         .discoverPromoCodes(true)
-                        .addPromoCode("sqF12lZ1VlBb")
+                        .addPromoCode("SAVE20")
                         .addVariantSelection(
                             VariantSelection.builder()
                                 .label("Size, Color, etc.")
@@ -648,7 +648,7 @@ internal class ErrorHandlingTest {
                                 .address2("Apt 1")
                                 .build()
                         )
-                        .productUrl("productUrl")
+                        .productUrl("https://www.amazon.com/dp/B0DFC9MT8Q")
                         .quantity(1)
                         .constraints(
                             CheckoutIntentCreateParams.Constraints.builder()
@@ -660,7 +660,7 @@ internal class ErrorHandlingTest {
                                 .build()
                         )
                         .discoverPromoCodes(true)
-                        .addPromoCode("sqF12lZ1VlBb")
+                        .addPromoCode("SAVE20")
                         .addVariantSelection(
                             VariantSelection.builder()
                                 .label("Size, Color, etc.")
@@ -704,7 +704,7 @@ internal class ErrorHandlingTest {
                                 .address2("Apt 1")
                                 .build()
                         )
-                        .productUrl("productUrl")
+                        .productUrl("https://www.amazon.com/dp/B0DFC9MT8Q")
                         .quantity(1)
                         .constraints(
                             CheckoutIntentCreateParams.Constraints.builder()
@@ -716,7 +716,7 @@ internal class ErrorHandlingTest {
                                 .build()
                         )
                         .discoverPromoCodes(true)
-                        .addPromoCode("sqF12lZ1VlBb")
+                        .addPromoCode("SAVE20")
                         .addVariantSelection(
                             VariantSelection.builder()
                                 .label("Size, Color, etc.")
@@ -760,7 +760,7 @@ internal class ErrorHandlingTest {
                                 .address2("Apt 1")
                                 .build()
                         )
-                        .productUrl("productUrl")
+                        .productUrl("https://www.amazon.com/dp/B0DFC9MT8Q")
                         .quantity(1)
                         .constraints(
                             CheckoutIntentCreateParams.Constraints.builder()
@@ -772,7 +772,7 @@ internal class ErrorHandlingTest {
                                 .build()
                         )
                         .discoverPromoCodes(true)
-                        .addPromoCode("sqF12lZ1VlBb")
+                        .addPromoCode("SAVE20")
                         .addVariantSelection(
                             VariantSelection.builder()
                                 .label("Size, Color, etc.")
@@ -816,7 +816,7 @@ internal class ErrorHandlingTest {
                                 .address2("Apt 1")
                                 .build()
                         )
-                        .productUrl("productUrl")
+                        .productUrl("https://www.amazon.com/dp/B0DFC9MT8Q")
                         .quantity(1)
                         .constraints(
                             CheckoutIntentCreateParams.Constraints.builder()
@@ -828,7 +828,7 @@ internal class ErrorHandlingTest {
                                 .build()
                         )
                         .discoverPromoCodes(true)
-                        .addPromoCode("sqF12lZ1VlBb")
+                        .addPromoCode("SAVE20")
                         .addVariantSelection(
                             VariantSelection.builder()
                                 .label("Size, Color, etc.")
@@ -872,7 +872,7 @@ internal class ErrorHandlingTest {
                                 .address2("Apt 1")
                                 .build()
                         )
-                        .productUrl("productUrl")
+                        .productUrl("https://www.amazon.com/dp/B0DFC9MT8Q")
                         .quantity(1)
                         .constraints(
                             CheckoutIntentCreateParams.Constraints.builder()
@@ -884,7 +884,7 @@ internal class ErrorHandlingTest {
                                 .build()
                         )
                         .discoverPromoCodes(true)
-                        .addPromoCode("sqF12lZ1VlBb")
+                        .addPromoCode("SAVE20")
                         .addVariantSelection(
                             VariantSelection.builder()
                                 .label("Size, Color, etc.")
@@ -928,7 +928,7 @@ internal class ErrorHandlingTest {
                                 .address2("Apt 1")
                                 .build()
                         )
-                        .productUrl("productUrl")
+                        .productUrl("https://www.amazon.com/dp/B0DFC9MT8Q")
                         .quantity(1)
                         .constraints(
                             CheckoutIntentCreateParams.Constraints.builder()
@@ -940,7 +940,7 @@ internal class ErrorHandlingTest {
                                 .build()
                         )
                         .discoverPromoCodes(true)
-                        .addPromoCode("sqF12lZ1VlBb")
+                        .addPromoCode("SAVE20")
                         .addVariantSelection(
                             VariantSelection.builder()
                                 .label("Size, Color, etc.")
@@ -982,7 +982,7 @@ internal class ErrorHandlingTest {
                                 .address2("Apt 1")
                                 .build()
                         )
-                        .productUrl("productUrl")
+                        .productUrl("https://www.amazon.com/dp/B0DFC9MT8Q")
                         .quantity(1)
                         .constraints(
                             CheckoutIntentCreateParams.Constraints.builder()
@@ -994,7 +994,7 @@ internal class ErrorHandlingTest {
                                 .build()
                         )
                         .discoverPromoCodes(true)
-                        .addPromoCode("sqF12lZ1VlBb")
+                        .addPromoCode("SAVE20")
                         .addVariantSelection(
                             VariantSelection.builder()
                                 .label("Size, Color, etc.")

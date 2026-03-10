@@ -10,7 +10,7 @@ internal class ShipmentListParamsTest {
 
     @Test
     fun create() {
-        ShipmentListParams.builder().id("id").after("after").before("before").limit(0.0).build()
+        ShipmentListParams.builder().id("id").after("after").before("before").limit(1).build()
     }
 
     @Test
@@ -25,7 +25,7 @@ internal class ShipmentListParamsTest {
     @Test
     fun queryParams() {
         val params =
-            ShipmentListParams.builder().id("id").after("after").before("before").limit(0.0).build()
+            ShipmentListParams.builder().id("id").after("after").before("before").limit(1).build()
 
         val queryParams = params._queryParams()
 
@@ -34,7 +34,7 @@ internal class ShipmentListParamsTest {
                 QueryParams.builder()
                     .put("after", "after")
                     .put("before", "before")
-                    .put("limit", "0.0")
+                    .put("limit", "1")
                     .build()
             )
     }
