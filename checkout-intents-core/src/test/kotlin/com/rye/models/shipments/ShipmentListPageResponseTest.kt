@@ -20,6 +20,7 @@ internal class ShipmentListPageResponseTest {
                         .checkoutIntentId("checkoutIntentId")
                         .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .externalId("externalId")
+                        .marketplaceOrderId("marketplaceOrderId")
                         .shippedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .status(Shipment.WithStatusBaseShipmentWithTrackingShipped.Status.SHIPPED)
                         .tracking(
@@ -78,6 +79,7 @@ internal class ShipmentListPageResponseTest {
                         .checkoutIntentId("checkoutIntentId")
                         .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .externalId("externalId")
+                        .marketplaceOrderId("marketplaceOrderId")
                         .shippedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .status(Shipment.WithStatusBaseShipmentWithTrackingShipped.Status.SHIPPED)
                         .tracking(
@@ -141,6 +143,7 @@ internal class ShipmentListPageResponseTest {
                         .checkoutIntentId("checkoutIntentId")
                         .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .externalId("externalId")
+                        .marketplaceOrderId("marketplaceOrderId")
                         .shippedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .status(Shipment.WithStatusBaseShipmentWithTrackingShipped.Status.SHIPPED)
                         .tracking(

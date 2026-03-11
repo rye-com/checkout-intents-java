@@ -450,6 +450,7 @@ private constructor(
         private val checkoutIntentId: JsonField<String>,
         private val createdAt: JsonField<OffsetDateTime>,
         private val externalId: JsonField<String>,
+        private val marketplaceOrderId: JsonField<String>,
         private val shippedAt: JsonField<OffsetDateTime>,
         private val status: JsonField<Status>,
         private val tracking: JsonField<ShipmentTracking>,
@@ -470,6 +471,9 @@ private constructor(
             @JsonProperty("externalId")
             @ExcludeMissing
             externalId: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("marketplaceOrderId")
+            @ExcludeMissing
+            marketplaceOrderId: JsonField<String> = JsonMissing.of(),
             @JsonProperty("shippedAt")
             @ExcludeMissing
             shippedAt: JsonField<OffsetDateTime> = JsonMissing.of(),
@@ -488,6 +492,7 @@ private constructor(
             checkoutIntentId,
             createdAt,
             externalId,
+            marketplaceOrderId,
             shippedAt,
             status,
             tracking,
@@ -525,6 +530,13 @@ private constructor(
          *   value).
          */
         fun externalId(): String = externalId.getRequired("externalId")
+
+        /**
+         * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type or
+         *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
+         *   value).
+         */
+        fun marketplaceOrderId(): String = marketplaceOrderId.getRequired("marketplaceOrderId")
 
         /**
          * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type or
@@ -597,6 +609,16 @@ private constructor(
         fun _externalId(): JsonField<String> = externalId
 
         /**
+         * Returns the raw JSON value of [marketplaceOrderId].
+         *
+         * Unlike [marketplaceOrderId], this method doesn't throw if the JSON field has an
+         * unexpected type.
+         */
+        @JsonProperty("marketplaceOrderId")
+        @ExcludeMissing
+        fun _marketplaceOrderId(): JsonField<String> = marketplaceOrderId
+
+        /**
          * Returns the raw JSON value of [shippedAt].
          *
          * Unlike [shippedAt], this method doesn't throw if the JSON field has an unexpected type.
@@ -664,6 +686,7 @@ private constructor(
              * .checkoutIntentId()
              * .createdAt()
              * .externalId()
+             * .marketplaceOrderId()
              * .shippedAt()
              * .status()
              * .tracking()
@@ -681,6 +704,7 @@ private constructor(
             private var checkoutIntentId: JsonField<String>? = null
             private var createdAt: JsonField<OffsetDateTime>? = null
             private var externalId: JsonField<String>? = null
+            private var marketplaceOrderId: JsonField<String>? = null
             private var shippedAt: JsonField<OffsetDateTime>? = null
             private var status: JsonField<Status>? = null
             private var tracking: JsonField<ShipmentTracking>? = null
@@ -696,6 +720,7 @@ private constructor(
                 checkoutIntentId = withStatusBaseShipmentWithTrackingShipped.checkoutIntentId
                 createdAt = withStatusBaseShipmentWithTrackingShipped.createdAt
                 externalId = withStatusBaseShipmentWithTrackingShipped.externalId
+                marketplaceOrderId = withStatusBaseShipmentWithTrackingShipped.marketplaceOrderId
                 shippedAt = withStatusBaseShipmentWithTrackingShipped.shippedAt
                 status = withStatusBaseShipmentWithTrackingShipped.status
                 tracking = withStatusBaseShipmentWithTrackingShipped.tracking
@@ -760,6 +785,20 @@ private constructor(
              * supported value.
              */
             fun externalId(externalId: JsonField<String>) = apply { this.externalId = externalId }
+
+            fun marketplaceOrderId(marketplaceOrderId: String) =
+                marketplaceOrderId(JsonField.of(marketplaceOrderId))
+
+            /**
+             * Sets [Builder.marketplaceOrderId] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.marketplaceOrderId] with a well-typed [String] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun marketplaceOrderId(marketplaceOrderId: JsonField<String>) = apply {
+                this.marketplaceOrderId = marketplaceOrderId
+            }
 
             fun shippedAt(shippedAt: OffsetDateTime) = shippedAt(JsonField.of(shippedAt))
 
@@ -865,6 +904,7 @@ private constructor(
              * .checkoutIntentId()
              * .createdAt()
              * .externalId()
+             * .marketplaceOrderId()
              * .shippedAt()
              * .status()
              * .tracking()
@@ -880,6 +920,7 @@ private constructor(
                     checkRequired("checkoutIntentId", checkoutIntentId),
                     checkRequired("createdAt", createdAt),
                     checkRequired("externalId", externalId),
+                    checkRequired("marketplaceOrderId", marketplaceOrderId),
                     checkRequired("shippedAt", shippedAt),
                     checkRequired("status", status),
                     checkRequired("tracking", tracking),
@@ -900,6 +941,7 @@ private constructor(
             checkoutIntentId()
             createdAt()
             externalId()
+            marketplaceOrderId()
             shippedAt()
             status().validate()
             tracking().validate()
@@ -928,6 +970,7 @@ private constructor(
                 (if (checkoutIntentId.asKnown().isPresent) 1 else 0) +
                 (if (createdAt.asKnown().isPresent) 1 else 0) +
                 (if (externalId.asKnown().isPresent) 1 else 0) +
+                (if (marketplaceOrderId.asKnown().isPresent) 1 else 0) +
                 (if (shippedAt.asKnown().isPresent) 1 else 0) +
                 (status.asKnown().getOrNull()?.validity() ?: 0) +
                 (tracking.asKnown().getOrNull()?.validity() ?: 0) +
@@ -1764,6 +1807,7 @@ private constructor(
                 checkoutIntentId == other.checkoutIntentId &&
                 createdAt == other.createdAt &&
                 externalId == other.externalId &&
+                marketplaceOrderId == other.marketplaceOrderId &&
                 shippedAt == other.shippedAt &&
                 status == other.status &&
                 tracking == other.tracking &&
@@ -1778,6 +1822,7 @@ private constructor(
                 checkoutIntentId,
                 createdAt,
                 externalId,
+                marketplaceOrderId,
                 shippedAt,
                 status,
                 tracking,
@@ -1790,7 +1835,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "WithStatusBaseShipmentWithTrackingShipped{id=$id, checkoutIntentId=$checkoutIntentId, createdAt=$createdAt, externalId=$externalId, shippedAt=$shippedAt, status=$status, tracking=$tracking, trackingEvents=$trackingEvents, updatedAt=$updatedAt, additionalProperties=$additionalProperties}"
+            "WithStatusBaseShipmentWithTrackingShipped{id=$id, checkoutIntentId=$checkoutIntentId, createdAt=$createdAt, externalId=$externalId, marketplaceOrderId=$marketplaceOrderId, shippedAt=$shippedAt, status=$status, tracking=$tracking, trackingEvents=$trackingEvents, updatedAt=$updatedAt, additionalProperties=$additionalProperties}"
     }
 
     class DeliveredShipment
@@ -1801,6 +1846,7 @@ private constructor(
         private val createdAt: JsonField<OffsetDateTime>,
         private val deliveredAt: JsonField<OffsetDateTime>,
         private val externalId: JsonField<String>,
+        private val marketplaceOrderId: JsonField<String>,
         private val shippedAt: JsonField<OffsetDateTime>,
         private val status: JsonField<Status>,
         private val tracking: JsonField<ShipmentTracking>,
@@ -1824,6 +1870,9 @@ private constructor(
             @JsonProperty("externalId")
             @ExcludeMissing
             externalId: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("marketplaceOrderId")
+            @ExcludeMissing
+            marketplaceOrderId: JsonField<String> = JsonMissing.of(),
             @JsonProperty("shippedAt")
             @ExcludeMissing
             shippedAt: JsonField<OffsetDateTime> = JsonMissing.of(),
@@ -1843,6 +1892,7 @@ private constructor(
             createdAt,
             deliveredAt,
             externalId,
+            marketplaceOrderId,
             shippedAt,
             status,
             tracking,
@@ -1887,6 +1937,13 @@ private constructor(
          *   value).
          */
         fun externalId(): String = externalId.getRequired("externalId")
+
+        /**
+         * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type or
+         *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
+         *   value).
+         */
+        fun marketplaceOrderId(): String = marketplaceOrderId.getRequired("marketplaceOrderId")
 
         /**
          * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type or
@@ -1968,6 +2025,16 @@ private constructor(
         fun _externalId(): JsonField<String> = externalId
 
         /**
+         * Returns the raw JSON value of [marketplaceOrderId].
+         *
+         * Unlike [marketplaceOrderId], this method doesn't throw if the JSON field has an
+         * unexpected type.
+         */
+        @JsonProperty("marketplaceOrderId")
+        @ExcludeMissing
+        fun _marketplaceOrderId(): JsonField<String> = marketplaceOrderId
+
+        /**
          * Returns the raw JSON value of [shippedAt].
          *
          * Unlike [shippedAt], this method doesn't throw if the JSON field has an unexpected type.
@@ -2035,6 +2102,7 @@ private constructor(
              * .createdAt()
              * .deliveredAt()
              * .externalId()
+             * .marketplaceOrderId()
              * .shippedAt()
              * .status()
              * .tracking()
@@ -2053,6 +2121,7 @@ private constructor(
             private var createdAt: JsonField<OffsetDateTime>? = null
             private var deliveredAt: JsonField<OffsetDateTime>? = null
             private var externalId: JsonField<String>? = null
+            private var marketplaceOrderId: JsonField<String>? = null
             private var shippedAt: JsonField<OffsetDateTime>? = null
             private var status: JsonField<Status>? = null
             private var tracking: JsonField<ShipmentTracking>? = null
@@ -2067,6 +2136,7 @@ private constructor(
                 createdAt = deliveredShipment.createdAt
                 deliveredAt = deliveredShipment.deliveredAt
                 externalId = deliveredShipment.externalId
+                marketplaceOrderId = deliveredShipment.marketplaceOrderId
                 shippedAt = deliveredShipment.shippedAt
                 status = deliveredShipment.status
                 tracking = deliveredShipment.tracking
@@ -2140,6 +2210,20 @@ private constructor(
              * supported value.
              */
             fun externalId(externalId: JsonField<String>) = apply { this.externalId = externalId }
+
+            fun marketplaceOrderId(marketplaceOrderId: String) =
+                marketplaceOrderId(JsonField.of(marketplaceOrderId))
+
+            /**
+             * Sets [Builder.marketplaceOrderId] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.marketplaceOrderId] with a well-typed [String] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun marketplaceOrderId(marketplaceOrderId: JsonField<String>) = apply {
+                this.marketplaceOrderId = marketplaceOrderId
+            }
 
             fun shippedAt(shippedAt: OffsetDateTime) = shippedAt(JsonField.of(shippedAt))
 
@@ -2246,6 +2330,7 @@ private constructor(
              * .createdAt()
              * .deliveredAt()
              * .externalId()
+             * .marketplaceOrderId()
              * .shippedAt()
              * .status()
              * .tracking()
@@ -2262,6 +2347,7 @@ private constructor(
                     checkRequired("createdAt", createdAt),
                     checkRequired("deliveredAt", deliveredAt),
                     checkRequired("externalId", externalId),
+                    checkRequired("marketplaceOrderId", marketplaceOrderId),
                     checkRequired("shippedAt", shippedAt),
                     checkRequired("status", status),
                     checkRequired("tracking", tracking),
@@ -2283,6 +2369,7 @@ private constructor(
             createdAt()
             deliveredAt()
             externalId()
+            marketplaceOrderId()
             shippedAt()
             status().validate()
             tracking().validate()
@@ -2312,6 +2399,7 @@ private constructor(
                 (if (createdAt.asKnown().isPresent) 1 else 0) +
                 (if (deliveredAt.asKnown().isPresent) 1 else 0) +
                 (if (externalId.asKnown().isPresent) 1 else 0) +
+                (if (marketplaceOrderId.asKnown().isPresent) 1 else 0) +
                 (if (shippedAt.asKnown().isPresent) 1 else 0) +
                 (status.asKnown().getOrNull()?.validity() ?: 0) +
                 (tracking.asKnown().getOrNull()?.validity() ?: 0) +
@@ -3149,6 +3237,7 @@ private constructor(
                 createdAt == other.createdAt &&
                 deliveredAt == other.deliveredAt &&
                 externalId == other.externalId &&
+                marketplaceOrderId == other.marketplaceOrderId &&
                 shippedAt == other.shippedAt &&
                 status == other.status &&
                 tracking == other.tracking &&
@@ -3164,6 +3253,7 @@ private constructor(
                 createdAt,
                 deliveredAt,
                 externalId,
+                marketplaceOrderId,
                 shippedAt,
                 status,
                 tracking,
@@ -3176,7 +3266,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "DeliveredShipment{id=$id, checkoutIntentId=$checkoutIntentId, createdAt=$createdAt, deliveredAt=$deliveredAt, externalId=$externalId, shippedAt=$shippedAt, status=$status, tracking=$tracking, trackingEvents=$trackingEvents, updatedAt=$updatedAt, additionalProperties=$additionalProperties}"
+            "DeliveredShipment{id=$id, checkoutIntentId=$checkoutIntentId, createdAt=$createdAt, deliveredAt=$deliveredAt, externalId=$externalId, marketplaceOrderId=$marketplaceOrderId, shippedAt=$shippedAt, status=$status, tracking=$tracking, trackingEvents=$trackingEvents, updatedAt=$updatedAt, additionalProperties=$additionalProperties}"
     }
 
     class WithStatusBaseShipmentWithTrackingDelayed
@@ -3186,6 +3276,7 @@ private constructor(
         private val checkoutIntentId: JsonField<String>,
         private val createdAt: JsonField<OffsetDateTime>,
         private val externalId: JsonField<String>,
+        private val marketplaceOrderId: JsonField<String>,
         private val shippedAt: JsonField<OffsetDateTime>,
         private val status: JsonField<Status>,
         private val tracking: JsonField<ShipmentTracking>,
@@ -3206,6 +3297,9 @@ private constructor(
             @JsonProperty("externalId")
             @ExcludeMissing
             externalId: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("marketplaceOrderId")
+            @ExcludeMissing
+            marketplaceOrderId: JsonField<String> = JsonMissing.of(),
             @JsonProperty("shippedAt")
             @ExcludeMissing
             shippedAt: JsonField<OffsetDateTime> = JsonMissing.of(),
@@ -3224,6 +3318,7 @@ private constructor(
             checkoutIntentId,
             createdAt,
             externalId,
+            marketplaceOrderId,
             shippedAt,
             status,
             tracking,
@@ -3261,6 +3356,13 @@ private constructor(
          *   value).
          */
         fun externalId(): String = externalId.getRequired("externalId")
+
+        /**
+         * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type or
+         *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
+         *   value).
+         */
+        fun marketplaceOrderId(): String = marketplaceOrderId.getRequired("marketplaceOrderId")
 
         /**
          * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type or
@@ -3333,6 +3435,16 @@ private constructor(
         fun _externalId(): JsonField<String> = externalId
 
         /**
+         * Returns the raw JSON value of [marketplaceOrderId].
+         *
+         * Unlike [marketplaceOrderId], this method doesn't throw if the JSON field has an
+         * unexpected type.
+         */
+        @JsonProperty("marketplaceOrderId")
+        @ExcludeMissing
+        fun _marketplaceOrderId(): JsonField<String> = marketplaceOrderId
+
+        /**
          * Returns the raw JSON value of [shippedAt].
          *
          * Unlike [shippedAt], this method doesn't throw if the JSON field has an unexpected type.
@@ -3400,6 +3512,7 @@ private constructor(
              * .checkoutIntentId()
              * .createdAt()
              * .externalId()
+             * .marketplaceOrderId()
              * .shippedAt()
              * .status()
              * .tracking()
@@ -3417,6 +3530,7 @@ private constructor(
             private var checkoutIntentId: JsonField<String>? = null
             private var createdAt: JsonField<OffsetDateTime>? = null
             private var externalId: JsonField<String>? = null
+            private var marketplaceOrderId: JsonField<String>? = null
             private var shippedAt: JsonField<OffsetDateTime>? = null
             private var status: JsonField<Status>? = null
             private var tracking: JsonField<ShipmentTracking>? = null
@@ -3432,6 +3546,7 @@ private constructor(
                 checkoutIntentId = withStatusBaseShipmentWithTrackingDelayed.checkoutIntentId
                 createdAt = withStatusBaseShipmentWithTrackingDelayed.createdAt
                 externalId = withStatusBaseShipmentWithTrackingDelayed.externalId
+                marketplaceOrderId = withStatusBaseShipmentWithTrackingDelayed.marketplaceOrderId
                 shippedAt = withStatusBaseShipmentWithTrackingDelayed.shippedAt
                 status = withStatusBaseShipmentWithTrackingDelayed.status
                 tracking = withStatusBaseShipmentWithTrackingDelayed.tracking
@@ -3496,6 +3611,20 @@ private constructor(
              * supported value.
              */
             fun externalId(externalId: JsonField<String>) = apply { this.externalId = externalId }
+
+            fun marketplaceOrderId(marketplaceOrderId: String) =
+                marketplaceOrderId(JsonField.of(marketplaceOrderId))
+
+            /**
+             * Sets [Builder.marketplaceOrderId] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.marketplaceOrderId] with a well-typed [String] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun marketplaceOrderId(marketplaceOrderId: JsonField<String>) = apply {
+                this.marketplaceOrderId = marketplaceOrderId
+            }
 
             fun shippedAt(shippedAt: OffsetDateTime) = shippedAt(JsonField.of(shippedAt))
 
@@ -3601,6 +3730,7 @@ private constructor(
              * .checkoutIntentId()
              * .createdAt()
              * .externalId()
+             * .marketplaceOrderId()
              * .shippedAt()
              * .status()
              * .tracking()
@@ -3616,6 +3746,7 @@ private constructor(
                     checkRequired("checkoutIntentId", checkoutIntentId),
                     checkRequired("createdAt", createdAt),
                     checkRequired("externalId", externalId),
+                    checkRequired("marketplaceOrderId", marketplaceOrderId),
                     checkRequired("shippedAt", shippedAt),
                     checkRequired("status", status),
                     checkRequired("tracking", tracking),
@@ -3636,6 +3767,7 @@ private constructor(
             checkoutIntentId()
             createdAt()
             externalId()
+            marketplaceOrderId()
             shippedAt()
             status().validate()
             tracking().validate()
@@ -3664,6 +3796,7 @@ private constructor(
                 (if (checkoutIntentId.asKnown().isPresent) 1 else 0) +
                 (if (createdAt.asKnown().isPresent) 1 else 0) +
                 (if (externalId.asKnown().isPresent) 1 else 0) +
+                (if (marketplaceOrderId.asKnown().isPresent) 1 else 0) +
                 (if (shippedAt.asKnown().isPresent) 1 else 0) +
                 (status.asKnown().getOrNull()?.validity() ?: 0) +
                 (tracking.asKnown().getOrNull()?.validity() ?: 0) +
@@ -4500,6 +4633,7 @@ private constructor(
                 checkoutIntentId == other.checkoutIntentId &&
                 createdAt == other.createdAt &&
                 externalId == other.externalId &&
+                marketplaceOrderId == other.marketplaceOrderId &&
                 shippedAt == other.shippedAt &&
                 status == other.status &&
                 tracking == other.tracking &&
@@ -4514,6 +4648,7 @@ private constructor(
                 checkoutIntentId,
                 createdAt,
                 externalId,
+                marketplaceOrderId,
                 shippedAt,
                 status,
                 tracking,
@@ -4526,7 +4661,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "WithStatusBaseShipmentWithTrackingDelayed{id=$id, checkoutIntentId=$checkoutIntentId, createdAt=$createdAt, externalId=$externalId, shippedAt=$shippedAt, status=$status, tracking=$tracking, trackingEvents=$trackingEvents, updatedAt=$updatedAt, additionalProperties=$additionalProperties}"
+            "WithStatusBaseShipmentWithTrackingDelayed{id=$id, checkoutIntentId=$checkoutIntentId, createdAt=$createdAt, externalId=$externalId, marketplaceOrderId=$marketplaceOrderId, shippedAt=$shippedAt, status=$status, tracking=$tracking, trackingEvents=$trackingEvents, updatedAt=$updatedAt, additionalProperties=$additionalProperties}"
     }
 
     class WithStatusBaseShipmentWithTrackingOutForDelivery
@@ -4536,6 +4671,7 @@ private constructor(
         private val checkoutIntentId: JsonField<String>,
         private val createdAt: JsonField<OffsetDateTime>,
         private val externalId: JsonField<String>,
+        private val marketplaceOrderId: JsonField<String>,
         private val shippedAt: JsonField<OffsetDateTime>,
         private val status: JsonField<Status>,
         private val tracking: JsonField<ShipmentTracking>,
@@ -4556,6 +4692,9 @@ private constructor(
             @JsonProperty("externalId")
             @ExcludeMissing
             externalId: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("marketplaceOrderId")
+            @ExcludeMissing
+            marketplaceOrderId: JsonField<String> = JsonMissing.of(),
             @JsonProperty("shippedAt")
             @ExcludeMissing
             shippedAt: JsonField<OffsetDateTime> = JsonMissing.of(),
@@ -4574,6 +4713,7 @@ private constructor(
             checkoutIntentId,
             createdAt,
             externalId,
+            marketplaceOrderId,
             shippedAt,
             status,
             tracking,
@@ -4611,6 +4751,13 @@ private constructor(
          *   value).
          */
         fun externalId(): String = externalId.getRequired("externalId")
+
+        /**
+         * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type or
+         *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
+         *   value).
+         */
+        fun marketplaceOrderId(): String = marketplaceOrderId.getRequired("marketplaceOrderId")
 
         /**
          * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type or
@@ -4683,6 +4830,16 @@ private constructor(
         fun _externalId(): JsonField<String> = externalId
 
         /**
+         * Returns the raw JSON value of [marketplaceOrderId].
+         *
+         * Unlike [marketplaceOrderId], this method doesn't throw if the JSON field has an
+         * unexpected type.
+         */
+        @JsonProperty("marketplaceOrderId")
+        @ExcludeMissing
+        fun _marketplaceOrderId(): JsonField<String> = marketplaceOrderId
+
+        /**
          * Returns the raw JSON value of [shippedAt].
          *
          * Unlike [shippedAt], this method doesn't throw if the JSON field has an unexpected type.
@@ -4750,6 +4907,7 @@ private constructor(
              * .checkoutIntentId()
              * .createdAt()
              * .externalId()
+             * .marketplaceOrderId()
              * .shippedAt()
              * .status()
              * .tracking()
@@ -4767,6 +4925,7 @@ private constructor(
             private var checkoutIntentId: JsonField<String>? = null
             private var createdAt: JsonField<OffsetDateTime>? = null
             private var externalId: JsonField<String>? = null
+            private var marketplaceOrderId: JsonField<String>? = null
             private var shippedAt: JsonField<OffsetDateTime>? = null
             private var status: JsonField<Status>? = null
             private var tracking: JsonField<ShipmentTracking>? = null
@@ -4783,6 +4942,8 @@ private constructor(
                 checkoutIntentId = withStatusBaseShipmentWithTrackingOutForDelivery.checkoutIntentId
                 createdAt = withStatusBaseShipmentWithTrackingOutForDelivery.createdAt
                 externalId = withStatusBaseShipmentWithTrackingOutForDelivery.externalId
+                marketplaceOrderId =
+                    withStatusBaseShipmentWithTrackingOutForDelivery.marketplaceOrderId
                 shippedAt = withStatusBaseShipmentWithTrackingOutForDelivery.shippedAt
                 status = withStatusBaseShipmentWithTrackingOutForDelivery.status
                 tracking = withStatusBaseShipmentWithTrackingOutForDelivery.tracking
@@ -4848,6 +5009,20 @@ private constructor(
              * supported value.
              */
             fun externalId(externalId: JsonField<String>) = apply { this.externalId = externalId }
+
+            fun marketplaceOrderId(marketplaceOrderId: String) =
+                marketplaceOrderId(JsonField.of(marketplaceOrderId))
+
+            /**
+             * Sets [Builder.marketplaceOrderId] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.marketplaceOrderId] with a well-typed [String] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun marketplaceOrderId(marketplaceOrderId: JsonField<String>) = apply {
+                this.marketplaceOrderId = marketplaceOrderId
+            }
 
             fun shippedAt(shippedAt: OffsetDateTime) = shippedAt(JsonField.of(shippedAt))
 
@@ -4953,6 +5128,7 @@ private constructor(
              * .checkoutIntentId()
              * .createdAt()
              * .externalId()
+             * .marketplaceOrderId()
              * .shippedAt()
              * .status()
              * .tracking()
@@ -4968,6 +5144,7 @@ private constructor(
                     checkRequired("checkoutIntentId", checkoutIntentId),
                     checkRequired("createdAt", createdAt),
                     checkRequired("externalId", externalId),
+                    checkRequired("marketplaceOrderId", marketplaceOrderId),
                     checkRequired("shippedAt", shippedAt),
                     checkRequired("status", status),
                     checkRequired("tracking", tracking),
@@ -4988,6 +5165,7 @@ private constructor(
             checkoutIntentId()
             createdAt()
             externalId()
+            marketplaceOrderId()
             shippedAt()
             status().validate()
             tracking().validate()
@@ -5016,6 +5194,7 @@ private constructor(
                 (if (checkoutIntentId.asKnown().isPresent) 1 else 0) +
                 (if (createdAt.asKnown().isPresent) 1 else 0) +
                 (if (externalId.asKnown().isPresent) 1 else 0) +
+                (if (marketplaceOrderId.asKnown().isPresent) 1 else 0) +
                 (if (shippedAt.asKnown().isPresent) 1 else 0) +
                 (status.asKnown().getOrNull()?.validity() ?: 0) +
                 (tracking.asKnown().getOrNull()?.validity() ?: 0) +
@@ -5852,6 +6031,7 @@ private constructor(
                 checkoutIntentId == other.checkoutIntentId &&
                 createdAt == other.createdAt &&
                 externalId == other.externalId &&
+                marketplaceOrderId == other.marketplaceOrderId &&
                 shippedAt == other.shippedAt &&
                 status == other.status &&
                 tracking == other.tracking &&
@@ -5866,6 +6046,7 @@ private constructor(
                 checkoutIntentId,
                 createdAt,
                 externalId,
+                marketplaceOrderId,
                 shippedAt,
                 status,
                 tracking,
@@ -5878,7 +6059,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "WithStatusBaseShipmentWithTrackingOutForDelivery{id=$id, checkoutIntentId=$checkoutIntentId, createdAt=$createdAt, externalId=$externalId, shippedAt=$shippedAt, status=$status, tracking=$tracking, trackingEvents=$trackingEvents, updatedAt=$updatedAt, additionalProperties=$additionalProperties}"
+            "WithStatusBaseShipmentWithTrackingOutForDelivery{id=$id, checkoutIntentId=$checkoutIntentId, createdAt=$createdAt, externalId=$externalId, marketplaceOrderId=$marketplaceOrderId, shippedAt=$shippedAt, status=$status, tracking=$tracking, trackingEvents=$trackingEvents, updatedAt=$updatedAt, additionalProperties=$additionalProperties}"
     }
 
     class WithStatusBaseShipmentOrdered
@@ -5887,6 +6068,7 @@ private constructor(
         private val id: JsonField<String>,
         private val checkoutIntentId: JsonField<String>,
         private val createdAt: JsonField<OffsetDateTime>,
+        private val marketplaceOrderId: JsonField<String>,
         private val status: JsonField<Status>,
         private val updatedAt: JsonField<OffsetDateTime>,
         private val additionalProperties: MutableMap<String, JsonValue>,
@@ -5901,11 +6083,22 @@ private constructor(
             @JsonProperty("createdAt")
             @ExcludeMissing
             createdAt: JsonField<OffsetDateTime> = JsonMissing.of(),
+            @JsonProperty("marketplaceOrderId")
+            @ExcludeMissing
+            marketplaceOrderId: JsonField<String> = JsonMissing.of(),
             @JsonProperty("status") @ExcludeMissing status: JsonField<Status> = JsonMissing.of(),
             @JsonProperty("updatedAt")
             @ExcludeMissing
             updatedAt: JsonField<OffsetDateTime> = JsonMissing.of(),
-        ) : this(id, checkoutIntentId, createdAt, status, updatedAt, mutableMapOf())
+        ) : this(
+            id,
+            checkoutIntentId,
+            createdAt,
+            marketplaceOrderId,
+            status,
+            updatedAt,
+            mutableMapOf(),
+        )
 
         /**
          * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type or
@@ -5927,6 +6120,13 @@ private constructor(
          *   value).
          */
         fun createdAt(): OffsetDateTime = createdAt.getRequired("createdAt")
+
+        /**
+         * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type or
+         *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
+         *   value).
+         */
+        fun marketplaceOrderId(): String = marketplaceOrderId.getRequired("marketplaceOrderId")
 
         /**
          * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type or
@@ -5969,6 +6169,16 @@ private constructor(
         fun _createdAt(): JsonField<OffsetDateTime> = createdAt
 
         /**
+         * Returns the raw JSON value of [marketplaceOrderId].
+         *
+         * Unlike [marketplaceOrderId], this method doesn't throw if the JSON field has an
+         * unexpected type.
+         */
+        @JsonProperty("marketplaceOrderId")
+        @ExcludeMissing
+        fun _marketplaceOrderId(): JsonField<String> = marketplaceOrderId
+
+        /**
          * Returns the raw JSON value of [status].
          *
          * Unlike [status], this method doesn't throw if the JSON field has an unexpected type.
@@ -6007,6 +6217,7 @@ private constructor(
              * .id()
              * .checkoutIntentId()
              * .createdAt()
+             * .marketplaceOrderId()
              * .status()
              * .updatedAt()
              * ```
@@ -6020,6 +6231,7 @@ private constructor(
             private var id: JsonField<String>? = null
             private var checkoutIntentId: JsonField<String>? = null
             private var createdAt: JsonField<OffsetDateTime>? = null
+            private var marketplaceOrderId: JsonField<String>? = null
             private var status: JsonField<Status>? = null
             private var updatedAt: JsonField<OffsetDateTime>? = null
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
@@ -6030,6 +6242,7 @@ private constructor(
                     id = withStatusBaseShipmentOrdered.id
                     checkoutIntentId = withStatusBaseShipmentOrdered.checkoutIntentId
                     createdAt = withStatusBaseShipmentOrdered.createdAt
+                    marketplaceOrderId = withStatusBaseShipmentOrdered.marketplaceOrderId
                     status = withStatusBaseShipmentOrdered.status
                     updatedAt = withStatusBaseShipmentOrdered.updatedAt
                     additionalProperties =
@@ -6072,6 +6285,20 @@ private constructor(
              */
             fun createdAt(createdAt: JsonField<OffsetDateTime>) = apply {
                 this.createdAt = createdAt
+            }
+
+            fun marketplaceOrderId(marketplaceOrderId: String) =
+                marketplaceOrderId(JsonField.of(marketplaceOrderId))
+
+            /**
+             * Sets [Builder.marketplaceOrderId] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.marketplaceOrderId] with a well-typed [String] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun marketplaceOrderId(marketplaceOrderId: JsonField<String>) = apply {
+                this.marketplaceOrderId = marketplaceOrderId
             }
 
             fun status(status: Status) = status(JsonField.of(status))
@@ -6127,6 +6354,7 @@ private constructor(
              * .id()
              * .checkoutIntentId()
              * .createdAt()
+             * .marketplaceOrderId()
              * .status()
              * .updatedAt()
              * ```
@@ -6138,6 +6366,7 @@ private constructor(
                     checkRequired("id", id),
                     checkRequired("checkoutIntentId", checkoutIntentId),
                     checkRequired("createdAt", createdAt),
+                    checkRequired("marketplaceOrderId", marketplaceOrderId),
                     checkRequired("status", status),
                     checkRequired("updatedAt", updatedAt),
                     additionalProperties.toMutableMap(),
@@ -6154,6 +6383,7 @@ private constructor(
             id()
             checkoutIntentId()
             createdAt()
+            marketplaceOrderId()
             status().validate()
             updatedAt()
             validated = true
@@ -6178,6 +6408,7 @@ private constructor(
             (if (id.asKnown().isPresent) 1 else 0) +
                 (if (checkoutIntentId.asKnown().isPresent) 1 else 0) +
                 (if (createdAt.asKnown().isPresent) 1 else 0) +
+                (if (marketplaceOrderId.asKnown().isPresent) 1 else 0) +
                 (status.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (updatedAt.asKnown().isPresent) 1 else 0)
 
@@ -6313,19 +6544,28 @@ private constructor(
                 id == other.id &&
                 checkoutIntentId == other.checkoutIntentId &&
                 createdAt == other.createdAt &&
+                marketplaceOrderId == other.marketplaceOrderId &&
                 status == other.status &&
                 updatedAt == other.updatedAt &&
                 additionalProperties == other.additionalProperties
         }
 
         private val hashCode: Int by lazy {
-            Objects.hash(id, checkoutIntentId, createdAt, status, updatedAt, additionalProperties)
+            Objects.hash(
+                id,
+                checkoutIntentId,
+                createdAt,
+                marketplaceOrderId,
+                status,
+                updatedAt,
+                additionalProperties,
+            )
         }
 
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "WithStatusBaseShipmentOrdered{id=$id, checkoutIntentId=$checkoutIntentId, createdAt=$createdAt, status=$status, updatedAt=$updatedAt, additionalProperties=$additionalProperties}"
+            "WithStatusBaseShipmentOrdered{id=$id, checkoutIntentId=$checkoutIntentId, createdAt=$createdAt, marketplaceOrderId=$marketplaceOrderId, status=$status, updatedAt=$updatedAt, additionalProperties=$additionalProperties}"
     }
 
     class WithStatusBaseShipmentCanceled
@@ -6334,6 +6574,7 @@ private constructor(
         private val id: JsonField<String>,
         private val checkoutIntentId: JsonField<String>,
         private val createdAt: JsonField<OffsetDateTime>,
+        private val marketplaceOrderId: JsonField<String>,
         private val status: JsonField<Status>,
         private val updatedAt: JsonField<OffsetDateTime>,
         private val additionalProperties: MutableMap<String, JsonValue>,
@@ -6348,11 +6589,22 @@ private constructor(
             @JsonProperty("createdAt")
             @ExcludeMissing
             createdAt: JsonField<OffsetDateTime> = JsonMissing.of(),
+            @JsonProperty("marketplaceOrderId")
+            @ExcludeMissing
+            marketplaceOrderId: JsonField<String> = JsonMissing.of(),
             @JsonProperty("status") @ExcludeMissing status: JsonField<Status> = JsonMissing.of(),
             @JsonProperty("updatedAt")
             @ExcludeMissing
             updatedAt: JsonField<OffsetDateTime> = JsonMissing.of(),
-        ) : this(id, checkoutIntentId, createdAt, status, updatedAt, mutableMapOf())
+        ) : this(
+            id,
+            checkoutIntentId,
+            createdAt,
+            marketplaceOrderId,
+            status,
+            updatedAt,
+            mutableMapOf(),
+        )
 
         /**
          * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type or
@@ -6374,6 +6626,13 @@ private constructor(
          *   value).
          */
         fun createdAt(): OffsetDateTime = createdAt.getRequired("createdAt")
+
+        /**
+         * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type or
+         *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
+         *   value).
+         */
+        fun marketplaceOrderId(): String = marketplaceOrderId.getRequired("marketplaceOrderId")
 
         /**
          * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type or
@@ -6416,6 +6675,16 @@ private constructor(
         fun _createdAt(): JsonField<OffsetDateTime> = createdAt
 
         /**
+         * Returns the raw JSON value of [marketplaceOrderId].
+         *
+         * Unlike [marketplaceOrderId], this method doesn't throw if the JSON field has an
+         * unexpected type.
+         */
+        @JsonProperty("marketplaceOrderId")
+        @ExcludeMissing
+        fun _marketplaceOrderId(): JsonField<String> = marketplaceOrderId
+
+        /**
          * Returns the raw JSON value of [status].
          *
          * Unlike [status], this method doesn't throw if the JSON field has an unexpected type.
@@ -6454,6 +6723,7 @@ private constructor(
              * .id()
              * .checkoutIntentId()
              * .createdAt()
+             * .marketplaceOrderId()
              * .status()
              * .updatedAt()
              * ```
@@ -6467,6 +6737,7 @@ private constructor(
             private var id: JsonField<String>? = null
             private var checkoutIntentId: JsonField<String>? = null
             private var createdAt: JsonField<OffsetDateTime>? = null
+            private var marketplaceOrderId: JsonField<String>? = null
             private var status: JsonField<Status>? = null
             private var updatedAt: JsonField<OffsetDateTime>? = null
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
@@ -6477,6 +6748,7 @@ private constructor(
                     id = withStatusBaseShipmentCanceled.id
                     checkoutIntentId = withStatusBaseShipmentCanceled.checkoutIntentId
                     createdAt = withStatusBaseShipmentCanceled.createdAt
+                    marketplaceOrderId = withStatusBaseShipmentCanceled.marketplaceOrderId
                     status = withStatusBaseShipmentCanceled.status
                     updatedAt = withStatusBaseShipmentCanceled.updatedAt
                     additionalProperties =
@@ -6519,6 +6791,20 @@ private constructor(
              */
             fun createdAt(createdAt: JsonField<OffsetDateTime>) = apply {
                 this.createdAt = createdAt
+            }
+
+            fun marketplaceOrderId(marketplaceOrderId: String) =
+                marketplaceOrderId(JsonField.of(marketplaceOrderId))
+
+            /**
+             * Sets [Builder.marketplaceOrderId] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.marketplaceOrderId] with a well-typed [String] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun marketplaceOrderId(marketplaceOrderId: JsonField<String>) = apply {
+                this.marketplaceOrderId = marketplaceOrderId
             }
 
             fun status(status: Status) = status(JsonField.of(status))
@@ -6574,6 +6860,7 @@ private constructor(
              * .id()
              * .checkoutIntentId()
              * .createdAt()
+             * .marketplaceOrderId()
              * .status()
              * .updatedAt()
              * ```
@@ -6585,6 +6872,7 @@ private constructor(
                     checkRequired("id", id),
                     checkRequired("checkoutIntentId", checkoutIntentId),
                     checkRequired("createdAt", createdAt),
+                    checkRequired("marketplaceOrderId", marketplaceOrderId),
                     checkRequired("status", status),
                     checkRequired("updatedAt", updatedAt),
                     additionalProperties.toMutableMap(),
@@ -6601,6 +6889,7 @@ private constructor(
             id()
             checkoutIntentId()
             createdAt()
+            marketplaceOrderId()
             status().validate()
             updatedAt()
             validated = true
@@ -6625,6 +6914,7 @@ private constructor(
             (if (id.asKnown().isPresent) 1 else 0) +
                 (if (checkoutIntentId.asKnown().isPresent) 1 else 0) +
                 (if (createdAt.asKnown().isPresent) 1 else 0) +
+                (if (marketplaceOrderId.asKnown().isPresent) 1 else 0) +
                 (status.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (updatedAt.asKnown().isPresent) 1 else 0)
 
@@ -6760,18 +7050,27 @@ private constructor(
                 id == other.id &&
                 checkoutIntentId == other.checkoutIntentId &&
                 createdAt == other.createdAt &&
+                marketplaceOrderId == other.marketplaceOrderId &&
                 status == other.status &&
                 updatedAt == other.updatedAt &&
                 additionalProperties == other.additionalProperties
         }
 
         private val hashCode: Int by lazy {
-            Objects.hash(id, checkoutIntentId, createdAt, status, updatedAt, additionalProperties)
+            Objects.hash(
+                id,
+                checkoutIntentId,
+                createdAt,
+                marketplaceOrderId,
+                status,
+                updatedAt,
+                additionalProperties,
+            )
         }
 
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "WithStatusBaseShipmentCanceled{id=$id, checkoutIntentId=$checkoutIntentId, createdAt=$createdAt, status=$status, updatedAt=$updatedAt, additionalProperties=$additionalProperties}"
+            "WithStatusBaseShipmentCanceled{id=$id, checkoutIntentId=$checkoutIntentId, createdAt=$createdAt, marketplaceOrderId=$marketplaceOrderId, status=$status, updatedAt=$updatedAt, additionalProperties=$additionalProperties}"
     }
 }
