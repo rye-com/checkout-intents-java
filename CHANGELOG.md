@@ -1,5 +1,29 @@
 # Changelog
 
+## 0.6.0 (2026-03-18)
+
+Full Changelog: [v0.5.0...v0.6.0](https://github.com/rye-com/checkout-intents-java/compare/v0.5.0...v0.6.0)
+
+### Features
+
+* Return 403 for non-drawdown developers on billing endpoints ([69978e8](https://github.com/rye-com/checkout-intents-java/commit/69978e8d0c4b9c1d5fa5f9585937ac347ca51919))
+* Update shipment types in prep for tracking updates ([dc53e25](https://github.com/rye-com/checkout-intents-java/commit/dc53e2525772e34bc18deb0a019ed09493616e96))
+
+
+### Bug Fixes
+
+* **client:** allow updating header/query affecting fields in `toBuilder()` ([062a87f](https://github.com/rye-com/checkout-intents-java/commit/062a87f3be445e794e7c3e0a35389e374ec42fbd))
+* **client:** incorrect `Retry-After` parsing ([e604a5b](https://github.com/rye-com/checkout-intents-java/commit/e604a5b5b3aa5ceb05bd2b2f4434479d4daf17ae))
+* **docs:** remove double-slash from server urls ([5d76a93](https://github.com/rye-com/checkout-intents-java/commit/5d76a93027103bc18f8a2c82e7b7f017760456c4))
+
+
+### Chores
+
+* **ci:** skip uploading artifacts on stainless-internal branches ([e593355](https://github.com/rye-com/checkout-intents-java/commit/e5933550c9198838f574b7ce72f9a0509caf3543))
+* **docs:** improve examples ([ccf9df3](https://github.com/rye-com/checkout-intents-java/commit/ccf9df3bb460fd688d8a13af9bb777bf3fe37334))
+* **internal:** tweak CI branches ([99e9121](https://github.com/rye-com/checkout-intents-java/commit/99e91219cb069c2de2bcf70ca32c494f3fc1965f))
+* **internal:** update retry delay tests ([2eaba98](https://github.com/rye-com/checkout-intents-java/commit/2eaba987f50ddc47064d580a51c810b889b735cd))
+
 ## 0.5.0 (2026-03-06)
 
 Full Changelog: [v0.4.1...v0.5.0](https://github.com/rye-com/checkout-intents-java/compare/v0.4.1...v0.5.0)
