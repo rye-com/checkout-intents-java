@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.7.0 (2026-03-20)
+
+Full Changelog: [v0.6.0...v0.7.0](https://github.com/rye-com/checkout-intents-java/compare/v0.6.0...v0.7.0)
+
+### Features
+
+* Add deliveryEstimate to shipping options in offers. ([75b844e](https://github.com/rye-com/checkout-intents-java/commit/75b844e98bdcb3882a4ab57ca175697a6ec6ab53))
+
 ## 0.6.0 (2026-03-18)
 
 Full Changelog: [v0.5.0...v0.6.0](https://github.com/rye-com/checkout-intents-java/compare/v0.5.0...v0.6.0)
