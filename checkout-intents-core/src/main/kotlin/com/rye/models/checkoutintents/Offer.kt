@@ -14,6 +14,7 @@ import com.rye.core.checkKnown
 import com.rye.core.checkRequired
 import com.rye.core.toImmutable
 import com.rye.errors.CheckoutIntentsInvalidDataException
+import java.time.OffsetDateTime
 import java.util.Collections
 import java.util.Objects
 import java.util.Optional
@@ -774,6 +775,7 @@ private constructor(
         private constructor(
             private val id: JsonField<String>,
             private val cost: JsonField<Money>,
+            private val deliveryEstimate: JsonField<DeliveryEstimate>,
             private val discount: JsonField<Money>,
             private val additionalProperties: MutableMap<String, JsonValue>,
         ) {
@@ -782,10 +784,13 @@ private constructor(
             private constructor(
                 @JsonProperty("id") @ExcludeMissing id: JsonField<String> = JsonMissing.of(),
                 @JsonProperty("cost") @ExcludeMissing cost: JsonField<Money> = JsonMissing.of(),
+                @JsonProperty("deliveryEstimate")
+                @ExcludeMissing
+                deliveryEstimate: JsonField<DeliveryEstimate> = JsonMissing.of(),
                 @JsonProperty("discount")
                 @ExcludeMissing
                 discount: JsonField<Money> = JsonMissing.of(),
-            ) : this(id, cost, discount, mutableMapOf())
+            ) : this(id, cost, deliveryEstimate, discount, mutableMapOf())
 
             /**
              * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type
@@ -800,6 +805,13 @@ private constructor(
              *   value).
              */
             fun cost(): Money = cost.getRequired("cost")
+
+            /**
+             * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type
+             *   (e.g. if the server responded with an unexpected value).
+             */
+            fun deliveryEstimate(): Optional<DeliveryEstimate> =
+                deliveryEstimate.getOptional("deliveryEstimate")
 
             /**
              * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type
@@ -820,6 +832,16 @@ private constructor(
              * Unlike [cost], this method doesn't throw if the JSON field has an unexpected type.
              */
             @JsonProperty("cost") @ExcludeMissing fun _cost(): JsonField<Money> = cost
+
+            /**
+             * Returns the raw JSON value of [deliveryEstimate].
+             *
+             * Unlike [deliveryEstimate], this method doesn't throw if the JSON field has an
+             * unexpected type.
+             */
+            @JsonProperty("deliveryEstimate")
+            @ExcludeMissing
+            fun _deliveryEstimate(): JsonField<DeliveryEstimate> = deliveryEstimate
 
             /**
              * Returns the raw JSON value of [discount].
@@ -860,6 +882,7 @@ private constructor(
 
                 private var id: JsonField<String>? = null
                 private var cost: JsonField<Money>? = null
+                private var deliveryEstimate: JsonField<DeliveryEstimate> = JsonMissing.of()
                 private var discount: JsonField<Money> = JsonMissing.of()
                 private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
@@ -867,6 +890,7 @@ private constructor(
                 internal fun from(availableOption: AvailableOption) = apply {
                     id = availableOption.id
                     cost = availableOption.cost
+                    deliveryEstimate = availableOption.deliveryEstimate
                     discount = availableOption.discount
                     additionalProperties = availableOption.additionalProperties.toMutableMap()
                 }
@@ -892,6 +916,27 @@ private constructor(
                  * supported value.
                  */
                 fun cost(cost: JsonField<Money>) = apply { this.cost = cost }
+
+                fun deliveryEstimate(deliveryEstimate: DeliveryEstimate?) =
+                    deliveryEstimate(JsonField.ofNullable(deliveryEstimate))
+
+                /**
+                 * Alias for calling [Builder.deliveryEstimate] with
+                 * `deliveryEstimate.orElse(null)`.
+                 */
+                fun deliveryEstimate(deliveryEstimate: Optional<DeliveryEstimate>) =
+                    deliveryEstimate(deliveryEstimate.getOrNull())
+
+                /**
+                 * Sets [Builder.deliveryEstimate] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.deliveryEstimate] with a well-typed
+                 * [DeliveryEstimate] value instead. This method is primarily for setting the field
+                 * to an undocumented or not yet supported value.
+                 */
+                fun deliveryEstimate(deliveryEstimate: JsonField<DeliveryEstimate>) = apply {
+                    this.deliveryEstimate = deliveryEstimate
+                }
 
                 fun discount(discount: Money) = discount(JsonField.of(discount))
 
@@ -943,6 +988,7 @@ private constructor(
                     AvailableOption(
                         checkRequired("id", id),
                         checkRequired("cost", cost),
+                        deliveryEstimate,
                         discount,
                         additionalProperties.toMutableMap(),
                     )
@@ -957,6 +1003,7 @@ private constructor(
 
                 id()
                 cost().validate()
+                deliveryEstimate().ifPresent { it.validate() }
                 discount().ifPresent { it.validate() }
                 validated = true
             }
@@ -979,7 +1026,219 @@ private constructor(
             internal fun validity(): Int =
                 (if (id.asKnown().isPresent) 1 else 0) +
                     (cost.asKnown().getOrNull()?.validity() ?: 0) +
+                    (deliveryEstimate.asKnown().getOrNull()?.validity() ?: 0) +
                     (discount.asKnown().getOrNull()?.validity() ?: 0)
+
+            class DeliveryEstimate
+            @JsonCreator(mode = JsonCreator.Mode.DISABLED)
+            private constructor(
+                private val earliest: JsonField<OffsetDateTime>,
+                private val latest: JsonField<OffsetDateTime>,
+                private val additionalProperties: MutableMap<String, JsonValue>,
+            ) {
+
+                @JsonCreator
+                private constructor(
+                    @JsonProperty("earliest")
+                    @ExcludeMissing
+                    earliest: JsonField<OffsetDateTime> = JsonMissing.of(),
+                    @JsonProperty("latest")
+                    @ExcludeMissing
+                    latest: JsonField<OffsetDateTime> = JsonMissing.of(),
+                ) : this(earliest, latest, mutableMapOf())
+
+                /**
+                 * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected
+                 *   type or is unexpectedly missing or null (e.g. if the server responded with an
+                 *   unexpected value).
+                 */
+                fun earliest(): OffsetDateTime = earliest.getRequired("earliest")
+
+                /**
+                 * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected
+                 *   type or is unexpectedly missing or null (e.g. if the server responded with an
+                 *   unexpected value).
+                 */
+                fun latest(): OffsetDateTime = latest.getRequired("latest")
+
+                /**
+                 * Returns the raw JSON value of [earliest].
+                 *
+                 * Unlike [earliest], this method doesn't throw if the JSON field has an unexpected
+                 * type.
+                 */
+                @JsonProperty("earliest")
+                @ExcludeMissing
+                fun _earliest(): JsonField<OffsetDateTime> = earliest
+
+                /**
+                 * Returns the raw JSON value of [latest].
+                 *
+                 * Unlike [latest], this method doesn't throw if the JSON field has an unexpected
+                 * type.
+                 */
+                @JsonProperty("latest")
+                @ExcludeMissing
+                fun _latest(): JsonField<OffsetDateTime> = latest
+
+                @JsonAnySetter
+                private fun putAdditionalProperty(key: String, value: JsonValue) {
+                    additionalProperties.put(key, value)
+                }
+
+                @JsonAnyGetter
+                @ExcludeMissing
+                fun _additionalProperties(): Map<String, JsonValue> =
+                    Collections.unmodifiableMap(additionalProperties)
+
+                fun toBuilder() = Builder().from(this)
+
+                companion object {
+
+                    /**
+                     * Returns a mutable builder for constructing an instance of [DeliveryEstimate].
+                     *
+                     * The following fields are required:
+                     * ```java
+                     * .earliest()
+                     * .latest()
+                     * ```
+                     */
+                    @JvmStatic fun builder() = Builder()
+                }
+
+                /** A builder for [DeliveryEstimate]. */
+                class Builder internal constructor() {
+
+                    private var earliest: JsonField<OffsetDateTime>? = null
+                    private var latest: JsonField<OffsetDateTime>? = null
+                    private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
+
+                    @JvmSynthetic
+                    internal fun from(deliveryEstimate: DeliveryEstimate) = apply {
+                        earliest = deliveryEstimate.earliest
+                        latest = deliveryEstimate.latest
+                        additionalProperties = deliveryEstimate.additionalProperties.toMutableMap()
+                    }
+
+                    fun earliest(earliest: OffsetDateTime) = earliest(JsonField.of(earliest))
+
+                    /**
+                     * Sets [Builder.earliest] to an arbitrary JSON value.
+                     *
+                     * You should usually call [Builder.earliest] with a well-typed [OffsetDateTime]
+                     * value instead. This method is primarily for setting the field to an
+                     * undocumented or not yet supported value.
+                     */
+                    fun earliest(earliest: JsonField<OffsetDateTime>) = apply {
+                        this.earliest = earliest
+                    }
+
+                    fun latest(latest: OffsetDateTime) = latest(JsonField.of(latest))
+
+                    /**
+                     * Sets [Builder.latest] to an arbitrary JSON value.
+                     *
+                     * You should usually call [Builder.latest] with a well-typed [OffsetDateTime]
+                     * value instead. This method is primarily for setting the field to an
+                     * undocumented or not yet supported value.
+                     */
+                    fun latest(latest: JsonField<OffsetDateTime>) = apply { this.latest = latest }
+
+                    fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                        this.additionalProperties.clear()
+                        putAllAdditionalProperties(additionalProperties)
+                    }
+
+                    fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+                        additionalProperties.put(key, value)
+                    }
+
+                    fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+                        apply {
+                            this.additionalProperties.putAll(additionalProperties)
+                        }
+
+                    fun removeAdditionalProperty(key: String) = apply {
+                        additionalProperties.remove(key)
+                    }
+
+                    fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                        keys.forEach(::removeAdditionalProperty)
+                    }
+
+                    /**
+                     * Returns an immutable instance of [DeliveryEstimate].
+                     *
+                     * Further updates to this [Builder] will not mutate the returned instance.
+                     *
+                     * The following fields are required:
+                     * ```java
+                     * .earliest()
+                     * .latest()
+                     * ```
+                     *
+                     * @throws IllegalStateException if any required field is unset.
+                     */
+                    fun build(): DeliveryEstimate =
+                        DeliveryEstimate(
+                            checkRequired("earliest", earliest),
+                            checkRequired("latest", latest),
+                            additionalProperties.toMutableMap(),
+                        )
+                }
+
+                private var validated: Boolean = false
+
+                fun validate(): DeliveryEstimate = apply {
+                    if (validated) {
+                        return@apply
+                    }
+
+                    earliest()
+                    latest()
+                    validated = true
+                }
+
+                fun isValid(): Boolean =
+                    try {
+                        validate()
+                        true
+                    } catch (e: CheckoutIntentsInvalidDataException) {
+                        false
+                    }
+
+                /**
+                 * Returns a score indicating how many valid values are contained in this object
+                 * recursively.
+                 *
+                 * Used for best match union deserialization.
+                 */
+                @JvmSynthetic
+                internal fun validity(): Int =
+                    (if (earliest.asKnown().isPresent) 1 else 0) +
+                        (if (latest.asKnown().isPresent) 1 else 0)
+
+                override fun equals(other: Any?): Boolean {
+                    if (this === other) {
+                        return true
+                    }
+
+                    return other is DeliveryEstimate &&
+                        earliest == other.earliest &&
+                        latest == other.latest &&
+                        additionalProperties == other.additionalProperties
+                }
+
+                private val hashCode: Int by lazy {
+                    Objects.hash(earliest, latest, additionalProperties)
+                }
+
+                override fun hashCode(): Int = hashCode
+
+                override fun toString() =
+                    "DeliveryEstimate{earliest=$earliest, latest=$latest, additionalProperties=$additionalProperties}"
+            }
 
             override fun equals(other: Any?): Boolean {
                 if (this === other) {
@@ -989,18 +1248,19 @@ private constructor(
                 return other is AvailableOption &&
                     id == other.id &&
                     cost == other.cost &&
+                    deliveryEstimate == other.deliveryEstimate &&
                     discount == other.discount &&
                     additionalProperties == other.additionalProperties
             }
 
             private val hashCode: Int by lazy {
-                Objects.hash(id, cost, discount, additionalProperties)
+                Objects.hash(id, cost, deliveryEstimate, discount, additionalProperties)
             }
 
             override fun hashCode(): Int = hashCode
 
             override fun toString() =
-                "AvailableOption{id=$id, cost=$cost, discount=$discount, additionalProperties=$additionalProperties}"
+                "AvailableOption{id=$id, cost=$cost, deliveryEstimate=$deliveryEstimate, discount=$discount, additionalProperties=$additionalProperties}"
         }
 
         override fun equals(other: Any?): Boolean {

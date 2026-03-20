@@ -4,6 +4,7 @@ package com.rye.models.checkoutintents
 
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.rye.core.jsonMapper
+import java.time.OffsetDateTime
 import kotlin.jvm.optionals.getOrNull
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -31,6 +32,12 @@ internal class OfferTest {
                                 .id("id")
                                 .cost(
                                     Money.builder().amountSubunits(1500).currencyCode("USD").build()
+                                )
+                                .deliveryEstimate(
+                                    Offer.Shipping.AvailableOption.DeliveryEstimate.builder()
+                                        .earliest(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                        .latest(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                        .build()
                                 )
                                 .discount(
                                     Money.builder().amountSubunits(1500).currencyCode("USD").build()
@@ -61,6 +68,12 @@ internal class OfferTest {
                         Offer.Shipping.AvailableOption.builder()
                             .id("id")
                             .cost(Money.builder().amountSubunits(1500).currencyCode("USD").build())
+                            .deliveryEstimate(
+                                Offer.Shipping.AvailableOption.DeliveryEstimate.builder()
+                                    .earliest(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                    .latest(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                    .build()
+                            )
                             .discount(
                                 Money.builder().amountSubunits(1500).currencyCode("USD").build()
                             )
@@ -94,6 +107,12 @@ internal class OfferTest {
                                 .id("id")
                                 .cost(
                                     Money.builder().amountSubunits(1500).currencyCode("USD").build()
+                                )
+                                .deliveryEstimate(
+                                    Offer.Shipping.AvailableOption.DeliveryEstimate.builder()
+                                        .earliest(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                        .latest(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                        .build()
                                 )
                                 .discount(
                                     Money.builder().amountSubunits(1500).currencyCode("USD").build()
