@@ -2600,11 +2600,11 @@ private constructor(
         private val discoverPromoCodes: JsonField<Boolean>,
         private val promoCodes: JsonField<List<String>>,
         private val variantSelections: JsonField<List<VariantSelection>>,
-        private val estimatedDeliveryDate: JsonField<OffsetDateTime>,
         private val offer: JsonField<Offer>,
         private val orderId: JsonField<String>,
         private val paymentMethod: JsonField<PaymentMethod>,
         private val state: JsonField<State>,
+        private val estimatedDeliveryDate: JsonField<OffsetDateTime>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
 
@@ -2631,15 +2631,15 @@ private constructor(
             @JsonProperty("variantSelections")
             @ExcludeMissing
             variantSelections: JsonField<List<VariantSelection>> = JsonMissing.of(),
-            @JsonProperty("estimatedDeliveryDate")
-            @ExcludeMissing
-            estimatedDeliveryDate: JsonField<OffsetDateTime> = JsonMissing.of(),
             @JsonProperty("offer") @ExcludeMissing offer: JsonField<Offer> = JsonMissing.of(),
             @JsonProperty("orderId") @ExcludeMissing orderId: JsonField<String> = JsonMissing.of(),
             @JsonProperty("paymentMethod")
             @ExcludeMissing
             paymentMethod: JsonField<PaymentMethod> = JsonMissing.of(),
             @JsonProperty("state") @ExcludeMissing state: JsonField<State> = JsonMissing.of(),
+            @JsonProperty("estimatedDeliveryDate")
+            @ExcludeMissing
+            estimatedDeliveryDate: JsonField<OffsetDateTime> = JsonMissing.of(),
         ) : this(
             id,
             buyer,
@@ -2650,11 +2650,11 @@ private constructor(
             discoverPromoCodes,
             promoCodes,
             variantSelections,
-            estimatedDeliveryDate,
             offer,
             orderId,
             paymentMethod,
             state,
+            estimatedDeliveryDate,
             mutableMapOf(),
         )
 
@@ -2734,13 +2734,6 @@ private constructor(
             variantSelections.getOptional("variantSelections")
 
         /**
-         * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type
-         *   (e.g. if the server responded with an unexpected value).
-         */
-        fun estimatedDeliveryDate(): Optional<OffsetDateTime> =
-            estimatedDeliveryDate.getOptional("estimatedDeliveryDate")
-
-        /**
          * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type or
          *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
          *   value).
@@ -2766,6 +2759,14 @@ private constructor(
          *   value).
          */
         fun state(): State = state.getRequired("state")
+
+        /**
+         * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type
+         *   (e.g. if the server responded with an unexpected value).
+         */
+        @Deprecated("deprecated")
+        fun estimatedDeliveryDate(): Optional<OffsetDateTime> =
+            estimatedDeliveryDate.getOptional("estimatedDeliveryDate")
 
         /**
          * Returns the raw JSON value of [id].
@@ -2845,16 +2846,6 @@ private constructor(
         fun _variantSelections(): JsonField<List<VariantSelection>> = variantSelections
 
         /**
-         * Returns the raw JSON value of [estimatedDeliveryDate].
-         *
-         * Unlike [estimatedDeliveryDate], this method doesn't throw if the JSON field has an
-         * unexpected type.
-         */
-        @JsonProperty("estimatedDeliveryDate")
-        @ExcludeMissing
-        fun _estimatedDeliveryDate(): JsonField<OffsetDateTime> = estimatedDeliveryDate
-
-        /**
          * Returns the raw JSON value of [offer].
          *
          * Unlike [offer], this method doesn't throw if the JSON field has an unexpected type.
@@ -2885,6 +2876,17 @@ private constructor(
          */
         @JsonProperty("state") @ExcludeMissing fun _state(): JsonField<State> = state
 
+        /**
+         * Returns the raw JSON value of [estimatedDeliveryDate].
+         *
+         * Unlike [estimatedDeliveryDate], this method doesn't throw if the JSON field has an
+         * unexpected type.
+         */
+        @Deprecated("deprecated")
+        @JsonProperty("estimatedDeliveryDate")
+        @ExcludeMissing
+        fun _estimatedDeliveryDate(): JsonField<OffsetDateTime> = estimatedDeliveryDate
+
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
             additionalProperties.put(key, value)
@@ -2909,7 +2911,6 @@ private constructor(
              * .createdAt()
              * .productUrl()
              * .quantity()
-             * .estimatedDeliveryDate()
              * .offer()
              * .orderId()
              * .paymentMethod()
@@ -2931,11 +2932,11 @@ private constructor(
             private var discoverPromoCodes: JsonField<Boolean> = JsonMissing.of()
             private var promoCodes: JsonField<MutableList<String>>? = null
             private var variantSelections: JsonField<MutableList<VariantSelection>>? = null
-            private var estimatedDeliveryDate: JsonField<OffsetDateTime>? = null
             private var offer: JsonField<Offer>? = null
             private var orderId: JsonField<String>? = null
             private var paymentMethod: JsonField<PaymentMethod>? = null
             private var state: JsonField<State>? = null
+            private var estimatedDeliveryDate: JsonField<OffsetDateTime> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
@@ -2950,11 +2951,11 @@ private constructor(
                 promoCodes = completedCheckoutIntent.promoCodes.map { it.toMutableList() }
                 variantSelections =
                     completedCheckoutIntent.variantSelections.map { it.toMutableList() }
-                estimatedDeliveryDate = completedCheckoutIntent.estimatedDeliveryDate
                 offer = completedCheckoutIntent.offer
                 orderId = completedCheckoutIntent.orderId
                 paymentMethod = completedCheckoutIntent.paymentMethod
                 state = completedCheckoutIntent.state
+                estimatedDeliveryDate = completedCheckoutIntent.estimatedDeliveryDate
                 additionalProperties = completedCheckoutIntent.additionalProperties.toMutableMap()
             }
 
@@ -3094,27 +3095,6 @@ private constructor(
                     }
             }
 
-            fun estimatedDeliveryDate(estimatedDeliveryDate: OffsetDateTime?) =
-                estimatedDeliveryDate(JsonField.ofNullable(estimatedDeliveryDate))
-
-            /**
-             * Alias for calling [Builder.estimatedDeliveryDate] with
-             * `estimatedDeliveryDate.orElse(null)`.
-             */
-            fun estimatedDeliveryDate(estimatedDeliveryDate: Optional<OffsetDateTime>) =
-                estimatedDeliveryDate(estimatedDeliveryDate.getOrNull())
-
-            /**
-             * Sets [Builder.estimatedDeliveryDate] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.estimatedDeliveryDate] with a well-typed
-             * [OffsetDateTime] value instead. This method is primarily for setting the field to an
-             * undocumented or not yet supported value.
-             */
-            fun estimatedDeliveryDate(estimatedDeliveryDate: JsonField<OffsetDateTime>) = apply {
-                this.estimatedDeliveryDate = estimatedDeliveryDate
-            }
-
             fun offer(offer: Offer) = offer(JsonField.of(offer))
 
             /**
@@ -3189,6 +3169,30 @@ private constructor(
              */
             fun state(state: JsonField<State>) = apply { this.state = state }
 
+            @Deprecated("deprecated")
+            fun estimatedDeliveryDate(estimatedDeliveryDate: OffsetDateTime?) =
+                estimatedDeliveryDate(JsonField.ofNullable(estimatedDeliveryDate))
+
+            /**
+             * Alias for calling [Builder.estimatedDeliveryDate] with
+             * `estimatedDeliveryDate.orElse(null)`.
+             */
+            @Deprecated("deprecated")
+            fun estimatedDeliveryDate(estimatedDeliveryDate: Optional<OffsetDateTime>) =
+                estimatedDeliveryDate(estimatedDeliveryDate.getOrNull())
+
+            /**
+             * Sets [Builder.estimatedDeliveryDate] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.estimatedDeliveryDate] with a well-typed
+             * [OffsetDateTime] value instead. This method is primarily for setting the field to an
+             * undocumented or not yet supported value.
+             */
+            @Deprecated("deprecated")
+            fun estimatedDeliveryDate(estimatedDeliveryDate: JsonField<OffsetDateTime>) = apply {
+                this.estimatedDeliveryDate = estimatedDeliveryDate
+            }
+
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
                 putAllAdditionalProperties(additionalProperties)
@@ -3220,7 +3224,6 @@ private constructor(
              * .createdAt()
              * .productUrl()
              * .quantity()
-             * .estimatedDeliveryDate()
              * .offer()
              * .orderId()
              * .paymentMethod()
@@ -3240,11 +3243,11 @@ private constructor(
                     discoverPromoCodes,
                     (promoCodes ?: JsonMissing.of()).map { it.toImmutable() },
                     (variantSelections ?: JsonMissing.of()).map { it.toImmutable() },
-                    checkRequired("estimatedDeliveryDate", estimatedDeliveryDate),
                     checkRequired("offer", offer),
                     checkRequired("orderId", orderId),
                     checkRequired("paymentMethod", paymentMethod),
                     checkRequired("state", state),
+                    estimatedDeliveryDate,
                     additionalProperties.toMutableMap(),
                 )
         }
@@ -3265,11 +3268,11 @@ private constructor(
             discoverPromoCodes()
             promoCodes()
             variantSelections().ifPresent { it.forEach { it.validate() } }
-            estimatedDeliveryDate()
             offer().validate()
             orderId()
             paymentMethod().validate()
             state().validate()
+            estimatedDeliveryDate()
             validated = true
         }
 
@@ -3298,11 +3301,11 @@ private constructor(
                 (if (discoverPromoCodes.asKnown().isPresent) 1 else 0) +
                 (promoCodes.asKnown().getOrNull()?.size ?: 0) +
                 (variantSelections.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
-                (if (estimatedDeliveryDate.asKnown().isPresent) 1 else 0) +
                 (offer.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (orderId.asKnown().isPresent) 1 else 0) +
                 (paymentMethod.asKnown().getOrNull()?.validity() ?: 0) +
-                (state.asKnown().getOrNull()?.validity() ?: 0)
+                (state.asKnown().getOrNull()?.validity() ?: 0) +
+                (if (estimatedDeliveryDate.asKnown().isPresent) 1 else 0)
 
         class State @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
@@ -3442,11 +3445,11 @@ private constructor(
                 discoverPromoCodes == other.discoverPromoCodes &&
                 promoCodes == other.promoCodes &&
                 variantSelections == other.variantSelections &&
-                estimatedDeliveryDate == other.estimatedDeliveryDate &&
                 offer == other.offer &&
                 orderId == other.orderId &&
                 paymentMethod == other.paymentMethod &&
                 state == other.state &&
+                estimatedDeliveryDate == other.estimatedDeliveryDate &&
                 additionalProperties == other.additionalProperties
         }
 
@@ -3461,11 +3464,11 @@ private constructor(
                 discoverPromoCodes,
                 promoCodes,
                 variantSelections,
-                estimatedDeliveryDate,
                 offer,
                 orderId,
                 paymentMethod,
                 state,
+                estimatedDeliveryDate,
                 additionalProperties,
             )
         }
@@ -3473,7 +3476,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "CompletedCheckoutIntent{id=$id, buyer=$buyer, createdAt=$createdAt, productUrl=$productUrl, quantity=$quantity, constraints=$constraints, discoverPromoCodes=$discoverPromoCodes, promoCodes=$promoCodes, variantSelections=$variantSelections, estimatedDeliveryDate=$estimatedDeliveryDate, offer=$offer, orderId=$orderId, paymentMethod=$paymentMethod, state=$state, additionalProperties=$additionalProperties}"
+            "CompletedCheckoutIntent{id=$id, buyer=$buyer, createdAt=$createdAt, productUrl=$productUrl, quantity=$quantity, constraints=$constraints, discoverPromoCodes=$discoverPromoCodes, promoCodes=$promoCodes, variantSelections=$variantSelections, offer=$offer, orderId=$orderId, paymentMethod=$paymentMethod, state=$state, estimatedDeliveryDate=$estimatedDeliveryDate, additionalProperties=$additionalProperties}"
     }
 
     class FailedCheckoutIntent
