@@ -247,9 +247,9 @@ private constructor(
             .apply {
                 after?.let { put("after", it) }
                 before?.let { put("before", it) }
-                ids?.let { put("ids", it.joinToString(",")) }
+                ids?.forEach { put("ids", it) }
                 limit?.let { put("limit", it.toString()) }
-                status?.let { put("status", it.joinToString(",") { it.toString() }) }
+                status?.forEach { put("status", it.toString()) }
                 putAll(additionalQueryParams)
             }
             .build()

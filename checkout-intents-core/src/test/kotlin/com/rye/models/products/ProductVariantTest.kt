@@ -15,6 +15,7 @@ internal class ProductVariantTest {
     fun create() {
         val productVariant =
             ProductVariant.builder()
+                .id("id")
                 .availability(ProductAvailability.IN_STOCK)
                 .addDimension(
                     VariantSelection.builder()
@@ -33,6 +34,7 @@ internal class ProductVariantTest {
                 .sku("sku")
                 .build()
 
+        assertThat(productVariant.id()).contains("id")
         assertThat(productVariant.availability()).isEqualTo(ProductAvailability.IN_STOCK)
         assertThat(productVariant.dimensions())
             .containsExactly(
@@ -59,6 +61,7 @@ internal class ProductVariantTest {
         val jsonMapper = jsonMapper()
         val productVariant =
             ProductVariant.builder()
+                .id("id")
                 .availability(ProductAvailability.IN_STOCK)
                 .addDimension(
                     VariantSelection.builder()

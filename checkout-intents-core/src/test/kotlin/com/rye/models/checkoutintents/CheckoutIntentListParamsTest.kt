@@ -35,11 +35,11 @@ internal class CheckoutIntentListParamsTest {
         assertThat(queryParams)
             .isEqualTo(
                 QueryParams.builder()
-                    .put("id", listOf("string").joinToString(","))
+                    .put("id", "string")
                     .put("after", "after")
                     .put("before", "before")
                     .put("limit", "1")
-                    .put("state", listOf("completed").joinToString(","))
+                    .put("state", "completed")
                     .build()
             )
     }
