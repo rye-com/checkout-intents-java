@@ -36,6 +36,7 @@ internal class ProductTest {
                 )
                 .addVariant(
                     ProductVariant.builder()
+                        .id("id")
                         .availability(ProductAvailability.IN_STOCK)
                         .addDimension(
                             VariantSelection.builder()
@@ -79,6 +80,7 @@ internal class ProductTest {
         assertThat(product.variants().getOrNull())
             .containsExactly(
                 ProductVariant.builder()
+                    .id("id")
                     .availability(ProductAvailability.IN_STOCK)
                     .addDimension(
                         VariantSelection.builder()
@@ -124,6 +126,7 @@ internal class ProductTest {
                 )
                 .addVariant(
                     ProductVariant.builder()
+                        .id("id")
                         .availability(ProductAvailability.IN_STOCK)
                         .addDimension(
                             VariantSelection.builder()

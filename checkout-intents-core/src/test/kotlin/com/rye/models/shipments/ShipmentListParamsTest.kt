@@ -37,9 +37,9 @@ internal class ShipmentListParamsTest {
                 QueryParams.builder()
                     .put("after", "after")
                     .put("before", "before")
-                    .put("ids", listOf("string").joinToString(","))
+                    .put("ids", "string")
                     .put("limit", "1")
-                    .put("status", listOf("out_for_delivery").joinToString(","))
+                    .put("status", "out_for_delivery")
                     .build()
             )
     }

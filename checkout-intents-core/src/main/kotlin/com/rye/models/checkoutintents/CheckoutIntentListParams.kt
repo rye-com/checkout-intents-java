@@ -249,11 +249,11 @@ private constructor(
     override fun _queryParams(): QueryParams =
         QueryParams.builder()
             .apply {
-                id?.let { put("id", it.joinToString(",")) }
+                id?.forEach { put("id", it) }
                 after?.let { put("after", it) }
                 before?.let { put("before", it) }
                 limit?.let { put("limit", it.toString()) }
-                state?.let { put("state", it.joinToString(",") { it.toString() }) }
+                state?.forEach { put("state", it.toString()) }
                 putAll(additionalQueryParams)
             }
             .build()
