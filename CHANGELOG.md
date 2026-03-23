@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.7.1 (2026-03-23)
+
+Full Changelog: [v0.7.0...v0.7.1](https://github.com/rye-com/checkout-intents-java/compare/v0.7.0...v0.7.1)
+
+### Bug Fixes
+
+* **api:** use repeat format for array query param serialization ([2291903](https://github.com/rye-com/checkout-intents-java/commit/2291903323bc72909c725ad14ff5bddf105fde4c))
+
+
+### Chores
+
+* **internal:** bump ktfmt ([f81e249](https://github.com/rye-com/checkout-intents-java/commit/f81e249da70cf6387583160cf1d8d017c25a817f))
+
 ## 0.7.0 (2026-03-20)
 
 Full Changelog: [v0.6.0...v0.7.0](https://github.com/rye-com/checkout-intents-java/compare/v0.6.0...v0.7.0)
