@@ -24,6 +24,7 @@ import kotlin.jvm.optionals.getOrNull
 class ProductVariant
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
+    private val id: JsonField<String>,
     private val availability: JsonField<ProductAvailability>,
     private val dimensions: JsonField<List<VariantSelection>>,
     private val images: JsonField<List<ProductImage>>,
@@ -35,6 +36,7 @@ private constructor(
 
     @JsonCreator
     private constructor(
+        @JsonProperty("id") @ExcludeMissing id: JsonField<String> = JsonMissing.of(),
         @JsonProperty("availability")
         @ExcludeMissing
         availability: JsonField<ProductAvailability> = JsonMissing.of(),
@@ -47,7 +49,13 @@ private constructor(
         @JsonProperty("name") @ExcludeMissing name: JsonField<String> = JsonMissing.of(),
         @JsonProperty("price") @ExcludeMissing price: JsonField<Money> = JsonMissing.of(),
         @JsonProperty("sku") @ExcludeMissing sku: JsonField<String> = JsonMissing.of(),
-    ) : this(availability, dimensions, images, name, price, sku, mutableMapOf())
+    ) : this(id, availability, dimensions, images, name, price, sku, mutableMapOf())
+
+    /**
+     * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
+    fun id(): Optional<String> = id.getOptional("id")
 
     /**
      * The availability status of a product.
@@ -91,6 +99,13 @@ private constructor(
      *   the server responded with an unexpected value).
      */
     fun sku(): Optional<String> = sku.getOptional("sku")
+
+    /**
+     * Returns the raw JSON value of [id].
+     *
+     * Unlike [id], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("id") @ExcludeMissing fun _id(): JsonField<String> = id
 
     /**
      * Returns the raw JSON value of [availability].
@@ -157,6 +172,7 @@ private constructor(
          *
          * The following fields are required:
          * ```java
+         * .id()
          * .availability()
          * .dimensions()
          * .images()
@@ -171,6 +187,7 @@ private constructor(
     /** A builder for [ProductVariant]. */
     class Builder internal constructor() {
 
+        private var id: JsonField<String>? = null
         private var availability: JsonField<ProductAvailability>? = null
         private var dimensions: JsonField<MutableList<VariantSelection>>? = null
         private var images: JsonField<MutableList<ProductImage>>? = null
@@ -181,6 +198,7 @@ private constructor(
 
         @JvmSynthetic
         internal fun from(productVariant: ProductVariant) = apply {
+            id = productVariant.id
             availability = productVariant.availability
             dimensions = productVariant.dimensions.map { it.toMutableList() }
             images = productVariant.images.map { it.toMutableList() }
@@ -189,6 +207,19 @@ private constructor(
             sku = productVariant.sku
             additionalProperties = productVariant.additionalProperties.toMutableMap()
         }
+
+        fun id(id: String?) = id(JsonField.ofNullable(id))
+
+        /** Alias for calling [Builder.id] with `id.orElse(null)`. */
+        fun id(id: Optional<String>) = id(id.getOrNull())
+
+        /**
+         * Sets [Builder.id] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.id] with a well-typed [String] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun id(id: JsonField<String>) = apply { this.id = id }
 
         /**
          * The availability status of a product.
@@ -324,6 +355,7 @@ private constructor(
          *
          * The following fields are required:
          * ```java
+         * .id()
          * .availability()
          * .dimensions()
          * .images()
@@ -336,6 +368,7 @@ private constructor(
          */
         fun build(): ProductVariant =
             ProductVariant(
+                checkRequired("id", id),
                 checkRequired("availability", availability),
                 checkRequired("dimensions", dimensions).map { it.toImmutable() },
                 checkRequired("images", images).map { it.toImmutable() },
@@ -353,6 +386,7 @@ private constructor(
             return@apply
         }
 
+        id()
         availability().validate()
         dimensions().forEach { it.validate() }
         images().forEach { it.validate() }
@@ -377,7 +411,8 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        (availability.asKnown().getOrNull()?.validity() ?: 0) +
+        (if (id.asKnown().isPresent) 1 else 0) +
+            (availability.asKnown().getOrNull()?.validity() ?: 0) +
             (dimensions.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
             (images.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
             (if (name.asKnown().isPresent) 1 else 0) +
@@ -390,6 +425,7 @@ private constructor(
         }
 
         return other is ProductVariant &&
+            id == other.id &&
             availability == other.availability &&
             dimensions == other.dimensions &&
             images == other.images &&
@@ -400,11 +436,11 @@ private constructor(
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(availability, dimensions, images, name, price, sku, additionalProperties)
+        Objects.hash(id, availability, dimensions, images, name, price, sku, additionalProperties)
     }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "ProductVariant{availability=$availability, dimensions=$dimensions, images=$images, name=$name, price=$price, sku=$sku, additionalProperties=$additionalProperties}"
+        "ProductVariant{id=$id, availability=$availability, dimensions=$dimensions, images=$images, name=$name, price=$price, sku=$sku, additionalProperties=$additionalProperties}"
 }
