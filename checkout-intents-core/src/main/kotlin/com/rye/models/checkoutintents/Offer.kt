@@ -807,6 +807,15 @@ private constructor(
             fun cost(): Money = cost.getRequired("cost")
 
             /**
+             * Estimated range of dates that items will be delivered in. At least one of `earliest`
+             * or `latest` are guaranteed to be set.
+             *
+             * Interpretation:
+             * * If both `earliest` and `latest` are set, then the delivery estimate is the range
+             *   between the two dates.
+             * * If only `earliest` is set, then the delivery estimate is any date after that date.
+             * * If only `latest` is set, then the delivery estimate is any date before that date.
+             *
              * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type
              *   (e.g. if the server responded with an unexpected value).
              */
@@ -917,6 +926,18 @@ private constructor(
                  */
                 fun cost(cost: JsonField<Money>) = apply { this.cost = cost }
 
+                /**
+                 * Estimated range of dates that items will be delivered in. At least one of
+                 * `earliest` or `latest` are guaranteed to be set.
+                 *
+                 * Interpretation:
+                 * * If both `earliest` and `latest` are set, then the delivery estimate is the
+                 *   range between the two dates.
+                 * * If only `earliest` is set, then the delivery estimate is any date after that
+                 *   date.
+                 * * If only `latest` is set, then the delivery estimate is any date before that
+                 *   date.
+                 */
                 fun deliveryEstimate(deliveryEstimate: DeliveryEstimate?) =
                     deliveryEstimate(JsonField.ofNullable(deliveryEstimate))
 
@@ -1029,6 +1050,16 @@ private constructor(
                     (deliveryEstimate.asKnown().getOrNull()?.validity() ?: 0) +
                     (discount.asKnown().getOrNull()?.validity() ?: 0)
 
+            /**
+             * Estimated range of dates that items will be delivered in. At least one of `earliest`
+             * or `latest` are guaranteed to be set.
+             *
+             * Interpretation:
+             * * If both `earliest` and `latest` are set, then the delivery estimate is the range
+             *   between the two dates.
+             * * If only `earliest` is set, then the delivery estimate is any date after that date.
+             * * If only `latest` is set, then the delivery estimate is any date before that date.
+             */
             class DeliveryEstimate
             @JsonCreator(mode = JsonCreator.Mode.DISABLED)
             private constructor(
@@ -1048,18 +1079,20 @@ private constructor(
                 ) : this(earliest, latest, mutableMapOf())
 
                 /**
+                 * Earliest date that items will be delivered by.
+                 *
                  * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected
-                 *   type or is unexpectedly missing or null (e.g. if the server responded with an
-                 *   unexpected value).
+                 *   type (e.g. if the server responded with an unexpected value).
                  */
-                fun earliest(): OffsetDateTime = earliest.getRequired("earliest")
+                fun earliest(): Optional<OffsetDateTime> = earliest.getOptional("earliest")
 
                 /**
+                 * Latest date that items will be delivered by.
+                 *
                  * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected
-                 *   type or is unexpectedly missing or null (e.g. if the server responded with an
-                 *   unexpected value).
+                 *   type (e.g. if the server responded with an unexpected value).
                  */
-                fun latest(): OffsetDateTime = latest.getRequired("latest")
+                fun latest(): Optional<OffsetDateTime> = latest.getOptional("latest")
 
                 /**
                  * Returns the raw JSON value of [earliest].
@@ -1097,12 +1130,6 @@ private constructor(
 
                     /**
                      * Returns a mutable builder for constructing an instance of [DeliveryEstimate].
-                     *
-                     * The following fields are required:
-                     * ```java
-                     * .earliest()
-                     * .latest()
-                     * ```
                      */
                     @JvmStatic fun builder() = Builder()
                 }
@@ -1110,8 +1137,8 @@ private constructor(
                 /** A builder for [DeliveryEstimate]. */
                 class Builder internal constructor() {
 
-                    private var earliest: JsonField<OffsetDateTime>? = null
-                    private var latest: JsonField<OffsetDateTime>? = null
+                    private var earliest: JsonField<OffsetDateTime> = JsonMissing.of()
+                    private var latest: JsonField<OffsetDateTime> = JsonMissing.of()
                     private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
                     @JvmSynthetic
@@ -1121,6 +1148,7 @@ private constructor(
                         additionalProperties = deliveryEstimate.additionalProperties.toMutableMap()
                     }
 
+                    /** Earliest date that items will be delivered by. */
                     fun earliest(earliest: OffsetDateTime) = earliest(JsonField.of(earliest))
 
                     /**
@@ -1134,6 +1162,7 @@ private constructor(
                         this.earliest = earliest
                     }
 
+                    /** Latest date that items will be delivered by. */
                     fun latest(latest: OffsetDateTime) = latest(JsonField.of(latest))
 
                     /**
@@ -1171,21 +1200,9 @@ private constructor(
                      * Returns an immutable instance of [DeliveryEstimate].
                      *
                      * Further updates to this [Builder] will not mutate the returned instance.
-                     *
-                     * The following fields are required:
-                     * ```java
-                     * .earliest()
-                     * .latest()
-                     * ```
-                     *
-                     * @throws IllegalStateException if any required field is unset.
                      */
                     fun build(): DeliveryEstimate =
-                        DeliveryEstimate(
-                            checkRequired("earliest", earliest),
-                            checkRequired("latest", latest),
-                            additionalProperties.toMutableMap(),
-                        )
+                        DeliveryEstimate(earliest, latest, additionalProperties.toMutableMap())
                 }
 
                 private var validated: Boolean = false
