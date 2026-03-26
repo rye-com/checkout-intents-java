@@ -198,10 +198,10 @@ internal class CheckoutIntentTest {
                                             Offer.Shipping.AvailableOption.DeliveryEstimate
                                                 .builder()
                                                 .earliest(
-                                                    OffsetDateTime.parse("2019-12-27T18:11:19.117Z")
+                                                    OffsetDateTime.parse("2026-03-25T00:00:00Z")
                                                 )
                                                 .latest(
-                                                    OffsetDateTime.parse("2019-12-27T18:11:19.117Z")
+                                                    OffsetDateTime.parse("2026-03-28T00:00:00Z")
                                                 )
                                                 .build()
                                         )
@@ -337,14 +337,10 @@ internal class CheckoutIntentTest {
                                                 Offer.Shipping.AvailableOption.DeliveryEstimate
                                                     .builder()
                                                     .earliest(
-                                                        OffsetDateTime.parse(
-                                                            "2019-12-27T18:11:19.117Z"
-                                                        )
+                                                        OffsetDateTime.parse("2026-03-25T00:00:00Z")
                                                     )
                                                     .latest(
-                                                        OffsetDateTime.parse(
-                                                            "2019-12-27T18:11:19.117Z"
-                                                        )
+                                                        OffsetDateTime.parse("2026-03-28T00:00:00Z")
                                                     )
                                                     .build()
                                             )
@@ -462,10 +458,10 @@ internal class CheckoutIntentTest {
                                             Offer.Shipping.AvailableOption.DeliveryEstimate
                                                 .builder()
                                                 .earliest(
-                                                    OffsetDateTime.parse("2019-12-27T18:11:19.117Z")
+                                                    OffsetDateTime.parse("2026-03-25T00:00:00Z")
                                                 )
                                                 .latest(
-                                                    OffsetDateTime.parse("2019-12-27T18:11:19.117Z")
+                                                    OffsetDateTime.parse("2026-03-28T00:00:00Z")
                                                 )
                                                 .build()
                                         )
@@ -599,14 +595,10 @@ internal class CheckoutIntentTest {
                                                 Offer.Shipping.AvailableOption.DeliveryEstimate
                                                     .builder()
                                                     .earliest(
-                                                        OffsetDateTime.parse(
-                                                            "2019-12-27T18:11:19.117Z"
-                                                        )
+                                                        OffsetDateTime.parse("2026-03-25T00:00:00Z")
                                                     )
                                                     .latest(
-                                                        OffsetDateTime.parse(
-                                                            "2019-12-27T18:11:19.117Z"
-                                                        )
+                                                        OffsetDateTime.parse("2026-03-28T00:00:00Z")
                                                     )
                                                     .build()
                                             )
@@ -721,10 +713,10 @@ internal class CheckoutIntentTest {
                                             Offer.Shipping.AvailableOption.DeliveryEstimate
                                                 .builder()
                                                 .earliest(
-                                                    OffsetDateTime.parse("2019-12-27T18:11:19.117Z")
+                                                    OffsetDateTime.parse("2026-03-25T00:00:00Z")
                                                 )
                                                 .latest(
-                                                    OffsetDateTime.parse("2019-12-27T18:11:19.117Z")
+                                                    OffsetDateTime.parse("2026-03-28T00:00:00Z")
                                                 )
                                                 .build()
                                         )
@@ -860,14 +852,10 @@ internal class CheckoutIntentTest {
                                                 Offer.Shipping.AvailableOption.DeliveryEstimate
                                                     .builder()
                                                     .earliest(
-                                                        OffsetDateTime.parse(
-                                                            "2019-12-27T18:11:19.117Z"
-                                                        )
+                                                        OffsetDateTime.parse("2026-03-25T00:00:00Z")
                                                     )
                                                     .latest(
-                                                        OffsetDateTime.parse(
-                                                            "2019-12-27T18:11:19.117Z"
-                                                        )
+                                                        OffsetDateTime.parse("2026-03-28T00:00:00Z")
                                                     )
                                                     .build()
                                             )
@@ -994,10 +982,10 @@ internal class CheckoutIntentTest {
                                             Offer.Shipping.AvailableOption.DeliveryEstimate
                                                 .builder()
                                                 .earliest(
-                                                    OffsetDateTime.parse("2019-12-27T18:11:19.117Z")
+                                                    OffsetDateTime.parse("2026-03-25T00:00:00Z")
                                                 )
                                                 .latest(
-                                                    OffsetDateTime.parse("2019-12-27T18:11:19.117Z")
+                                                    OffsetDateTime.parse("2026-03-28T00:00:00Z")
                                                 )
                                                 .build()
                                         )
@@ -1140,14 +1128,10 @@ internal class CheckoutIntentTest {
                                                 Offer.Shipping.AvailableOption.DeliveryEstimate
                                                     .builder()
                                                     .earliest(
-                                                        OffsetDateTime.parse(
-                                                            "2019-12-27T18:11:19.117Z"
-                                                        )
+                                                        OffsetDateTime.parse("2026-03-25T00:00:00Z")
                                                     )
                                                     .latest(
-                                                        OffsetDateTime.parse(
-                                                            "2019-12-27T18:11:19.117Z"
-                                                        )
+                                                        OffsetDateTime.parse("2026-03-28T00:00:00Z")
                                                     )
                                                     .build()
                                             )
