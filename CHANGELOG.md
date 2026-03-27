@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.7.2 (2026-03-27)
+
+Full Changelog: [v0.7.1...v0.7.2](https://github.com/rye-com/checkout-intents-java/compare/v0.7.1...v0.7.2)
+
+### Chores
+
+* **ci:** skip lint on metadata-only changes ([a4860c9](https://github.com/rye-com/checkout-intents-java/commit/a4860c901196b89a6d781ff5b13ad167087a8ef6))
+* **internal:** improvements ([7ac7071](https://github.com/rye-com/checkout-intents-java/commit/7ac707168431b13d5ad7fe1e2ad0ae6e89a076c4))
+* **internal:** update gitignore ([908efa2](https://github.com/rye-com/checkout-intents-java/commit/908efa2f83fc92630f1b2884198994e9daa05c27))
+
 ## 0.7.1 (2026-03-23)
 
 Full Changelog: [v0.7.0...v0.7.1](https://github.com/rye-com/checkout-intents-java/compare/v0.7.0...v0.7.1)
