@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.8.0 (2026-03-28)
+
+Full Changelog: [v0.7.2...v0.8.0](https://github.com/rye-com/checkout-intents-java/compare/v0.7.2...v0.8.0)
+
+### Features
+
+* Add payment gateway to stainless.yml ([0e59a76](https://github.com/rye-com/checkout-intents-java/commit/0e59a7654b717fd1c37c59a8feddf29930f521f5))
+
 ## 0.7.2 (2026-03-27)
 
 Full Changelog: [v0.7.1...v0.7.2](https://github.com/rye-com/checkout-intents-java/compare/v0.7.1...v0.7.2)
