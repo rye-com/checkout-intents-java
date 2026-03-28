@@ -12,6 +12,8 @@ import com.rye.services.blocking.BrandService
 import com.rye.services.blocking.BrandServiceImpl
 import com.rye.services.blocking.CheckoutIntentService
 import com.rye.services.blocking.CheckoutIntentServiceImpl
+import com.rye.services.blocking.PaymentGatewayService
+import com.rye.services.blocking.PaymentGatewayServiceImpl
 import com.rye.services.blocking.ProductService
 import com.rye.services.blocking.ProductServiceImpl
 import com.rye.services.blocking.ShipmentService
@@ -51,6 +53,10 @@ class CheckoutIntentsClientImpl(private val clientOptions: ClientOptions) : Chec
         ShipmentServiceImpl(clientOptionsWithUserAgent)
     }
 
+    private val paymentGateways: PaymentGatewayService by lazy {
+        PaymentGatewayServiceImpl(clientOptionsWithUserAgent)
+    }
+
     private val billing: BillingService by lazy { BillingServiceImpl(clientOptionsWithUserAgent) }
 
     override fun async(): CheckoutIntentsClientAsync = async
@@ -69,6 +75,8 @@ class CheckoutIntentsClientImpl(private val clientOptions: ClientOptions) : Chec
     override fun products(): ProductService = products
 
     override fun shipments(): ShipmentService = shipments
+
+    override fun paymentGateways(): PaymentGatewayService = paymentGateways
 
     override fun billing(): BillingService = billing
 
@@ -97,6 +105,10 @@ class CheckoutIntentsClientImpl(private val clientOptions: ClientOptions) : Chec
             ShipmentServiceImpl.WithRawResponseImpl(clientOptions)
         }
 
+        private val paymentGateways: PaymentGatewayService.WithRawResponse by lazy {
+            PaymentGatewayServiceImpl.WithRawResponseImpl(clientOptions)
+        }
+
         private val billing: BillingService.WithRawResponse by lazy {
             BillingServiceImpl.WithRawResponseImpl(clientOptions)
         }
@@ -117,6 +129,8 @@ class CheckoutIntentsClientImpl(private val clientOptions: ClientOptions) : Chec
         override fun products(): ProductService.WithRawResponse = products
 
         override fun shipments(): ShipmentService.WithRawResponse = shipments
+
+        override fun paymentGateways(): PaymentGatewayService.WithRawResponse = paymentGateways
 
         override fun billing(): BillingService.WithRawResponse = billing
     }
