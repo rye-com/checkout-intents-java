@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.9.0 (2026-04-01)
+
+Full Changelog: [v0.8.0...v0.9.0](https://github.com/rye-com/checkout-intents-java/compare/v0.8.0...v0.9.0)
+
+### Features
+
+* RYE-7142: Add shipment status to individual tracking events ([de11c3a](https://github.com/rye-com/checkout-intents-java/commit/de11c3a5d8977526a52bd9df29d65b8f132de606))
+
 ## 0.8.0 (2026-03-28)
 
 Full Changelog: [v0.7.2...v0.8.0](https://github.com/rye-com/checkout-intents-java/compare/v0.7.2...v0.8.0)
