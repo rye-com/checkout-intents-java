@@ -39,6 +39,7 @@ private constructor(
     private val nekuda: NekudaPaymentMethod? = null,
     private val prava: PravaPaymentMethod? = null,
     private val drawdown: DrawdownPaymentMethod? = null,
+    private val x402: X402PaymentMethod? = null,
     private val _json: JsonValue? = null,
 ) {
 
@@ -52,6 +53,8 @@ private constructor(
 
     fun drawdown(): Optional<DrawdownPaymentMethod> = Optional.ofNullable(drawdown)
 
+    fun x402(): Optional<X402PaymentMethod> = Optional.ofNullable(x402)
+
     fun isStripeToken(): Boolean = stripeToken != null
 
     fun isBasisTheory(): Boolean = basisTheory != null
@@ -61,6 +64,8 @@ private constructor(
     fun isPrava(): Boolean = prava != null
 
     fun isDrawdown(): Boolean = drawdown != null
+
+    fun isX402(): Boolean = x402 != null
 
     fun asStripeToken(): StripeTokenPaymentMethod = stripeToken.getOrThrow("stripeToken")
 
@@ -72,6 +77,8 @@ private constructor(
 
     fun asDrawdown(): DrawdownPaymentMethod = drawdown.getOrThrow("drawdown")
 
+    fun asX402(): X402PaymentMethod = x402.getOrThrow("x402")
+
     fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
     fun <T> accept(visitor: Visitor<T>): T =
@@ -81,6 +88,7 @@ private constructor(
             nekuda != null -> visitor.visitNekuda(nekuda)
             prava != null -> visitor.visitPrava(prava)
             drawdown != null -> visitor.visitDrawdown(drawdown)
+            x402 != null -> visitor.visitX402(x402)
             else -> visitor.unknown(_json)
         }
 
@@ -111,6 +119,10 @@ private constructor(
 
                 override fun visitDrawdown(drawdown: DrawdownPaymentMethod) {
                     drawdown.validate()
+                }
+
+                override fun visitX402(x402: X402PaymentMethod) {
+                    x402.validate()
                 }
             }
         )
@@ -146,6 +158,8 @@ private constructor(
 
                 override fun visitDrawdown(drawdown: DrawdownPaymentMethod) = drawdown.validity()
 
+                override fun visitX402(x402: X402PaymentMethod) = x402.validity()
+
                 override fun unknown(json: JsonValue?) = 0
             }
         )
@@ -160,10 +174,12 @@ private constructor(
             basisTheory == other.basisTheory &&
             nekuda == other.nekuda &&
             prava == other.prava &&
-            drawdown == other.drawdown
+            drawdown == other.drawdown &&
+            x402 == other.x402
     }
 
-    override fun hashCode(): Int = Objects.hash(stripeToken, basisTheory, nekuda, prava, drawdown)
+    override fun hashCode(): Int =
+        Objects.hash(stripeToken, basisTheory, nekuda, prava, drawdown, x402)
 
     override fun toString(): String =
         when {
@@ -172,6 +188,7 @@ private constructor(
             nekuda != null -> "PaymentMethod{nekuda=$nekuda}"
             prava != null -> "PaymentMethod{prava=$prava}"
             drawdown != null -> "PaymentMethod{drawdown=$drawdown}"
+            x402 != null -> "PaymentMethod{x402=$x402}"
             _json != null -> "PaymentMethod{_unknown=$_json}"
             else -> throw IllegalStateException("Invalid PaymentMethod")
         }
@@ -192,6 +209,8 @@ private constructor(
 
         @JvmStatic
         fun ofDrawdown(drawdown: DrawdownPaymentMethod) = PaymentMethod(drawdown = drawdown)
+
+        @JvmStatic fun ofX402(x402: X402PaymentMethod) = PaymentMethod(x402 = x402)
     }
 
     /**
@@ -208,6 +227,8 @@ private constructor(
         fun visitPrava(prava: PravaPaymentMethod): T
 
         fun visitDrawdown(drawdown: DrawdownPaymentMethod): T
+
+        fun visitX402(x402: X402PaymentMethod): T
 
         /**
          * Maps an unknown variant of [PaymentMethod] to a value of type [T].
@@ -245,6 +266,9 @@ private constructor(
                         tryDeserialize(node, jacksonTypeRef<DrawdownPaymentMethod>())?.let {
                             PaymentMethod(drawdown = it, _json = json)
                         },
+                        tryDeserialize(node, jacksonTypeRef<X402PaymentMethod>())?.let {
+                            PaymentMethod(x402 = it, _json = json)
+                        },
                     )
                     .filterNotNull()
                     .allMaxBy { it.validity() }
@@ -274,6 +298,7 @@ private constructor(
                 value.nekuda != null -> generator.writeObject(value.nekuda)
                 value.prava != null -> generator.writeObject(value.prava)
                 value.drawdown != null -> generator.writeObject(value.drawdown)
+                value.x402 != null -> generator.writeObject(value.x402)
                 value._json != null -> generator.writeObject(value._json)
                 else -> throw IllegalStateException("Invalid PaymentMethod")
             }
@@ -1997,5 +2022,456 @@ private constructor(
 
         override fun toString() =
             "DrawdownPaymentMethod{type=$type, additionalProperties=$additionalProperties}"
+    }
+
+    class X402PaymentMethod
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
+    private constructor(
+        private val network: JsonField<Network>,
+        private val type: JsonField<Type>,
+        private val additionalProperties: MutableMap<String, JsonValue>,
+    ) {
+
+        @JsonCreator
+        private constructor(
+            @JsonProperty("network") @ExcludeMissing network: JsonField<Network> = JsonMissing.of(),
+            @JsonProperty("type") @ExcludeMissing type: JsonField<Type> = JsonMissing.of(),
+        ) : this(network, type, mutableMapOf())
+
+        /**
+         * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type or
+         *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
+         *   value).
+         */
+        fun network(): Network = network.getRequired("network")
+
+        /**
+         * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type or
+         *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
+         *   value).
+         */
+        fun type(): Type = type.getRequired("type")
+
+        /**
+         * Returns the raw JSON value of [network].
+         *
+         * Unlike [network], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("network") @ExcludeMissing fun _network(): JsonField<Network> = network
+
+        /**
+         * Returns the raw JSON value of [type].
+         *
+         * Unlike [type], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("type") @ExcludeMissing fun _type(): JsonField<Type> = type
+
+        @JsonAnySetter
+        private fun putAdditionalProperty(key: String, value: JsonValue) {
+            additionalProperties.put(key, value)
+        }
+
+        @JsonAnyGetter
+        @ExcludeMissing
+        fun _additionalProperties(): Map<String, JsonValue> =
+            Collections.unmodifiableMap(additionalProperties)
+
+        fun toBuilder() = Builder().from(this)
+
+        companion object {
+
+            /**
+             * Returns a mutable builder for constructing an instance of [X402PaymentMethod].
+             *
+             * The following fields are required:
+             * ```java
+             * .network()
+             * .type()
+             * ```
+             */
+            @JvmStatic fun builder() = Builder()
+        }
+
+        /** A builder for [X402PaymentMethod]. */
+        class Builder internal constructor() {
+
+            private var network: JsonField<Network>? = null
+            private var type: JsonField<Type>? = null
+            private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
+
+            @JvmSynthetic
+            internal fun from(x402PaymentMethod: X402PaymentMethod) = apply {
+                network = x402PaymentMethod.network
+                type = x402PaymentMethod.type
+                additionalProperties = x402PaymentMethod.additionalProperties.toMutableMap()
+            }
+
+            fun network(network: Network) = network(JsonField.of(network))
+
+            /**
+             * Sets [Builder.network] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.network] with a well-typed [Network] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun network(network: JsonField<Network>) = apply { this.network = network }
+
+            fun type(type: Type) = type(JsonField.of(type))
+
+            /**
+             * Sets [Builder.type] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.type] with a well-typed [Type] value instead. This
+             * method is primarily for setting the field to an undocumented or not yet supported
+             * value.
+             */
+            fun type(type: JsonField<Type>) = apply { this.type = type }
+
+            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                this.additionalProperties.clear()
+                putAllAdditionalProperties(additionalProperties)
+            }
+
+            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+                additionalProperties.put(key, value)
+            }
+
+            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                this.additionalProperties.putAll(additionalProperties)
+            }
+
+            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+
+            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                keys.forEach(::removeAdditionalProperty)
+            }
+
+            /**
+             * Returns an immutable instance of [X402PaymentMethod].
+             *
+             * Further updates to this [Builder] will not mutate the returned instance.
+             *
+             * The following fields are required:
+             * ```java
+             * .network()
+             * .type()
+             * ```
+             *
+             * @throws IllegalStateException if any required field is unset.
+             */
+            fun build(): X402PaymentMethod =
+                X402PaymentMethod(
+                    checkRequired("network", network),
+                    checkRequired("type", type),
+                    additionalProperties.toMutableMap(),
+                )
+        }
+
+        private var validated: Boolean = false
+
+        fun validate(): X402PaymentMethod = apply {
+            if (validated) {
+                return@apply
+            }
+
+            network().validate()
+            type().validate()
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: CheckoutIntentsInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic
+        internal fun validity(): Int =
+            (network.asKnown().getOrNull()?.validity() ?: 0) +
+                (type.asKnown().getOrNull()?.validity() ?: 0)
+
+        class Network @JsonCreator private constructor(private val value: JsonField<String>) :
+            Enum {
+
+            /**
+             * Returns this class instance's raw value.
+             *
+             * This is usually only useful if this instance was deserialized from data that doesn't
+             * match any known member, and you want to know that value. For example, if the SDK is
+             * on an older version than the API, then the API may respond with new members that the
+             * SDK is unaware of.
+             */
+            @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+
+            companion object {
+
+                @JvmField val BASE = of("base")
+
+                @JvmField val SOLANA = of("solana")
+
+                @JvmField val TEMPO = of("tempo")
+
+                @JvmStatic fun of(value: String) = Network(JsonField.of(value))
+            }
+
+            /** An enum containing [Network]'s known values. */
+            enum class Known {
+                BASE,
+                SOLANA,
+                TEMPO,
+            }
+
+            /**
+             * An enum containing [Network]'s known values, as well as an [_UNKNOWN] member.
+             *
+             * An instance of [Network] can contain an unknown value in a couple of cases:
+             * - It was deserialized from data that doesn't match any known member. For example, if
+             *   the SDK is on an older version than the API, then the API may respond with new
+             *   members that the SDK is unaware of.
+             * - It was constructed with an arbitrary value using the [of] method.
+             */
+            enum class Value {
+                BASE,
+                SOLANA,
+                TEMPO,
+                /**
+                 * An enum member indicating that [Network] was instantiated with an unknown value.
+                 */
+                _UNKNOWN,
+            }
+
+            /**
+             * Returns an enum member corresponding to this class instance's value, or
+             * [Value._UNKNOWN] if the class was instantiated with an unknown value.
+             *
+             * Use the [known] method instead if you're certain the value is always known or if you
+             * want to throw for the unknown case.
+             */
+            fun value(): Value =
+                when (this) {
+                    BASE -> Value.BASE
+                    SOLANA -> Value.SOLANA
+                    TEMPO -> Value.TEMPO
+                    else -> Value._UNKNOWN
+                }
+
+            /**
+             * Returns an enum member corresponding to this class instance's value.
+             *
+             * Use the [value] method instead if you're uncertain the value is always known and
+             * don't want to throw for the unknown case.
+             *
+             * @throws CheckoutIntentsInvalidDataException if this class instance's value is a not a
+             *   known member.
+             */
+            fun known(): Known =
+                when (this) {
+                    BASE -> Known.BASE
+                    SOLANA -> Known.SOLANA
+                    TEMPO -> Known.TEMPO
+                    else -> throw CheckoutIntentsInvalidDataException("Unknown Network: $value")
+                }
+
+            /**
+             * Returns this class instance's primitive wire representation.
+             *
+             * This differs from the [toString] method because that method is primarily for
+             * debugging and generally doesn't throw.
+             *
+             * @throws CheckoutIntentsInvalidDataException if this class instance's value does not
+             *   have the expected primitive type.
+             */
+            fun asString(): String =
+                _value().asString().orElseThrow {
+                    CheckoutIntentsInvalidDataException("Value is not a String")
+                }
+
+            private var validated: Boolean = false
+
+            fun validate(): Network = apply {
+                if (validated) {
+                    return@apply
+                }
+
+                known()
+                validated = true
+            }
+
+            fun isValid(): Boolean =
+                try {
+                    validate()
+                    true
+                } catch (e: CheckoutIntentsInvalidDataException) {
+                    false
+                }
+
+            /**
+             * Returns a score indicating how many valid values are contained in this object
+             * recursively.
+             *
+             * Used for best match union deserialization.
+             */
+            @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+
+            override fun equals(other: Any?): Boolean {
+                if (this === other) {
+                    return true
+                }
+
+                return other is Network && value == other.value
+            }
+
+            override fun hashCode() = value.hashCode()
+
+            override fun toString() = value.toString()
+        }
+
+        class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+
+            /**
+             * Returns this class instance's raw value.
+             *
+             * This is usually only useful if this instance was deserialized from data that doesn't
+             * match any known member, and you want to know that value. For example, if the SDK is
+             * on an older version than the API, then the API may respond with new members that the
+             * SDK is unaware of.
+             */
+            @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+
+            companion object {
+
+                @JvmField val X402 = of("x402")
+
+                @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+            }
+
+            /** An enum containing [Type]'s known values. */
+            enum class Known {
+                X402
+            }
+
+            /**
+             * An enum containing [Type]'s known values, as well as an [_UNKNOWN] member.
+             *
+             * An instance of [Type] can contain an unknown value in a couple of cases:
+             * - It was deserialized from data that doesn't match any known member. For example, if
+             *   the SDK is on an older version than the API, then the API may respond with new
+             *   members that the SDK is unaware of.
+             * - It was constructed with an arbitrary value using the [of] method.
+             */
+            enum class Value {
+                X402,
+                /** An enum member indicating that [Type] was instantiated with an unknown value. */
+                _UNKNOWN,
+            }
+
+            /**
+             * Returns an enum member corresponding to this class instance's value, or
+             * [Value._UNKNOWN] if the class was instantiated with an unknown value.
+             *
+             * Use the [known] method instead if you're certain the value is always known or if you
+             * want to throw for the unknown case.
+             */
+            fun value(): Value =
+                when (this) {
+                    X402 -> Value.X402
+                    else -> Value._UNKNOWN
+                }
+
+            /**
+             * Returns an enum member corresponding to this class instance's value.
+             *
+             * Use the [value] method instead if you're uncertain the value is always known and
+             * don't want to throw for the unknown case.
+             *
+             * @throws CheckoutIntentsInvalidDataException if this class instance's value is a not a
+             *   known member.
+             */
+            fun known(): Known =
+                when (this) {
+                    X402 -> Known.X402
+                    else -> throw CheckoutIntentsInvalidDataException("Unknown Type: $value")
+                }
+
+            /**
+             * Returns this class instance's primitive wire representation.
+             *
+             * This differs from the [toString] method because that method is primarily for
+             * debugging and generally doesn't throw.
+             *
+             * @throws CheckoutIntentsInvalidDataException if this class instance's value does not
+             *   have the expected primitive type.
+             */
+            fun asString(): String =
+                _value().asString().orElseThrow {
+                    CheckoutIntentsInvalidDataException("Value is not a String")
+                }
+
+            private var validated: Boolean = false
+
+            fun validate(): Type = apply {
+                if (validated) {
+                    return@apply
+                }
+
+                known()
+                validated = true
+            }
+
+            fun isValid(): Boolean =
+                try {
+                    validate()
+                    true
+                } catch (e: CheckoutIntentsInvalidDataException) {
+                    false
+                }
+
+            /**
+             * Returns a score indicating how many valid values are contained in this object
+             * recursively.
+             *
+             * Used for best match union deserialization.
+             */
+            @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+
+            override fun equals(other: Any?): Boolean {
+                if (this === other) {
+                    return true
+                }
+
+                return other is Type && value == other.value
+            }
+
+            override fun hashCode() = value.hashCode()
+
+            override fun toString() = value.toString()
+        }
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is X402PaymentMethod &&
+                network == other.network &&
+                type == other.type &&
+                additionalProperties == other.additionalProperties
+        }
+
+        private val hashCode: Int by lazy { Objects.hash(network, type, additionalProperties) }
+
+        override fun hashCode(): Int = hashCode
+
+        override fun toString() =
+            "X402PaymentMethod{network=$network, type=$type, additionalProperties=$additionalProperties}"
     }
 }

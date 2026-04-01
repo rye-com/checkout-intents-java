@@ -29,6 +29,7 @@ internal class PaymentMethodTest {
         assertThat(paymentMethod.nekuda()).isEmpty
         assertThat(paymentMethod.prava()).isEmpty
         assertThat(paymentMethod.drawdown()).isEmpty
+        assertThat(paymentMethod.x402()).isEmpty
     }
 
     @Test
@@ -66,6 +67,7 @@ internal class PaymentMethodTest {
         assertThat(paymentMethod.nekuda()).isEmpty
         assertThat(paymentMethod.prava()).isEmpty
         assertThat(paymentMethod.drawdown()).isEmpty
+        assertThat(paymentMethod.x402()).isEmpty
     }
 
     @Test
@@ -108,6 +110,7 @@ internal class PaymentMethodTest {
         assertThat(paymentMethod.nekuda()).contains(nekuda)
         assertThat(paymentMethod.prava()).isEmpty
         assertThat(paymentMethod.drawdown()).isEmpty
+        assertThat(paymentMethod.x402()).isEmpty
     }
 
     @Test
@@ -150,6 +153,7 @@ internal class PaymentMethodTest {
         assertThat(paymentMethod.nekuda()).isEmpty
         assertThat(paymentMethod.prava()).contains(prava)
         assertThat(paymentMethod.drawdown()).isEmpty
+        assertThat(paymentMethod.x402()).isEmpty
     }
 
     @Test
@@ -186,6 +190,7 @@ internal class PaymentMethodTest {
         assertThat(paymentMethod.nekuda()).isEmpty
         assertThat(paymentMethod.prava()).isEmpty
         assertThat(paymentMethod.drawdown()).contains(drawdown)
+        assertThat(paymentMethod.x402()).isEmpty
     }
 
     @Test
@@ -195,6 +200,44 @@ internal class PaymentMethodTest {
             PaymentMethod.ofDrawdown(
                 PaymentMethod.DrawdownPaymentMethod.builder()
                     .type(PaymentMethod.DrawdownPaymentMethod.Type.DRAWDOWN)
+                    .build()
+            )
+
+        val roundtrippedPaymentMethod =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(paymentMethod),
+                jacksonTypeRef<PaymentMethod>(),
+            )
+
+        assertThat(roundtrippedPaymentMethod).isEqualTo(paymentMethod)
+    }
+
+    @Test
+    fun ofX402() {
+        val x402 =
+            PaymentMethod.X402PaymentMethod.builder()
+                .network(PaymentMethod.X402PaymentMethod.Network.BASE)
+                .type(PaymentMethod.X402PaymentMethod.Type.X402)
+                .build()
+
+        val paymentMethod = PaymentMethod.ofX402(x402)
+
+        assertThat(paymentMethod.stripeToken()).isEmpty
+        assertThat(paymentMethod.basisTheory()).isEmpty
+        assertThat(paymentMethod.nekuda()).isEmpty
+        assertThat(paymentMethod.prava()).isEmpty
+        assertThat(paymentMethod.drawdown()).isEmpty
+        assertThat(paymentMethod.x402()).contains(x402)
+    }
+
+    @Test
+    fun ofX402Roundtrip() {
+        val jsonMapper = jsonMapper()
+        val paymentMethod =
+            PaymentMethod.ofX402(
+                PaymentMethod.X402PaymentMethod.builder()
+                    .network(PaymentMethod.X402PaymentMethod.Network.BASE)
+                    .type(PaymentMethod.X402PaymentMethod.Type.X402)
                     .build()
             )
 
