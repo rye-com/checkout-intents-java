@@ -1515,6 +1515,10 @@ private constructor(
             fun paymentMethod(drawdown: PaymentMethod.DrawdownPaymentMethod) =
                 paymentMethod(PaymentMethod.ofDrawdown(drawdown))
 
+            /** Alias for calling [paymentMethod] with `PaymentMethod.ofX402(x402)`. */
+            fun paymentMethod(x402: PaymentMethod.X402PaymentMethod) =
+                paymentMethod(PaymentMethod.ofX402(x402))
+
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
                 putAllAdditionalProperties(additionalProperties)
@@ -2301,6 +2305,10 @@ private constructor(
             /** Alias for calling [paymentMethod] with `PaymentMethod.ofDrawdown(drawdown)`. */
             fun paymentMethod(drawdown: PaymentMethod.DrawdownPaymentMethod) =
                 paymentMethod(PaymentMethod.ofDrawdown(drawdown))
+
+            /** Alias for calling [paymentMethod] with `PaymentMethod.ofX402(x402)`. */
+            fun paymentMethod(x402: PaymentMethod.X402PaymentMethod) =
+                paymentMethod(PaymentMethod.ofX402(x402))
 
             fun state(state: State) = state(JsonField.of(state))
 
@@ -3157,6 +3165,10 @@ private constructor(
             /** Alias for calling [paymentMethod] with `PaymentMethod.ofDrawdown(drawdown)`. */
             fun paymentMethod(drawdown: PaymentMethod.DrawdownPaymentMethod) =
                 paymentMethod(PaymentMethod.ofDrawdown(drawdown))
+
+            /** Alias for calling [paymentMethod] with `PaymentMethod.ofX402(x402)`. */
+            fun paymentMethod(x402: PaymentMethod.X402PaymentMethod) =
+                paymentMethod(PaymentMethod.ofX402(x402))
 
             fun state(state: State) = state(JsonField.of(state))
 
@@ -4035,6 +4047,10 @@ private constructor(
             /** Alias for calling [paymentMethod] with `PaymentMethod.ofDrawdown(drawdown)`. */
             fun paymentMethod(drawdown: PaymentMethod.DrawdownPaymentMethod) =
                 paymentMethod(PaymentMethod.ofDrawdown(drawdown))
+
+            /** Alias for calling [paymentMethod] with `PaymentMethod.ofX402(x402)`. */
+            fun paymentMethod(x402: PaymentMethod.X402PaymentMethod) =
+                paymentMethod(PaymentMethod.ofX402(x402))
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()

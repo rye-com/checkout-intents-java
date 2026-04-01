@@ -138,6 +138,11 @@ private constructor(
             body.paymentMethod(drawdown)
         }
 
+        /** Alias for calling [paymentMethod] with `PaymentMethod.ofX402(x402)`. */
+        fun paymentMethod(x402: PaymentMethod.X402PaymentMethod) = apply {
+            body.paymentMethod(x402)
+        }
+
         fun additionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) = apply {
             body.additionalProperties(additionalBodyProperties)
         }
@@ -393,6 +398,10 @@ private constructor(
             /** Alias for calling [paymentMethod] with `PaymentMethod.ofDrawdown(drawdown)`. */
             fun paymentMethod(drawdown: PaymentMethod.DrawdownPaymentMethod) =
                 paymentMethod(PaymentMethod.ofDrawdown(drawdown))
+
+            /** Alias for calling [paymentMethod] with `PaymentMethod.ofX402(x402)`. */
+            fun paymentMethod(x402: PaymentMethod.X402PaymentMethod) =
+                paymentMethod(PaymentMethod.ofX402(x402))
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
