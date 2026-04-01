@@ -16,10 +16,10 @@ internal class BillingListTransactionsResponseTest {
     fun create() {
         val billingListTransactionsResponse =
             BillingListTransactionsResponse.builder()
-                .id("id")
+                .id("cbtxn_abc123")
                 .amount(Money.builder().amountSubunits(1500).currencyCode("USD").build())
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                .description("description")
+                .description("Balance debit for order #12345")
                 .metadata(
                     BillingListTransactionsResponse.Metadata.builder()
                         .putAdditionalProperty("foo", JsonValue.from("string"))
@@ -27,12 +27,13 @@ internal class BillingListTransactionsResponseTest {
                 )
                 .build()
 
-        assertThat(billingListTransactionsResponse.id()).isEqualTo("id")
+        assertThat(billingListTransactionsResponse.id()).isEqualTo("cbtxn_abc123")
         assertThat(billingListTransactionsResponse.amount())
             .isEqualTo(Money.builder().amountSubunits(1500).currencyCode("USD").build())
         assertThat(billingListTransactionsResponse.createdAt())
             .isEqualTo(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-        assertThat(billingListTransactionsResponse.description()).contains("description")
+        assertThat(billingListTransactionsResponse.description())
+            .contains("Balance debit for order #12345")
         assertThat(billingListTransactionsResponse.metadata())
             .contains(
                 BillingListTransactionsResponse.Metadata.builder()
@@ -46,10 +47,10 @@ internal class BillingListTransactionsResponseTest {
         val jsonMapper = jsonMapper()
         val billingListTransactionsResponse =
             BillingListTransactionsResponse.builder()
-                .id("id")
+                .id("cbtxn_abc123")
                 .amount(Money.builder().amountSubunits(1500).currencyCode("USD").build())
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                .description("description")
+                .description("Balance debit for order #12345")
                 .metadata(
                     BillingListTransactionsResponse.Metadata.builder()
                         .putAdditionalProperty("foo", JsonValue.from("string"))
