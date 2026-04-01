@@ -247,6 +247,11 @@ private constructor(
             body.paymentMethod(drawdown)
         }
 
+        /** Alias for calling [paymentMethod] with `PaymentMethod.ofX402(x402)`. */
+        fun paymentMethod(x402: PaymentMethod.X402PaymentMethod) = apply {
+            body.paymentMethod(x402)
+        }
+
         fun productUrl(productUrl: String) = apply { body.productUrl(productUrl) }
 
         /**
@@ -759,6 +764,10 @@ private constructor(
             /** Alias for calling [paymentMethod] with `PaymentMethod.ofDrawdown(drawdown)`. */
             fun paymentMethod(drawdown: PaymentMethod.DrawdownPaymentMethod) =
                 paymentMethod(PaymentMethod.ofDrawdown(drawdown))
+
+            /** Alias for calling [paymentMethod] with `PaymentMethod.ofX402(x402)`. */
+            fun paymentMethod(x402: PaymentMethod.X402PaymentMethod) =
+                paymentMethod(PaymentMethod.ofX402(x402))
 
             fun productUrl(productUrl: String) = productUrl(JsonField.of(productUrl))
 
