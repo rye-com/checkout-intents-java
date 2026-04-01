@@ -1105,6 +1105,7 @@ private constructor(
         private constructor(
             private val description: JsonField<String>,
             private val location: JsonField<Location>,
+            private val status: JsonField<ShipmentStatus>,
             private val timestamp: JsonField<Timestamp>,
             private val additionalProperties: MutableMap<String, JsonValue>,
         ) {
@@ -1117,10 +1118,13 @@ private constructor(
                 @JsonProperty("location")
                 @ExcludeMissing
                 location: JsonField<Location> = JsonMissing.of(),
+                @JsonProperty("status")
+                @ExcludeMissing
+                status: JsonField<ShipmentStatus> = JsonMissing.of(),
                 @JsonProperty("timestamp")
                 @ExcludeMissing
                 timestamp: JsonField<Timestamp> = JsonMissing.of(),
-            ) : this(description, location, timestamp, mutableMapOf())
+            ) : this(description, location, status, timestamp, mutableMapOf())
 
             /**
              * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type
@@ -1134,6 +1138,13 @@ private constructor(
              *   value).
              */
             fun location(): Location = location.getRequired("location")
+
+            /**
+             * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type
+             *   or is unexpectedly missing or null (e.g. if the server responded with an unexpected
+             *   value).
+             */
+            fun status(): ShipmentStatus = status.getRequired("status")
 
             /**
              * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type
@@ -1160,6 +1171,15 @@ private constructor(
             @JsonProperty("location")
             @ExcludeMissing
             fun _location(): JsonField<Location> = location
+
+            /**
+             * Returns the raw JSON value of [status].
+             *
+             * Unlike [status], this method doesn't throw if the JSON field has an unexpected type.
+             */
+            @JsonProperty("status")
+            @ExcludeMissing
+            fun _status(): JsonField<ShipmentStatus> = status
 
             /**
              * Returns the raw JSON value of [timestamp].
@@ -1192,6 +1212,7 @@ private constructor(
                  * ```java
                  * .description()
                  * .location()
+                 * .status()
                  * .timestamp()
                  * ```
                  */
@@ -1203,6 +1224,7 @@ private constructor(
 
                 private var description: JsonField<String>? = null
                 private var location: JsonField<Location>? = null
+                private var status: JsonField<ShipmentStatus>? = null
                 private var timestamp: JsonField<Timestamp>? = null
                 private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
@@ -1210,6 +1232,7 @@ private constructor(
                 internal fun from(trackingEvent: TrackingEvent) = apply {
                     description = trackingEvent.description
                     location = trackingEvent.location
+                    status = trackingEvent.status
                     timestamp = trackingEvent.timestamp
                     additionalProperties = trackingEvent.additionalProperties.toMutableMap()
                 }
@@ -1242,6 +1265,17 @@ private constructor(
                  * yet supported value.
                  */
                 fun location(location: JsonField<Location>) = apply { this.location = location }
+
+                fun status(status: ShipmentStatus) = status(JsonField.of(status))
+
+                /**
+                 * Sets [Builder.status] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.status] with a well-typed [ShipmentStatus] value
+                 * instead. This method is primarily for setting the field to an undocumented or not
+                 * yet supported value.
+                 */
+                fun status(status: JsonField<ShipmentStatus>) = apply { this.status = status }
 
                 fun timestamp(timestamp: Timestamp?) = timestamp(JsonField.ofNullable(timestamp))
 
@@ -1290,6 +1324,7 @@ private constructor(
                  * ```java
                  * .description()
                  * .location()
+                 * .status()
                  * .timestamp()
                  * ```
                  *
@@ -1299,6 +1334,7 @@ private constructor(
                     TrackingEvent(
                         checkRequired("description", description),
                         checkRequired("location", location),
+                        checkRequired("status", status),
                         checkRequired("timestamp", timestamp),
                         additionalProperties.toMutableMap(),
                     )
@@ -1313,6 +1349,7 @@ private constructor(
 
                 description()
                 location().validate()
+                status().validate()
                 timestamp().ifPresent { it.validate() }
                 validated = true
             }
@@ -1335,6 +1372,7 @@ private constructor(
             internal fun validity(): Int =
                 (if (description.asKnown().isPresent) 1 else 0) +
                     (location.asKnown().getOrNull()?.validity() ?: 0) +
+                    (status.asKnown().getOrNull()?.validity() ?: 0) +
                     (timestamp.asKnown().getOrNull()?.validity() ?: 0)
 
             class Location
@@ -1783,18 +1821,19 @@ private constructor(
                 return other is TrackingEvent &&
                     description == other.description &&
                     location == other.location &&
+                    status == other.status &&
                     timestamp == other.timestamp &&
                     additionalProperties == other.additionalProperties
             }
 
             private val hashCode: Int by lazy {
-                Objects.hash(description, location, timestamp, additionalProperties)
+                Objects.hash(description, location, status, timestamp, additionalProperties)
             }
 
             override fun hashCode(): Int = hashCode
 
             override fun toString() =
-                "TrackingEvent{description=$description, location=$location, timestamp=$timestamp, additionalProperties=$additionalProperties}"
+                "TrackingEvent{description=$description, location=$location, status=$status, timestamp=$timestamp, additionalProperties=$additionalProperties}"
         }
 
         override fun equals(other: Any?): Boolean {
@@ -2534,6 +2573,7 @@ private constructor(
         private constructor(
             private val description: JsonField<String>,
             private val location: JsonField<Location>,
+            private val status: JsonField<ShipmentStatus>,
             private val timestamp: JsonField<Timestamp>,
             private val additionalProperties: MutableMap<String, JsonValue>,
         ) {
@@ -2546,10 +2586,13 @@ private constructor(
                 @JsonProperty("location")
                 @ExcludeMissing
                 location: JsonField<Location> = JsonMissing.of(),
+                @JsonProperty("status")
+                @ExcludeMissing
+                status: JsonField<ShipmentStatus> = JsonMissing.of(),
                 @JsonProperty("timestamp")
                 @ExcludeMissing
                 timestamp: JsonField<Timestamp> = JsonMissing.of(),
-            ) : this(description, location, timestamp, mutableMapOf())
+            ) : this(description, location, status, timestamp, mutableMapOf())
 
             /**
              * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type
@@ -2563,6 +2606,13 @@ private constructor(
              *   value).
              */
             fun location(): Location = location.getRequired("location")
+
+            /**
+             * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type
+             *   or is unexpectedly missing or null (e.g. if the server responded with an unexpected
+             *   value).
+             */
+            fun status(): ShipmentStatus = status.getRequired("status")
 
             /**
              * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type
@@ -2589,6 +2639,15 @@ private constructor(
             @JsonProperty("location")
             @ExcludeMissing
             fun _location(): JsonField<Location> = location
+
+            /**
+             * Returns the raw JSON value of [status].
+             *
+             * Unlike [status], this method doesn't throw if the JSON field has an unexpected type.
+             */
+            @JsonProperty("status")
+            @ExcludeMissing
+            fun _status(): JsonField<ShipmentStatus> = status
 
             /**
              * Returns the raw JSON value of [timestamp].
@@ -2621,6 +2680,7 @@ private constructor(
                  * ```java
                  * .description()
                  * .location()
+                 * .status()
                  * .timestamp()
                  * ```
                  */
@@ -2632,6 +2692,7 @@ private constructor(
 
                 private var description: JsonField<String>? = null
                 private var location: JsonField<Location>? = null
+                private var status: JsonField<ShipmentStatus>? = null
                 private var timestamp: JsonField<Timestamp>? = null
                 private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
@@ -2639,6 +2700,7 @@ private constructor(
                 internal fun from(trackingEvent: TrackingEvent) = apply {
                     description = trackingEvent.description
                     location = trackingEvent.location
+                    status = trackingEvent.status
                     timestamp = trackingEvent.timestamp
                     additionalProperties = trackingEvent.additionalProperties.toMutableMap()
                 }
@@ -2671,6 +2733,17 @@ private constructor(
                  * yet supported value.
                  */
                 fun location(location: JsonField<Location>) = apply { this.location = location }
+
+                fun status(status: ShipmentStatus) = status(JsonField.of(status))
+
+                /**
+                 * Sets [Builder.status] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.status] with a well-typed [ShipmentStatus] value
+                 * instead. This method is primarily for setting the field to an undocumented or not
+                 * yet supported value.
+                 */
+                fun status(status: JsonField<ShipmentStatus>) = apply { this.status = status }
 
                 fun timestamp(timestamp: Timestamp?) = timestamp(JsonField.ofNullable(timestamp))
 
@@ -2719,6 +2792,7 @@ private constructor(
                  * ```java
                  * .description()
                  * .location()
+                 * .status()
                  * .timestamp()
                  * ```
                  *
@@ -2728,6 +2802,7 @@ private constructor(
                     TrackingEvent(
                         checkRequired("description", description),
                         checkRequired("location", location),
+                        checkRequired("status", status),
                         checkRequired("timestamp", timestamp),
                         additionalProperties.toMutableMap(),
                     )
@@ -2742,6 +2817,7 @@ private constructor(
 
                 description()
                 location().validate()
+                status().validate()
                 timestamp().ifPresent { it.validate() }
                 validated = true
             }
@@ -2764,6 +2840,7 @@ private constructor(
             internal fun validity(): Int =
                 (if (description.asKnown().isPresent) 1 else 0) +
                     (location.asKnown().getOrNull()?.validity() ?: 0) +
+                    (status.asKnown().getOrNull()?.validity() ?: 0) +
                     (timestamp.asKnown().getOrNull()?.validity() ?: 0)
 
             class Location
@@ -3212,18 +3289,19 @@ private constructor(
                 return other is TrackingEvent &&
                     description == other.description &&
                     location == other.location &&
+                    status == other.status &&
                     timestamp == other.timestamp &&
                     additionalProperties == other.additionalProperties
             }
 
             private val hashCode: Int by lazy {
-                Objects.hash(description, location, timestamp, additionalProperties)
+                Objects.hash(description, location, status, timestamp, additionalProperties)
             }
 
             override fun hashCode(): Int = hashCode
 
             override fun toString() =
-                "TrackingEvent{description=$description, location=$location, timestamp=$timestamp, additionalProperties=$additionalProperties}"
+                "TrackingEvent{description=$description, location=$location, status=$status, timestamp=$timestamp, additionalProperties=$additionalProperties}"
         }
 
         override fun equals(other: Any?): Boolean {
@@ -3931,6 +4009,7 @@ private constructor(
         private constructor(
             private val description: JsonField<String>,
             private val location: JsonField<Location>,
+            private val status: JsonField<ShipmentStatus>,
             private val timestamp: JsonField<Timestamp>,
             private val additionalProperties: MutableMap<String, JsonValue>,
         ) {
@@ -3943,10 +4022,13 @@ private constructor(
                 @JsonProperty("location")
                 @ExcludeMissing
                 location: JsonField<Location> = JsonMissing.of(),
+                @JsonProperty("status")
+                @ExcludeMissing
+                status: JsonField<ShipmentStatus> = JsonMissing.of(),
                 @JsonProperty("timestamp")
                 @ExcludeMissing
                 timestamp: JsonField<Timestamp> = JsonMissing.of(),
-            ) : this(description, location, timestamp, mutableMapOf())
+            ) : this(description, location, status, timestamp, mutableMapOf())
 
             /**
              * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type
@@ -3960,6 +4042,13 @@ private constructor(
              *   value).
              */
             fun location(): Location = location.getRequired("location")
+
+            /**
+             * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type
+             *   or is unexpectedly missing or null (e.g. if the server responded with an unexpected
+             *   value).
+             */
+            fun status(): ShipmentStatus = status.getRequired("status")
 
             /**
              * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type
@@ -3986,6 +4075,15 @@ private constructor(
             @JsonProperty("location")
             @ExcludeMissing
             fun _location(): JsonField<Location> = location
+
+            /**
+             * Returns the raw JSON value of [status].
+             *
+             * Unlike [status], this method doesn't throw if the JSON field has an unexpected type.
+             */
+            @JsonProperty("status")
+            @ExcludeMissing
+            fun _status(): JsonField<ShipmentStatus> = status
 
             /**
              * Returns the raw JSON value of [timestamp].
@@ -4018,6 +4116,7 @@ private constructor(
                  * ```java
                  * .description()
                  * .location()
+                 * .status()
                  * .timestamp()
                  * ```
                  */
@@ -4029,6 +4128,7 @@ private constructor(
 
                 private var description: JsonField<String>? = null
                 private var location: JsonField<Location>? = null
+                private var status: JsonField<ShipmentStatus>? = null
                 private var timestamp: JsonField<Timestamp>? = null
                 private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
@@ -4036,6 +4136,7 @@ private constructor(
                 internal fun from(trackingEvent: TrackingEvent) = apply {
                     description = trackingEvent.description
                     location = trackingEvent.location
+                    status = trackingEvent.status
                     timestamp = trackingEvent.timestamp
                     additionalProperties = trackingEvent.additionalProperties.toMutableMap()
                 }
@@ -4068,6 +4169,17 @@ private constructor(
                  * yet supported value.
                  */
                 fun location(location: JsonField<Location>) = apply { this.location = location }
+
+                fun status(status: ShipmentStatus) = status(JsonField.of(status))
+
+                /**
+                 * Sets [Builder.status] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.status] with a well-typed [ShipmentStatus] value
+                 * instead. This method is primarily for setting the field to an undocumented or not
+                 * yet supported value.
+                 */
+                fun status(status: JsonField<ShipmentStatus>) = apply { this.status = status }
 
                 fun timestamp(timestamp: Timestamp?) = timestamp(JsonField.ofNullable(timestamp))
 
@@ -4116,6 +4228,7 @@ private constructor(
                  * ```java
                  * .description()
                  * .location()
+                 * .status()
                  * .timestamp()
                  * ```
                  *
@@ -4125,6 +4238,7 @@ private constructor(
                     TrackingEvent(
                         checkRequired("description", description),
                         checkRequired("location", location),
+                        checkRequired("status", status),
                         checkRequired("timestamp", timestamp),
                         additionalProperties.toMutableMap(),
                     )
@@ -4139,6 +4253,7 @@ private constructor(
 
                 description()
                 location().validate()
+                status().validate()
                 timestamp().ifPresent { it.validate() }
                 validated = true
             }
@@ -4161,6 +4276,7 @@ private constructor(
             internal fun validity(): Int =
                 (if (description.asKnown().isPresent) 1 else 0) +
                     (location.asKnown().getOrNull()?.validity() ?: 0) +
+                    (status.asKnown().getOrNull()?.validity() ?: 0) +
                     (timestamp.asKnown().getOrNull()?.validity() ?: 0)
 
             class Location
@@ -4609,18 +4725,19 @@ private constructor(
                 return other is TrackingEvent &&
                     description == other.description &&
                     location == other.location &&
+                    status == other.status &&
                     timestamp == other.timestamp &&
                     additionalProperties == other.additionalProperties
             }
 
             private val hashCode: Int by lazy {
-                Objects.hash(description, location, timestamp, additionalProperties)
+                Objects.hash(description, location, status, timestamp, additionalProperties)
             }
 
             override fun hashCode(): Int = hashCode
 
             override fun toString() =
-                "TrackingEvent{description=$description, location=$location, timestamp=$timestamp, additionalProperties=$additionalProperties}"
+                "TrackingEvent{description=$description, location=$location, status=$status, timestamp=$timestamp, additionalProperties=$additionalProperties}"
         }
 
         override fun equals(other: Any?): Boolean {
@@ -5329,6 +5446,7 @@ private constructor(
         private constructor(
             private val description: JsonField<String>,
             private val location: JsonField<Location>,
+            private val status: JsonField<ShipmentStatus>,
             private val timestamp: JsonField<Timestamp>,
             private val additionalProperties: MutableMap<String, JsonValue>,
         ) {
@@ -5341,10 +5459,13 @@ private constructor(
                 @JsonProperty("location")
                 @ExcludeMissing
                 location: JsonField<Location> = JsonMissing.of(),
+                @JsonProperty("status")
+                @ExcludeMissing
+                status: JsonField<ShipmentStatus> = JsonMissing.of(),
                 @JsonProperty("timestamp")
                 @ExcludeMissing
                 timestamp: JsonField<Timestamp> = JsonMissing.of(),
-            ) : this(description, location, timestamp, mutableMapOf())
+            ) : this(description, location, status, timestamp, mutableMapOf())
 
             /**
              * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type
@@ -5358,6 +5479,13 @@ private constructor(
              *   value).
              */
             fun location(): Location = location.getRequired("location")
+
+            /**
+             * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type
+             *   or is unexpectedly missing or null (e.g. if the server responded with an unexpected
+             *   value).
+             */
+            fun status(): ShipmentStatus = status.getRequired("status")
 
             /**
              * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type
@@ -5384,6 +5512,15 @@ private constructor(
             @JsonProperty("location")
             @ExcludeMissing
             fun _location(): JsonField<Location> = location
+
+            /**
+             * Returns the raw JSON value of [status].
+             *
+             * Unlike [status], this method doesn't throw if the JSON field has an unexpected type.
+             */
+            @JsonProperty("status")
+            @ExcludeMissing
+            fun _status(): JsonField<ShipmentStatus> = status
 
             /**
              * Returns the raw JSON value of [timestamp].
@@ -5416,6 +5553,7 @@ private constructor(
                  * ```java
                  * .description()
                  * .location()
+                 * .status()
                  * .timestamp()
                  * ```
                  */
@@ -5427,6 +5565,7 @@ private constructor(
 
                 private var description: JsonField<String>? = null
                 private var location: JsonField<Location>? = null
+                private var status: JsonField<ShipmentStatus>? = null
                 private var timestamp: JsonField<Timestamp>? = null
                 private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
@@ -5434,6 +5573,7 @@ private constructor(
                 internal fun from(trackingEvent: TrackingEvent) = apply {
                     description = trackingEvent.description
                     location = trackingEvent.location
+                    status = trackingEvent.status
                     timestamp = trackingEvent.timestamp
                     additionalProperties = trackingEvent.additionalProperties.toMutableMap()
                 }
@@ -5466,6 +5606,17 @@ private constructor(
                  * yet supported value.
                  */
                 fun location(location: JsonField<Location>) = apply { this.location = location }
+
+                fun status(status: ShipmentStatus) = status(JsonField.of(status))
+
+                /**
+                 * Sets [Builder.status] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.status] with a well-typed [ShipmentStatus] value
+                 * instead. This method is primarily for setting the field to an undocumented or not
+                 * yet supported value.
+                 */
+                fun status(status: JsonField<ShipmentStatus>) = apply { this.status = status }
 
                 fun timestamp(timestamp: Timestamp?) = timestamp(JsonField.ofNullable(timestamp))
 
@@ -5514,6 +5665,7 @@ private constructor(
                  * ```java
                  * .description()
                  * .location()
+                 * .status()
                  * .timestamp()
                  * ```
                  *
@@ -5523,6 +5675,7 @@ private constructor(
                     TrackingEvent(
                         checkRequired("description", description),
                         checkRequired("location", location),
+                        checkRequired("status", status),
                         checkRequired("timestamp", timestamp),
                         additionalProperties.toMutableMap(),
                     )
@@ -5537,6 +5690,7 @@ private constructor(
 
                 description()
                 location().validate()
+                status().validate()
                 timestamp().ifPresent { it.validate() }
                 validated = true
             }
@@ -5559,6 +5713,7 @@ private constructor(
             internal fun validity(): Int =
                 (if (description.asKnown().isPresent) 1 else 0) +
                     (location.asKnown().getOrNull()?.validity() ?: 0) +
+                    (status.asKnown().getOrNull()?.validity() ?: 0) +
                     (timestamp.asKnown().getOrNull()?.validity() ?: 0)
 
             class Location
@@ -6007,18 +6162,19 @@ private constructor(
                 return other is TrackingEvent &&
                     description == other.description &&
                     location == other.location &&
+                    status == other.status &&
                     timestamp == other.timestamp &&
                     additionalProperties == other.additionalProperties
             }
 
             private val hashCode: Int by lazy {
-                Objects.hash(description, location, timestamp, additionalProperties)
+                Objects.hash(description, location, status, timestamp, additionalProperties)
             }
 
             override fun hashCode(): Int = hashCode
 
             override fun toString() =
-                "TrackingEvent{description=$description, location=$location, timestamp=$timestamp, additionalProperties=$additionalProperties}"
+                "TrackingEvent{description=$description, location=$location, status=$status, timestamp=$timestamp, additionalProperties=$additionalProperties}"
         }
 
         override fun equals(other: Any?): Boolean {

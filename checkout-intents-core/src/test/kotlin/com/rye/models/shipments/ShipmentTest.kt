@@ -50,6 +50,7 @@ internal class ShipmentTest {
                                 .province("province")
                                 .build()
                         )
+                        .status(ShipmentStatus.OUT_FOR_DELIVERY)
                         .timestamp(
                             Shipment.WithStatusBaseShipmentWithTrackingShipped.TrackingEvent
                                 .Timestamp
@@ -114,6 +115,7 @@ internal class ShipmentTest {
                                     .province("province")
                                     .build()
                             )
+                            .status(ShipmentStatus.OUT_FOR_DELIVERY)
                             .timestamp(
                                 Shipment.WithStatusBaseShipmentWithTrackingShipped.TrackingEvent
                                     .Timestamp
@@ -171,6 +173,7 @@ internal class ShipmentTest {
                                 .province("province")
                                 .build()
                         )
+                        .status(ShipmentStatus.OUT_FOR_DELIVERY)
                         .timestamp(
                             Shipment.DeliveredShipment.TrackingEvent.Timestamp.builder()
                                 .local("local")
@@ -228,6 +231,7 @@ internal class ShipmentTest {
                                     .province("province")
                                     .build()
                             )
+                            .status(ShipmentStatus.OUT_FOR_DELIVERY)
                             .timestamp(
                                 Shipment.DeliveredShipment.TrackingEvent.Timestamp.builder()
                                     .local("local")
@@ -284,6 +288,7 @@ internal class ShipmentTest {
                                 .province("province")
                                 .build()
                         )
+                        .status(ShipmentStatus.OUT_FOR_DELIVERY)
                         .timestamp(
                             Shipment.WithStatusBaseShipmentWithTrackingDelayed.TrackingEvent
                                 .Timestamp
@@ -348,6 +353,7 @@ internal class ShipmentTest {
                                     .province("province")
                                     .build()
                             )
+                            .status(ShipmentStatus.OUT_FOR_DELIVERY)
                             .timestamp(
                                 Shipment.WithStatusBaseShipmentWithTrackingDelayed.TrackingEvent
                                     .Timestamp
@@ -410,6 +416,7 @@ internal class ShipmentTest {
                                 .province("province")
                                 .build()
                         )
+                        .status(ShipmentStatus.OUT_FOR_DELIVERY)
                         .timestamp(
                             Shipment.WithStatusBaseShipmentWithTrackingOutForDelivery.TrackingEvent
                                 .Timestamp
@@ -479,6 +486,7 @@ internal class ShipmentTest {
                                     .province("province")
                                     .build()
                             )
+                            .status(ShipmentStatus.OUT_FOR_DELIVERY)
                             .timestamp(
                                 Shipment.WithStatusBaseShipmentWithTrackingOutForDelivery
                                     .TrackingEvent

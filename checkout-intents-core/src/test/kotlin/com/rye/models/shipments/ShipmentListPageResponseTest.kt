@@ -48,6 +48,7 @@ internal class ShipmentListPageResponseTest {
                                         .province("province")
                                         .build()
                                 )
+                                .status(ShipmentStatus.OUT_FOR_DELIVERY)
                                 .timestamp(
                                     Shipment.WithStatusBaseShipmentWithTrackingShipped.TrackingEvent
                                         .Timestamp
@@ -107,6 +108,7 @@ internal class ShipmentListPageResponseTest {
                                         .province("province")
                                         .build()
                                 )
+                                .status(ShipmentStatus.OUT_FOR_DELIVERY)
                                 .timestamp(
                                     Shipment.WithStatusBaseShipmentWithTrackingShipped.TrackingEvent
                                         .Timestamp
@@ -171,6 +173,7 @@ internal class ShipmentListPageResponseTest {
                                         .province("province")
                                         .build()
                                 )
+                                .status(ShipmentStatus.OUT_FOR_DELIVERY)
                                 .timestamp(
                                     Shipment.WithStatusBaseShipmentWithTrackingShipped.TrackingEvent
                                         .Timestamp

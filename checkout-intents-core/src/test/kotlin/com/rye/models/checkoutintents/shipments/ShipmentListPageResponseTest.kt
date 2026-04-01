@@ -5,6 +5,7 @@ package com.rye.models.checkoutintents.shipments
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.rye.core.jsonMapper
 import com.rye.models.shipments.Shipment
+import com.rye.models.shipments.ShipmentStatus
 import com.rye.models.shipments.ShipmentTracking
 import java.time.OffsetDateTime
 import org.assertj.core.api.Assertions.assertThat
@@ -50,6 +51,7 @@ internal class ShipmentListPageResponseTest {
                                         .province("province")
                                         .build()
                                 )
+                                .status(ShipmentStatus.OUT_FOR_DELIVERY)
                                 .timestamp(
                                     Shipment.WithStatusBaseShipmentWithTrackingShipped.TrackingEvent
                                         .Timestamp
@@ -109,6 +111,7 @@ internal class ShipmentListPageResponseTest {
                                         .province("province")
                                         .build()
                                 )
+                                .status(ShipmentStatus.OUT_FOR_DELIVERY)
                                 .timestamp(
                                     Shipment.WithStatusBaseShipmentWithTrackingShipped.TrackingEvent
                                         .Timestamp
@@ -173,6 +176,7 @@ internal class ShipmentListPageResponseTest {
                                         .province("province")
                                         .build()
                                 )
+                                .status(ShipmentStatus.OUT_FOR_DELIVERY)
                                 .timestamp(
                                     Shipment.WithStatusBaseShipmentWithTrackingShipped.TrackingEvent
                                         .Timestamp
