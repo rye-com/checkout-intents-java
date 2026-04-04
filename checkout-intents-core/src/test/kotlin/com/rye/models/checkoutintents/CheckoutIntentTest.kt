@@ -61,6 +61,7 @@ internal class CheckoutIntentTest {
 
         assertThat(checkoutIntent.retrievingOffer()).contains(retrievingOffer)
         assertThat(checkoutIntent.awaitingConfirmation()).isEmpty
+        assertThat(checkoutIntent.awaitingPayment()).isEmpty
         assertThat(checkoutIntent.placingOrder()).isEmpty
         assertThat(checkoutIntent.completed()).isEmpty
         assertThat(checkoutIntent.failed()).isEmpty
@@ -234,6 +235,7 @@ internal class CheckoutIntentTest {
 
         assertThat(checkoutIntent.retrievingOffer()).isEmpty
         assertThat(checkoutIntent.awaitingConfirmation()).contains(awaitingConfirmation)
+        assertThat(checkoutIntent.awaitingPayment()).isEmpty
         assertThat(checkoutIntent.placingOrder()).isEmpty
         assertThat(checkoutIntent.completed()).isEmpty
         assertThat(checkoutIntent.failed()).isEmpty
@@ -381,6 +383,262 @@ internal class CheckoutIntentTest {
     }
 
     @Test
+    fun ofAwaitingPayment() {
+        val awaitingPayment =
+            CheckoutIntent.AwaitingPaymentCheckoutIntent.builder()
+                .id("id")
+                .buyer(
+                    Buyer.builder()
+                        .address1("123 Main St")
+                        .city("New York")
+                        .country("US")
+                        .email("john.doe@example.com")
+                        .firstName("John")
+                        .lastName("Doe")
+                        .phone("1234567890")
+                        .postalCode("10001")
+                        .province("NY")
+                        .address2("Apt 1")
+                        .build()
+                )
+                .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .productUrl("productUrl")
+                .quantity(0)
+                .constraints(
+                    BaseCheckoutIntent.Constraints.builder()
+                        .maxShippingPrice(500)
+                        .maxTotalPrice(100000)
+                        .offerRetrievalEffort(
+                            BaseCheckoutIntent.Constraints.OfferRetrievalEffort.MAX
+                        )
+                        .build()
+                )
+                .discoverPromoCodes(true)
+                .addPromoCode("SAVE20")
+                .addVariantSelection(
+                    VariantSelection.builder()
+                        .label("Size, Color, etc.")
+                        .value("Small, Red, XS, L, etc.")
+                        .build()
+                )
+                .offer(
+                    Offer.builder()
+                        .cost(
+                            Offer.Cost.builder()
+                                .subtotal(
+                                    Money.builder().amountSubunits(1500).currencyCode("USD").build()
+                                )
+                                .total(
+                                    Money.builder().amountSubunits(1500).currencyCode("USD").build()
+                                )
+                                .discount(
+                                    Money.builder().amountSubunits(1500).currencyCode("USD").build()
+                                )
+                                .shipping(
+                                    Money.builder().amountSubunits(1500).currencyCode("USD").build()
+                                )
+                                .surcharge(
+                                    Money.builder().amountSubunits(1500).currencyCode("USD").build()
+                                )
+                                .tax(
+                                    Money.builder().amountSubunits(1500).currencyCode("USD").build()
+                                )
+                                .build()
+                        )
+                        .shipping(
+                            Offer.Shipping.builder()
+                                .addAvailableOption(
+                                    Offer.Shipping.AvailableOption.builder()
+                                        .id("id")
+                                        .cost(
+                                            Money.builder()
+                                                .amountSubunits(1500)
+                                                .currencyCode("USD")
+                                                .build()
+                                        )
+                                        .deliveryEstimate(
+                                            Offer.Shipping.AvailableOption.DeliveryEstimate
+                                                .builder()
+                                                .earliest(
+                                                    OffsetDateTime.parse("2026-03-25T00:00:00Z")
+                                                )
+                                                .latest(
+                                                    OffsetDateTime.parse("2026-03-28T00:00:00Z")
+                                                )
+                                                .build()
+                                        )
+                                        .discount(
+                                            Money.builder()
+                                                .amountSubunits(1500)
+                                                .currencyCode("USD")
+                                                .build()
+                                        )
+                                        .build()
+                                )
+                                .selectedOptionId("selectedOptionId")
+                                .build()
+                        )
+                        .addAppliedPromoCode("string")
+                        .build()
+                )
+                .paymentMethod(
+                    PaymentMethod.StripeTokenPaymentMethod.builder()
+                        .stripeToken("tok_1RkrWWHGDlstla3f1Fc7ZrhH")
+                        .type(PaymentMethod.StripeTokenPaymentMethod.Type.STRIPE_TOKEN)
+                        .build()
+                )
+                .state(CheckoutIntent.AwaitingPaymentCheckoutIntent.State.AWAITING_PAYMENT)
+                .build()
+
+        val checkoutIntent = CheckoutIntent.ofAwaitingPayment(awaitingPayment)
+
+        assertThat(checkoutIntent.retrievingOffer()).isEmpty
+        assertThat(checkoutIntent.awaitingConfirmation()).isEmpty
+        assertThat(checkoutIntent.awaitingPayment()).contains(awaitingPayment)
+        assertThat(checkoutIntent.placingOrder()).isEmpty
+        assertThat(checkoutIntent.completed()).isEmpty
+        assertThat(checkoutIntent.failed()).isEmpty
+    }
+
+    @Test
+    fun ofAwaitingPaymentRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val checkoutIntent =
+            CheckoutIntent.ofAwaitingPayment(
+                CheckoutIntent.AwaitingPaymentCheckoutIntent.builder()
+                    .id("id")
+                    .buyer(
+                        Buyer.builder()
+                            .address1("123 Main St")
+                            .city("New York")
+                            .country("US")
+                            .email("john.doe@example.com")
+                            .firstName("John")
+                            .lastName("Doe")
+                            .phone("1234567890")
+                            .postalCode("10001")
+                            .province("NY")
+                            .address2("Apt 1")
+                            .build()
+                    )
+                    .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .productUrl("productUrl")
+                    .quantity(0)
+                    .constraints(
+                        BaseCheckoutIntent.Constraints.builder()
+                            .maxShippingPrice(500)
+                            .maxTotalPrice(100000)
+                            .offerRetrievalEffort(
+                                BaseCheckoutIntent.Constraints.OfferRetrievalEffort.MAX
+                            )
+                            .build()
+                    )
+                    .discoverPromoCodes(true)
+                    .addPromoCode("SAVE20")
+                    .addVariantSelection(
+                        VariantSelection.builder()
+                            .label("Size, Color, etc.")
+                            .value("Small, Red, XS, L, etc.")
+                            .build()
+                    )
+                    .offer(
+                        Offer.builder()
+                            .cost(
+                                Offer.Cost.builder()
+                                    .subtotal(
+                                        Money.builder()
+                                            .amountSubunits(1500)
+                                            .currencyCode("USD")
+                                            .build()
+                                    )
+                                    .total(
+                                        Money.builder()
+                                            .amountSubunits(1500)
+                                            .currencyCode("USD")
+                                            .build()
+                                    )
+                                    .discount(
+                                        Money.builder()
+                                            .amountSubunits(1500)
+                                            .currencyCode("USD")
+                                            .build()
+                                    )
+                                    .shipping(
+                                        Money.builder()
+                                            .amountSubunits(1500)
+                                            .currencyCode("USD")
+                                            .build()
+                                    )
+                                    .surcharge(
+                                        Money.builder()
+                                            .amountSubunits(1500)
+                                            .currencyCode("USD")
+                                            .build()
+                                    )
+                                    .tax(
+                                        Money.builder()
+                                            .amountSubunits(1500)
+                                            .currencyCode("USD")
+                                            .build()
+                                    )
+                                    .build()
+                            )
+                            .shipping(
+                                Offer.Shipping.builder()
+                                    .addAvailableOption(
+                                        Offer.Shipping.AvailableOption.builder()
+                                            .id("id")
+                                            .cost(
+                                                Money.builder()
+                                                    .amountSubunits(1500)
+                                                    .currencyCode("USD")
+                                                    .build()
+                                            )
+                                            .deliveryEstimate(
+                                                Offer.Shipping.AvailableOption.DeliveryEstimate
+                                                    .builder()
+                                                    .earliest(
+                                                        OffsetDateTime.parse("2026-03-25T00:00:00Z")
+                                                    )
+                                                    .latest(
+                                                        OffsetDateTime.parse("2026-03-28T00:00:00Z")
+                                                    )
+                                                    .build()
+                                            )
+                                            .discount(
+                                                Money.builder()
+                                                    .amountSubunits(1500)
+                                                    .currencyCode("USD")
+                                                    .build()
+                                            )
+                                            .build()
+                                    )
+                                    .selectedOptionId("selectedOptionId")
+                                    .build()
+                            )
+                            .addAppliedPromoCode("string")
+                            .build()
+                    )
+                    .paymentMethod(
+                        PaymentMethod.StripeTokenPaymentMethod.builder()
+                            .stripeToken("tok_1RkrWWHGDlstla3f1Fc7ZrhH")
+                            .type(PaymentMethod.StripeTokenPaymentMethod.Type.STRIPE_TOKEN)
+                            .build()
+                    )
+                    .state(CheckoutIntent.AwaitingPaymentCheckoutIntent.State.AWAITING_PAYMENT)
+                    .build()
+            )
+
+        val roundtrippedCheckoutIntent =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(checkoutIntent),
+                jacksonTypeRef<CheckoutIntent>(),
+            )
+
+        assertThat(roundtrippedCheckoutIntent).isEqualTo(checkoutIntent)
+    }
+
+    @Test
     fun ofPlacingOrder() {
         val placingOrder =
             CheckoutIntent.PlacingOrderCheckoutIntent.builder()
@@ -492,6 +750,7 @@ internal class CheckoutIntentTest {
 
         assertThat(checkoutIntent.retrievingOffer()).isEmpty
         assertThat(checkoutIntent.awaitingConfirmation()).isEmpty
+        assertThat(checkoutIntent.awaitingPayment()).isEmpty
         assertThat(checkoutIntent.placingOrder()).contains(placingOrder)
         assertThat(checkoutIntent.completed()).isEmpty
         assertThat(checkoutIntent.failed()).isEmpty
@@ -749,6 +1008,7 @@ internal class CheckoutIntentTest {
 
         assertThat(checkoutIntent.retrievingOffer()).isEmpty
         assertThat(checkoutIntent.awaitingConfirmation()).isEmpty
+        assertThat(checkoutIntent.awaitingPayment()).isEmpty
         assertThat(checkoutIntent.placingOrder()).isEmpty
         assertThat(checkoutIntent.completed()).contains(completed)
         assertThat(checkoutIntent.failed()).isEmpty
@@ -1015,6 +1275,7 @@ internal class CheckoutIntentTest {
 
         assertThat(checkoutIntent.retrievingOffer()).isEmpty
         assertThat(checkoutIntent.awaitingConfirmation()).isEmpty
+        assertThat(checkoutIntent.awaitingPayment()).isEmpty
         assertThat(checkoutIntent.placingOrder()).isEmpty
         assertThat(checkoutIntent.completed()).isEmpty
         assertThat(checkoutIntent.failed()).contains(failed)
