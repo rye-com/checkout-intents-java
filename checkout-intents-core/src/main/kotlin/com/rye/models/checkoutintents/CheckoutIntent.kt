@@ -38,6 +38,7 @@ class CheckoutIntent
 private constructor(
     private val retrievingOffer: RetrievingOfferCheckoutIntent? = null,
     private val awaitingConfirmation: AwaitingConfirmationCheckoutIntent? = null,
+    private val awaitingPayment: AwaitingPaymentCheckoutIntent? = null,
     private val placingOrder: PlacingOrderCheckoutIntent? = null,
     private val completed: CompletedCheckoutIntent? = null,
     private val failed: FailedCheckoutIntent? = null,
@@ -50,6 +51,9 @@ private constructor(
     fun awaitingConfirmation(): Optional<AwaitingConfirmationCheckoutIntent> =
         Optional.ofNullable(awaitingConfirmation)
 
+    fun awaitingPayment(): Optional<AwaitingPaymentCheckoutIntent> =
+        Optional.ofNullable(awaitingPayment)
+
     fun placingOrder(): Optional<PlacingOrderCheckoutIntent> = Optional.ofNullable(placingOrder)
 
     fun completed(): Optional<CompletedCheckoutIntent> = Optional.ofNullable(completed)
@@ -59,6 +63,8 @@ private constructor(
     fun isRetrievingOffer(): Boolean = retrievingOffer != null
 
     fun isAwaitingConfirmation(): Boolean = awaitingConfirmation != null
+
+    fun isAwaitingPayment(): Boolean = awaitingPayment != null
 
     fun isPlacingOrder(): Boolean = placingOrder != null
 
@@ -72,6 +78,9 @@ private constructor(
     fun asAwaitingConfirmation(): AwaitingConfirmationCheckoutIntent =
         awaitingConfirmation.getOrThrow("awaitingConfirmation")
 
+    fun asAwaitingPayment(): AwaitingPaymentCheckoutIntent =
+        awaitingPayment.getOrThrow("awaitingPayment")
+
     fun asPlacingOrder(): PlacingOrderCheckoutIntent = placingOrder.getOrThrow("placingOrder")
 
     fun asCompleted(): CompletedCheckoutIntent = completed.getOrThrow("completed")
@@ -84,6 +93,7 @@ private constructor(
         when {
             retrievingOffer != null -> visitor.visitRetrievingOffer(retrievingOffer)
             awaitingConfirmation != null -> visitor.visitAwaitingConfirmation(awaitingConfirmation)
+            awaitingPayment != null -> visitor.visitAwaitingPayment(awaitingPayment)
             placingOrder != null -> visitor.visitPlacingOrder(placingOrder)
             completed != null -> visitor.visitCompleted(completed)
             failed != null -> visitor.visitFailed(failed)
@@ -107,6 +117,10 @@ private constructor(
                     awaitingConfirmation: AwaitingConfirmationCheckoutIntent
                 ) {
                     awaitingConfirmation.validate()
+                }
+
+                override fun visitAwaitingPayment(awaitingPayment: AwaitingPaymentCheckoutIntent) {
+                    awaitingPayment.validate()
                 }
 
                 override fun visitPlacingOrder(placingOrder: PlacingOrderCheckoutIntent) {
@@ -149,6 +163,9 @@ private constructor(
                     awaitingConfirmation: AwaitingConfirmationCheckoutIntent
                 ) = awaitingConfirmation.validity()
 
+                override fun visitAwaitingPayment(awaitingPayment: AwaitingPaymentCheckoutIntent) =
+                    awaitingPayment.validity()
+
                 override fun visitPlacingOrder(placingOrder: PlacingOrderCheckoutIntent) =
                     placingOrder.validity()
 
@@ -169,19 +186,28 @@ private constructor(
         return other is CheckoutIntent &&
             retrievingOffer == other.retrievingOffer &&
             awaitingConfirmation == other.awaitingConfirmation &&
+            awaitingPayment == other.awaitingPayment &&
             placingOrder == other.placingOrder &&
             completed == other.completed &&
             failed == other.failed
     }
 
     override fun hashCode(): Int =
-        Objects.hash(retrievingOffer, awaitingConfirmation, placingOrder, completed, failed)
+        Objects.hash(
+            retrievingOffer,
+            awaitingConfirmation,
+            awaitingPayment,
+            placingOrder,
+            completed,
+            failed,
+        )
 
     override fun toString(): String =
         when {
             retrievingOffer != null -> "CheckoutIntent{retrievingOffer=$retrievingOffer}"
             awaitingConfirmation != null ->
                 "CheckoutIntent{awaitingConfirmation=$awaitingConfirmation}"
+            awaitingPayment != null -> "CheckoutIntent{awaitingPayment=$awaitingPayment}"
             placingOrder != null -> "CheckoutIntent{placingOrder=$placingOrder}"
             completed != null -> "CheckoutIntent{completed=$completed}"
             failed != null -> "CheckoutIntent{failed=$failed}"
@@ -198,6 +224,10 @@ private constructor(
         @JvmStatic
         fun ofAwaitingConfirmation(awaitingConfirmation: AwaitingConfirmationCheckoutIntent) =
             CheckoutIntent(awaitingConfirmation = awaitingConfirmation)
+
+        @JvmStatic
+        fun ofAwaitingPayment(awaitingPayment: AwaitingPaymentCheckoutIntent) =
+            CheckoutIntent(awaitingPayment = awaitingPayment)
 
         @JvmStatic
         fun ofPlacingOrder(placingOrder: PlacingOrderCheckoutIntent) =
@@ -217,6 +247,8 @@ private constructor(
         fun visitRetrievingOffer(retrievingOffer: RetrievingOfferCheckoutIntent): T
 
         fun visitAwaitingConfirmation(awaitingConfirmation: AwaitingConfirmationCheckoutIntent): T
+
+        fun visitAwaitingPayment(awaitingPayment: AwaitingPaymentCheckoutIntent): T
 
         fun visitPlacingOrder(placingOrder: PlacingOrderCheckoutIntent): T
 
@@ -251,6 +283,9 @@ private constructor(
                         },
                         tryDeserialize(node, jacksonTypeRef<AwaitingConfirmationCheckoutIntent>())
                             ?.let { CheckoutIntent(awaitingConfirmation = it, _json = json) },
+                        tryDeserialize(node, jacksonTypeRef<AwaitingPaymentCheckoutIntent>())?.let {
+                            CheckoutIntent(awaitingPayment = it, _json = json)
+                        },
                         tryDeserialize(node, jacksonTypeRef<PlacingOrderCheckoutIntent>())?.let {
                             CheckoutIntent(placingOrder = it, _json = json)
                         },
@@ -287,6 +322,7 @@ private constructor(
                 value.retrievingOffer != null -> generator.writeObject(value.retrievingOffer)
                 value.awaitingConfirmation != null ->
                     generator.writeObject(value.awaitingConfirmation)
+                value.awaitingPayment != null -> generator.writeObject(value.awaitingPayment)
                 value.placingOrder != null -> generator.writeObject(value.placingOrder)
                 value.completed != null -> generator.writeObject(value.completed)
                 value.failed != null -> generator.writeObject(value.failed)
@@ -1791,6 +1827,810 @@ private constructor(
 
         override fun toString() =
             "AwaitingConfirmationCheckoutIntent{id=$id, buyer=$buyer, createdAt=$createdAt, productUrl=$productUrl, quantity=$quantity, constraints=$constraints, discoverPromoCodes=$discoverPromoCodes, promoCodes=$promoCodes, variantSelections=$variantSelections, offer=$offer, state=$state, paymentMethod=$paymentMethod, additionalProperties=$additionalProperties}"
+    }
+
+    class AwaitingPaymentCheckoutIntent
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
+    private constructor(
+        private val id: JsonField<String>,
+        private val buyer: JsonField<Buyer>,
+        private val createdAt: JsonField<OffsetDateTime>,
+        private val productUrl: JsonField<String>,
+        private val quantity: JsonField<Int>,
+        private val constraints: JsonField<BaseCheckoutIntent.Constraints>,
+        private val discoverPromoCodes: JsonField<Boolean>,
+        private val promoCodes: JsonField<List<String>>,
+        private val variantSelections: JsonField<List<VariantSelection>>,
+        private val offer: JsonField<Offer>,
+        private val paymentMethod: JsonField<PaymentMethod>,
+        private val state: JsonField<State>,
+        private val additionalProperties: MutableMap<String, JsonValue>,
+    ) {
+
+        @JsonCreator
+        private constructor(
+            @JsonProperty("id") @ExcludeMissing id: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("buyer") @ExcludeMissing buyer: JsonField<Buyer> = JsonMissing.of(),
+            @JsonProperty("createdAt")
+            @ExcludeMissing
+            createdAt: JsonField<OffsetDateTime> = JsonMissing.of(),
+            @JsonProperty("productUrl")
+            @ExcludeMissing
+            productUrl: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("quantity") @ExcludeMissing quantity: JsonField<Int> = JsonMissing.of(),
+            @JsonProperty("constraints")
+            @ExcludeMissing
+            constraints: JsonField<BaseCheckoutIntent.Constraints> = JsonMissing.of(),
+            @JsonProperty("discoverPromoCodes")
+            @ExcludeMissing
+            discoverPromoCodes: JsonField<Boolean> = JsonMissing.of(),
+            @JsonProperty("promoCodes")
+            @ExcludeMissing
+            promoCodes: JsonField<List<String>> = JsonMissing.of(),
+            @JsonProperty("variantSelections")
+            @ExcludeMissing
+            variantSelections: JsonField<List<VariantSelection>> = JsonMissing.of(),
+            @JsonProperty("offer") @ExcludeMissing offer: JsonField<Offer> = JsonMissing.of(),
+            @JsonProperty("paymentMethod")
+            @ExcludeMissing
+            paymentMethod: JsonField<PaymentMethod> = JsonMissing.of(),
+            @JsonProperty("state") @ExcludeMissing state: JsonField<State> = JsonMissing.of(),
+        ) : this(
+            id,
+            buyer,
+            createdAt,
+            productUrl,
+            quantity,
+            constraints,
+            discoverPromoCodes,
+            promoCodes,
+            variantSelections,
+            offer,
+            paymentMethod,
+            state,
+            mutableMapOf(),
+        )
+
+        fun toBaseCheckoutIntent(): BaseCheckoutIntent =
+            BaseCheckoutIntent.builder()
+                .id(id)
+                .buyer(buyer)
+                .createdAt(createdAt)
+                .productUrl(productUrl)
+                .quantity(quantity)
+                .constraints(constraints)
+                .discoverPromoCodes(discoverPromoCodes)
+                .promoCodes(promoCodes)
+                .variantSelections(variantSelections)
+                .build()
+
+        /**
+         * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type or
+         *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
+         *   value).
+         */
+        fun id(): String = id.getRequired("id")
+
+        /**
+         * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type or
+         *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
+         *   value).
+         */
+        fun buyer(): Buyer = buyer.getRequired("buyer")
+
+        /**
+         * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type or
+         *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
+         *   value).
+         */
+        fun createdAt(): OffsetDateTime = createdAt.getRequired("createdAt")
+
+        /**
+         * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type or
+         *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
+         *   value).
+         */
+        fun productUrl(): String = productUrl.getRequired("productUrl")
+
+        /**
+         * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type or
+         *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
+         *   value).
+         */
+        fun quantity(): Int = quantity.getRequired("quantity")
+
+        /**
+         * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type
+         *   (e.g. if the server responded with an unexpected value).
+         */
+        fun constraints(): Optional<BaseCheckoutIntent.Constraints> =
+            constraints.getOptional("constraints")
+
+        /**
+         * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type
+         *   (e.g. if the server responded with an unexpected value).
+         */
+        fun discoverPromoCodes(): Optional<Boolean> =
+            discoverPromoCodes.getOptional("discoverPromoCodes")
+
+        /**
+         * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type
+         *   (e.g. if the server responded with an unexpected value).
+         */
+        fun promoCodes(): Optional<List<String>> = promoCodes.getOptional("promoCodes")
+
+        /**
+         * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type
+         *   (e.g. if the server responded with an unexpected value).
+         */
+        fun variantSelections(): Optional<List<VariantSelection>> =
+            variantSelections.getOptional("variantSelections")
+
+        /**
+         * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type or
+         *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
+         *   value).
+         */
+        fun offer(): Offer = offer.getRequired("offer")
+
+        /**
+         * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type or
+         *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
+         *   value).
+         */
+        fun paymentMethod(): PaymentMethod = paymentMethod.getRequired("paymentMethod")
+
+        /**
+         * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type or
+         *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
+         *   value).
+         */
+        fun state(): State = state.getRequired("state")
+
+        /**
+         * Returns the raw JSON value of [id].
+         *
+         * Unlike [id], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("id") @ExcludeMissing fun _id(): JsonField<String> = id
+
+        /**
+         * Returns the raw JSON value of [buyer].
+         *
+         * Unlike [buyer], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("buyer") @ExcludeMissing fun _buyer(): JsonField<Buyer> = buyer
+
+        /**
+         * Returns the raw JSON value of [createdAt].
+         *
+         * Unlike [createdAt], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("createdAt")
+        @ExcludeMissing
+        fun _createdAt(): JsonField<OffsetDateTime> = createdAt
+
+        /**
+         * Returns the raw JSON value of [productUrl].
+         *
+         * Unlike [productUrl], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("productUrl")
+        @ExcludeMissing
+        fun _productUrl(): JsonField<String> = productUrl
+
+        /**
+         * Returns the raw JSON value of [quantity].
+         *
+         * Unlike [quantity], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("quantity") @ExcludeMissing fun _quantity(): JsonField<Int> = quantity
+
+        /**
+         * Returns the raw JSON value of [constraints].
+         *
+         * Unlike [constraints], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("constraints")
+        @ExcludeMissing
+        fun _constraints(): JsonField<BaseCheckoutIntent.Constraints> = constraints
+
+        /**
+         * Returns the raw JSON value of [discoverPromoCodes].
+         *
+         * Unlike [discoverPromoCodes], this method doesn't throw if the JSON field has an
+         * unexpected type.
+         */
+        @JsonProperty("discoverPromoCodes")
+        @ExcludeMissing
+        fun _discoverPromoCodes(): JsonField<Boolean> = discoverPromoCodes
+
+        /**
+         * Returns the raw JSON value of [promoCodes].
+         *
+         * Unlike [promoCodes], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("promoCodes")
+        @ExcludeMissing
+        fun _promoCodes(): JsonField<List<String>> = promoCodes
+
+        /**
+         * Returns the raw JSON value of [variantSelections].
+         *
+         * Unlike [variantSelections], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("variantSelections")
+        @ExcludeMissing
+        fun _variantSelections(): JsonField<List<VariantSelection>> = variantSelections
+
+        /**
+         * Returns the raw JSON value of [offer].
+         *
+         * Unlike [offer], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("offer") @ExcludeMissing fun _offer(): JsonField<Offer> = offer
+
+        /**
+         * Returns the raw JSON value of [paymentMethod].
+         *
+         * Unlike [paymentMethod], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("paymentMethod")
+        @ExcludeMissing
+        fun _paymentMethod(): JsonField<PaymentMethod> = paymentMethod
+
+        /**
+         * Returns the raw JSON value of [state].
+         *
+         * Unlike [state], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("state") @ExcludeMissing fun _state(): JsonField<State> = state
+
+        @JsonAnySetter
+        private fun putAdditionalProperty(key: String, value: JsonValue) {
+            additionalProperties.put(key, value)
+        }
+
+        @JsonAnyGetter
+        @ExcludeMissing
+        fun _additionalProperties(): Map<String, JsonValue> =
+            Collections.unmodifiableMap(additionalProperties)
+
+        fun toBuilder() = Builder().from(this)
+
+        companion object {
+
+            /**
+             * Returns a mutable builder for constructing an instance of
+             * [AwaitingPaymentCheckoutIntent].
+             *
+             * The following fields are required:
+             * ```java
+             * .id()
+             * .buyer()
+             * .createdAt()
+             * .productUrl()
+             * .quantity()
+             * .offer()
+             * .paymentMethod()
+             * .state()
+             * ```
+             */
+            @JvmStatic fun builder() = Builder()
+        }
+
+        /** A builder for [AwaitingPaymentCheckoutIntent]. */
+        class Builder internal constructor() {
+
+            private var id: JsonField<String>? = null
+            private var buyer: JsonField<Buyer>? = null
+            private var createdAt: JsonField<OffsetDateTime>? = null
+            private var productUrl: JsonField<String>? = null
+            private var quantity: JsonField<Int>? = null
+            private var constraints: JsonField<BaseCheckoutIntent.Constraints> = JsonMissing.of()
+            private var discoverPromoCodes: JsonField<Boolean> = JsonMissing.of()
+            private var promoCodes: JsonField<MutableList<String>>? = null
+            private var variantSelections: JsonField<MutableList<VariantSelection>>? = null
+            private var offer: JsonField<Offer>? = null
+            private var paymentMethod: JsonField<PaymentMethod>? = null
+            private var state: JsonField<State>? = null
+            private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
+
+            @JvmSynthetic
+            internal fun from(awaitingPaymentCheckoutIntent: AwaitingPaymentCheckoutIntent) =
+                apply {
+                    id = awaitingPaymentCheckoutIntent.id
+                    buyer = awaitingPaymentCheckoutIntent.buyer
+                    createdAt = awaitingPaymentCheckoutIntent.createdAt
+                    productUrl = awaitingPaymentCheckoutIntent.productUrl
+                    quantity = awaitingPaymentCheckoutIntent.quantity
+                    constraints = awaitingPaymentCheckoutIntent.constraints
+                    discoverPromoCodes = awaitingPaymentCheckoutIntent.discoverPromoCodes
+                    promoCodes = awaitingPaymentCheckoutIntent.promoCodes.map { it.toMutableList() }
+                    variantSelections =
+                        awaitingPaymentCheckoutIntent.variantSelections.map { it.toMutableList() }
+                    offer = awaitingPaymentCheckoutIntent.offer
+                    paymentMethod = awaitingPaymentCheckoutIntent.paymentMethod
+                    state = awaitingPaymentCheckoutIntent.state
+                    additionalProperties =
+                        awaitingPaymentCheckoutIntent.additionalProperties.toMutableMap()
+                }
+
+            fun id(id: String) = id(JsonField.of(id))
+
+            /**
+             * Sets [Builder.id] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.id] with a well-typed [String] value instead. This
+             * method is primarily for setting the field to an undocumented or not yet supported
+             * value.
+             */
+            fun id(id: JsonField<String>) = apply { this.id = id }
+
+            fun buyer(buyer: Buyer) = buyer(JsonField.of(buyer))
+
+            /**
+             * Sets [Builder.buyer] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.buyer] with a well-typed [Buyer] value instead. This
+             * method is primarily for setting the field to an undocumented or not yet supported
+             * value.
+             */
+            fun buyer(buyer: JsonField<Buyer>) = apply { this.buyer = buyer }
+
+            fun createdAt(createdAt: OffsetDateTime) = createdAt(JsonField.of(createdAt))
+
+            /**
+             * Sets [Builder.createdAt] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.createdAt] with a well-typed [OffsetDateTime] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun createdAt(createdAt: JsonField<OffsetDateTime>) = apply {
+                this.createdAt = createdAt
+            }
+
+            fun productUrl(productUrl: String) = productUrl(JsonField.of(productUrl))
+
+            /**
+             * Sets [Builder.productUrl] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.productUrl] with a well-typed [String] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun productUrl(productUrl: JsonField<String>) = apply { this.productUrl = productUrl }
+
+            fun quantity(quantity: Int) = quantity(JsonField.of(quantity))
+
+            /**
+             * Sets [Builder.quantity] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.quantity] with a well-typed [Int] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun quantity(quantity: JsonField<Int>) = apply { this.quantity = quantity }
+
+            fun constraints(constraints: BaseCheckoutIntent.Constraints) =
+                constraints(JsonField.of(constraints))
+
+            /**
+             * Sets [Builder.constraints] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.constraints] with a well-typed
+             * [BaseCheckoutIntent.Constraints] value instead. This method is primarily for setting
+             * the field to an undocumented or not yet supported value.
+             */
+            fun constraints(constraints: JsonField<BaseCheckoutIntent.Constraints>) = apply {
+                this.constraints = constraints
+            }
+
+            fun discoverPromoCodes(discoverPromoCodes: Boolean) =
+                discoverPromoCodes(JsonField.of(discoverPromoCodes))
+
+            /**
+             * Sets [Builder.discoverPromoCodes] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.discoverPromoCodes] with a well-typed [Boolean]
+             * value instead. This method is primarily for setting the field to an undocumented or
+             * not yet supported value.
+             */
+            fun discoverPromoCodes(discoverPromoCodes: JsonField<Boolean>) = apply {
+                this.discoverPromoCodes = discoverPromoCodes
+            }
+
+            fun promoCodes(promoCodes: List<String>) = promoCodes(JsonField.of(promoCodes))
+
+            /**
+             * Sets [Builder.promoCodes] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.promoCodes] with a well-typed `List<String>` value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun promoCodes(promoCodes: JsonField<List<String>>) = apply {
+                this.promoCodes = promoCodes.map { it.toMutableList() }
+            }
+
+            /**
+             * Adds a single [String] to [promoCodes].
+             *
+             * @throws IllegalStateException if the field was previously set to a non-list.
+             */
+            fun addPromoCode(promoCode: String) = apply {
+                promoCodes =
+                    (promoCodes ?: JsonField.of(mutableListOf())).also {
+                        checkKnown("promoCodes", it).add(promoCode)
+                    }
+            }
+
+            fun variantSelections(variantSelections: List<VariantSelection>) =
+                variantSelections(JsonField.of(variantSelections))
+
+            /**
+             * Sets [Builder.variantSelections] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.variantSelections] with a well-typed
+             * `List<VariantSelection>` value instead. This method is primarily for setting the
+             * field to an undocumented or not yet supported value.
+             */
+            fun variantSelections(variantSelections: JsonField<List<VariantSelection>>) = apply {
+                this.variantSelections = variantSelections.map { it.toMutableList() }
+            }
+
+            /**
+             * Adds a single [VariantSelection] to [variantSelections].
+             *
+             * @throws IllegalStateException if the field was previously set to a non-list.
+             */
+            fun addVariantSelection(variantSelection: VariantSelection) = apply {
+                variantSelections =
+                    (variantSelections ?: JsonField.of(mutableListOf())).also {
+                        checkKnown("variantSelections", it).add(variantSelection)
+                    }
+            }
+
+            fun offer(offer: Offer) = offer(JsonField.of(offer))
+
+            /**
+             * Sets [Builder.offer] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.offer] with a well-typed [Offer] value instead. This
+             * method is primarily for setting the field to an undocumented or not yet supported
+             * value.
+             */
+            fun offer(offer: JsonField<Offer>) = apply { this.offer = offer }
+
+            fun paymentMethod(paymentMethod: PaymentMethod) =
+                paymentMethod(JsonField.of(paymentMethod))
+
+            /**
+             * Sets [Builder.paymentMethod] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.paymentMethod] with a well-typed [PaymentMethod]
+             * value instead. This method is primarily for setting the field to an undocumented or
+             * not yet supported value.
+             */
+            fun paymentMethod(paymentMethod: JsonField<PaymentMethod>) = apply {
+                this.paymentMethod = paymentMethod
+            }
+
+            /**
+             * Alias for calling [paymentMethod] with `PaymentMethod.ofStripeToken(stripeToken)`.
+             */
+            fun paymentMethod(stripeToken: PaymentMethod.StripeTokenPaymentMethod) =
+                paymentMethod(PaymentMethod.ofStripeToken(stripeToken))
+
+            /**
+             * Alias for calling [paymentMethod] with `PaymentMethod.ofBasisTheory(basisTheory)`.
+             */
+            fun paymentMethod(basisTheory: PaymentMethod.BasisTheoryPaymentMethod) =
+                paymentMethod(PaymentMethod.ofBasisTheory(basisTheory))
+
+            /** Alias for calling [paymentMethod] with `PaymentMethod.ofNekuda(nekuda)`. */
+            fun paymentMethod(nekuda: PaymentMethod.NekudaPaymentMethod) =
+                paymentMethod(PaymentMethod.ofNekuda(nekuda))
+
+            /** Alias for calling [paymentMethod] with `PaymentMethod.ofPrava(prava)`. */
+            fun paymentMethod(prava: PaymentMethod.PravaPaymentMethod) =
+                paymentMethod(PaymentMethod.ofPrava(prava))
+
+            /** Alias for calling [paymentMethod] with `PaymentMethod.ofDrawdown(drawdown)`. */
+            fun paymentMethod(drawdown: PaymentMethod.DrawdownPaymentMethod) =
+                paymentMethod(PaymentMethod.ofDrawdown(drawdown))
+
+            /** Alias for calling [paymentMethod] with `PaymentMethod.ofX402(x402)`. */
+            fun paymentMethod(x402: PaymentMethod.X402PaymentMethod) =
+                paymentMethod(PaymentMethod.ofX402(x402))
+
+            fun state(state: State) = state(JsonField.of(state))
+
+            /**
+             * Sets [Builder.state] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.state] with a well-typed [State] value instead. This
+             * method is primarily for setting the field to an undocumented or not yet supported
+             * value.
+             */
+            fun state(state: JsonField<State>) = apply { this.state = state }
+
+            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                this.additionalProperties.clear()
+                putAllAdditionalProperties(additionalProperties)
+            }
+
+            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+                additionalProperties.put(key, value)
+            }
+
+            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                this.additionalProperties.putAll(additionalProperties)
+            }
+
+            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+
+            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                keys.forEach(::removeAdditionalProperty)
+            }
+
+            /**
+             * Returns an immutable instance of [AwaitingPaymentCheckoutIntent].
+             *
+             * Further updates to this [Builder] will not mutate the returned instance.
+             *
+             * The following fields are required:
+             * ```java
+             * .id()
+             * .buyer()
+             * .createdAt()
+             * .productUrl()
+             * .quantity()
+             * .offer()
+             * .paymentMethod()
+             * .state()
+             * ```
+             *
+             * @throws IllegalStateException if any required field is unset.
+             */
+            fun build(): AwaitingPaymentCheckoutIntent =
+                AwaitingPaymentCheckoutIntent(
+                    checkRequired("id", id),
+                    checkRequired("buyer", buyer),
+                    checkRequired("createdAt", createdAt),
+                    checkRequired("productUrl", productUrl),
+                    checkRequired("quantity", quantity),
+                    constraints,
+                    discoverPromoCodes,
+                    (promoCodes ?: JsonMissing.of()).map { it.toImmutable() },
+                    (variantSelections ?: JsonMissing.of()).map { it.toImmutable() },
+                    checkRequired("offer", offer),
+                    checkRequired("paymentMethod", paymentMethod),
+                    checkRequired("state", state),
+                    additionalProperties.toMutableMap(),
+                )
+        }
+
+        private var validated: Boolean = false
+
+        fun validate(): AwaitingPaymentCheckoutIntent = apply {
+            if (validated) {
+                return@apply
+            }
+
+            id()
+            buyer().validate()
+            createdAt()
+            productUrl()
+            quantity()
+            constraints().ifPresent { it.validate() }
+            discoverPromoCodes()
+            promoCodes()
+            variantSelections().ifPresent { it.forEach { it.validate() } }
+            offer().validate()
+            paymentMethod().validate()
+            state().validate()
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: CheckoutIntentsInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic
+        internal fun validity(): Int =
+            (if (id.asKnown().isPresent) 1 else 0) +
+                (buyer.asKnown().getOrNull()?.validity() ?: 0) +
+                (if (createdAt.asKnown().isPresent) 1 else 0) +
+                (if (productUrl.asKnown().isPresent) 1 else 0) +
+                (if (quantity.asKnown().isPresent) 1 else 0) +
+                (constraints.asKnown().getOrNull()?.validity() ?: 0) +
+                (if (discoverPromoCodes.asKnown().isPresent) 1 else 0) +
+                (promoCodes.asKnown().getOrNull()?.size ?: 0) +
+                (variantSelections.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
+                (offer.asKnown().getOrNull()?.validity() ?: 0) +
+                (paymentMethod.asKnown().getOrNull()?.validity() ?: 0) +
+                (state.asKnown().getOrNull()?.validity() ?: 0)
+
+        class State @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+
+            /**
+             * Returns this class instance's raw value.
+             *
+             * This is usually only useful if this instance was deserialized from data that doesn't
+             * match any known member, and you want to know that value. For example, if the SDK is
+             * on an older version than the API, then the API may respond with new members that the
+             * SDK is unaware of.
+             */
+            @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+
+            companion object {
+
+                @JvmField val AWAITING_PAYMENT = of("awaiting_payment")
+
+                @JvmStatic fun of(value: String) = State(JsonField.of(value))
+            }
+
+            /** An enum containing [State]'s known values. */
+            enum class Known {
+                AWAITING_PAYMENT
+            }
+
+            /**
+             * An enum containing [State]'s known values, as well as an [_UNKNOWN] member.
+             *
+             * An instance of [State] can contain an unknown value in a couple of cases:
+             * - It was deserialized from data that doesn't match any known member. For example, if
+             *   the SDK is on an older version than the API, then the API may respond with new
+             *   members that the SDK is unaware of.
+             * - It was constructed with an arbitrary value using the [of] method.
+             */
+            enum class Value {
+                AWAITING_PAYMENT,
+                /**
+                 * An enum member indicating that [State] was instantiated with an unknown value.
+                 */
+                _UNKNOWN,
+            }
+
+            /**
+             * Returns an enum member corresponding to this class instance's value, or
+             * [Value._UNKNOWN] if the class was instantiated with an unknown value.
+             *
+             * Use the [known] method instead if you're certain the value is always known or if you
+             * want to throw for the unknown case.
+             */
+            fun value(): Value =
+                when (this) {
+                    AWAITING_PAYMENT -> Value.AWAITING_PAYMENT
+                    else -> Value._UNKNOWN
+                }
+
+            /**
+             * Returns an enum member corresponding to this class instance's value.
+             *
+             * Use the [value] method instead if you're uncertain the value is always known and
+             * don't want to throw for the unknown case.
+             *
+             * @throws CheckoutIntentsInvalidDataException if this class instance's value is a not a
+             *   known member.
+             */
+            fun known(): Known =
+                when (this) {
+                    AWAITING_PAYMENT -> Known.AWAITING_PAYMENT
+                    else -> throw CheckoutIntentsInvalidDataException("Unknown State: $value")
+                }
+
+            /**
+             * Returns this class instance's primitive wire representation.
+             *
+             * This differs from the [toString] method because that method is primarily for
+             * debugging and generally doesn't throw.
+             *
+             * @throws CheckoutIntentsInvalidDataException if this class instance's value does not
+             *   have the expected primitive type.
+             */
+            fun asString(): String =
+                _value().asString().orElseThrow {
+                    CheckoutIntentsInvalidDataException("Value is not a String")
+                }
+
+            private var validated: Boolean = false
+
+            fun validate(): State = apply {
+                if (validated) {
+                    return@apply
+                }
+
+                known()
+                validated = true
+            }
+
+            fun isValid(): Boolean =
+                try {
+                    validate()
+                    true
+                } catch (e: CheckoutIntentsInvalidDataException) {
+                    false
+                }
+
+            /**
+             * Returns a score indicating how many valid values are contained in this object
+             * recursively.
+             *
+             * Used for best match union deserialization.
+             */
+            @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+
+            override fun equals(other: Any?): Boolean {
+                if (this === other) {
+                    return true
+                }
+
+                return other is State && value == other.value
+            }
+
+            override fun hashCode() = value.hashCode()
+
+            override fun toString() = value.toString()
+        }
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is AwaitingPaymentCheckoutIntent &&
+                id == other.id &&
+                buyer == other.buyer &&
+                createdAt == other.createdAt &&
+                productUrl == other.productUrl &&
+                quantity == other.quantity &&
+                constraints == other.constraints &&
+                discoverPromoCodes == other.discoverPromoCodes &&
+                promoCodes == other.promoCodes &&
+                variantSelections == other.variantSelections &&
+                offer == other.offer &&
+                paymentMethod == other.paymentMethod &&
+                state == other.state &&
+                additionalProperties == other.additionalProperties
+        }
+
+        private val hashCode: Int by lazy {
+            Objects.hash(
+                id,
+                buyer,
+                createdAt,
+                productUrl,
+                quantity,
+                constraints,
+                discoverPromoCodes,
+                promoCodes,
+                variantSelections,
+                offer,
+                paymentMethod,
+                state,
+                additionalProperties,
+            )
+        }
+
+        override fun hashCode(): Int = hashCode
+
+        override fun toString() =
+            "AwaitingPaymentCheckoutIntent{id=$id, buyer=$buyer, createdAt=$createdAt, productUrl=$productUrl, quantity=$quantity, constraints=$constraints, discoverPromoCodes=$discoverPromoCodes, promoCodes=$promoCodes, variantSelections=$variantSelections, offer=$offer, paymentMethod=$paymentMethod, state=$state, additionalProperties=$additionalProperties}"
     }
 
     class PlacingOrderCheckoutIntent
