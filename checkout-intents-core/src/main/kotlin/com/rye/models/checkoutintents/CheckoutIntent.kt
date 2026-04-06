@@ -38,7 +38,7 @@ class CheckoutIntent
 private constructor(
     private val retrievingOffer: RetrievingOfferCheckoutIntent? = null,
     private val awaitingConfirmation: AwaitingConfirmationCheckoutIntent? = null,
-    private val awaitingPayment: AwaitingPaymentCheckoutIntent? = null,
+    private val requiresAction: RequiresActionCheckoutIntent? = null,
     private val placingOrder: PlacingOrderCheckoutIntent? = null,
     private val completed: CompletedCheckoutIntent? = null,
     private val failed: FailedCheckoutIntent? = null,
@@ -51,8 +51,8 @@ private constructor(
     fun awaitingConfirmation(): Optional<AwaitingConfirmationCheckoutIntent> =
         Optional.ofNullable(awaitingConfirmation)
 
-    fun awaitingPayment(): Optional<AwaitingPaymentCheckoutIntent> =
-        Optional.ofNullable(awaitingPayment)
+    fun requiresAction(): Optional<RequiresActionCheckoutIntent> =
+        Optional.ofNullable(requiresAction)
 
     fun placingOrder(): Optional<PlacingOrderCheckoutIntent> = Optional.ofNullable(placingOrder)
 
@@ -64,7 +64,7 @@ private constructor(
 
     fun isAwaitingConfirmation(): Boolean = awaitingConfirmation != null
 
-    fun isAwaitingPayment(): Boolean = awaitingPayment != null
+    fun isRequiresAction(): Boolean = requiresAction != null
 
     fun isPlacingOrder(): Boolean = placingOrder != null
 
@@ -78,8 +78,8 @@ private constructor(
     fun asAwaitingConfirmation(): AwaitingConfirmationCheckoutIntent =
         awaitingConfirmation.getOrThrow("awaitingConfirmation")
 
-    fun asAwaitingPayment(): AwaitingPaymentCheckoutIntent =
-        awaitingPayment.getOrThrow("awaitingPayment")
+    fun asRequiresAction(): RequiresActionCheckoutIntent =
+        requiresAction.getOrThrow("requiresAction")
 
     fun asPlacingOrder(): PlacingOrderCheckoutIntent = placingOrder.getOrThrow("placingOrder")
 
@@ -93,7 +93,7 @@ private constructor(
         when {
             retrievingOffer != null -> visitor.visitRetrievingOffer(retrievingOffer)
             awaitingConfirmation != null -> visitor.visitAwaitingConfirmation(awaitingConfirmation)
-            awaitingPayment != null -> visitor.visitAwaitingPayment(awaitingPayment)
+            requiresAction != null -> visitor.visitRequiresAction(requiresAction)
             placingOrder != null -> visitor.visitPlacingOrder(placingOrder)
             completed != null -> visitor.visitCompleted(completed)
             failed != null -> visitor.visitFailed(failed)
@@ -119,8 +119,8 @@ private constructor(
                     awaitingConfirmation.validate()
                 }
 
-                override fun visitAwaitingPayment(awaitingPayment: AwaitingPaymentCheckoutIntent) {
-                    awaitingPayment.validate()
+                override fun visitRequiresAction(requiresAction: RequiresActionCheckoutIntent) {
+                    requiresAction.validate()
                 }
 
                 override fun visitPlacingOrder(placingOrder: PlacingOrderCheckoutIntent) {
@@ -163,8 +163,8 @@ private constructor(
                     awaitingConfirmation: AwaitingConfirmationCheckoutIntent
                 ) = awaitingConfirmation.validity()
 
-                override fun visitAwaitingPayment(awaitingPayment: AwaitingPaymentCheckoutIntent) =
-                    awaitingPayment.validity()
+                override fun visitRequiresAction(requiresAction: RequiresActionCheckoutIntent) =
+                    requiresAction.validity()
 
                 override fun visitPlacingOrder(placingOrder: PlacingOrderCheckoutIntent) =
                     placingOrder.validity()
@@ -186,7 +186,7 @@ private constructor(
         return other is CheckoutIntent &&
             retrievingOffer == other.retrievingOffer &&
             awaitingConfirmation == other.awaitingConfirmation &&
-            awaitingPayment == other.awaitingPayment &&
+            requiresAction == other.requiresAction &&
             placingOrder == other.placingOrder &&
             completed == other.completed &&
             failed == other.failed
@@ -196,7 +196,7 @@ private constructor(
         Objects.hash(
             retrievingOffer,
             awaitingConfirmation,
-            awaitingPayment,
+            requiresAction,
             placingOrder,
             completed,
             failed,
@@ -207,7 +207,7 @@ private constructor(
             retrievingOffer != null -> "CheckoutIntent{retrievingOffer=$retrievingOffer}"
             awaitingConfirmation != null ->
                 "CheckoutIntent{awaitingConfirmation=$awaitingConfirmation}"
-            awaitingPayment != null -> "CheckoutIntent{awaitingPayment=$awaitingPayment}"
+            requiresAction != null -> "CheckoutIntent{requiresAction=$requiresAction}"
             placingOrder != null -> "CheckoutIntent{placingOrder=$placingOrder}"
             completed != null -> "CheckoutIntent{completed=$completed}"
             failed != null -> "CheckoutIntent{failed=$failed}"
@@ -226,8 +226,8 @@ private constructor(
             CheckoutIntent(awaitingConfirmation = awaitingConfirmation)
 
         @JvmStatic
-        fun ofAwaitingPayment(awaitingPayment: AwaitingPaymentCheckoutIntent) =
-            CheckoutIntent(awaitingPayment = awaitingPayment)
+        fun ofRequiresAction(requiresAction: RequiresActionCheckoutIntent) =
+            CheckoutIntent(requiresAction = requiresAction)
 
         @JvmStatic
         fun ofPlacingOrder(placingOrder: PlacingOrderCheckoutIntent) =
@@ -248,7 +248,7 @@ private constructor(
 
         fun visitAwaitingConfirmation(awaitingConfirmation: AwaitingConfirmationCheckoutIntent): T
 
-        fun visitAwaitingPayment(awaitingPayment: AwaitingPaymentCheckoutIntent): T
+        fun visitRequiresAction(requiresAction: RequiresActionCheckoutIntent): T
 
         fun visitPlacingOrder(placingOrder: PlacingOrderCheckoutIntent): T
 
@@ -283,8 +283,8 @@ private constructor(
                         },
                         tryDeserialize(node, jacksonTypeRef<AwaitingConfirmationCheckoutIntent>())
                             ?.let { CheckoutIntent(awaitingConfirmation = it, _json = json) },
-                        tryDeserialize(node, jacksonTypeRef<AwaitingPaymentCheckoutIntent>())?.let {
-                            CheckoutIntent(awaitingPayment = it, _json = json)
+                        tryDeserialize(node, jacksonTypeRef<RequiresActionCheckoutIntent>())?.let {
+                            CheckoutIntent(requiresAction = it, _json = json)
                         },
                         tryDeserialize(node, jacksonTypeRef<PlacingOrderCheckoutIntent>())?.let {
                             CheckoutIntent(placingOrder = it, _json = json)
@@ -322,7 +322,7 @@ private constructor(
                 value.retrievingOffer != null -> generator.writeObject(value.retrievingOffer)
                 value.awaitingConfirmation != null ->
                     generator.writeObject(value.awaitingConfirmation)
-                value.awaitingPayment != null -> generator.writeObject(value.awaitingPayment)
+                value.requiresAction != null -> generator.writeObject(value.requiresAction)
                 value.placingOrder != null -> generator.writeObject(value.placingOrder)
                 value.completed != null -> generator.writeObject(value.completed)
                 value.failed != null -> generator.writeObject(value.failed)
@@ -1829,7 +1829,7 @@ private constructor(
             "AwaitingConfirmationCheckoutIntent{id=$id, buyer=$buyer, createdAt=$createdAt, productUrl=$productUrl, quantity=$quantity, constraints=$constraints, discoverPromoCodes=$discoverPromoCodes, promoCodes=$promoCodes, variantSelections=$variantSelections, offer=$offer, state=$state, paymentMethod=$paymentMethod, additionalProperties=$additionalProperties}"
     }
 
-    class AwaitingPaymentCheckoutIntent
+    class RequiresActionCheckoutIntent
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val id: JsonField<String>,
@@ -1841,6 +1841,7 @@ private constructor(
         private val discoverPromoCodes: JsonField<Boolean>,
         private val promoCodes: JsonField<List<String>>,
         private val variantSelections: JsonField<List<VariantSelection>>,
+        private val nextAction: JsonField<NextAction>,
         private val offer: JsonField<Offer>,
         private val paymentMethod: JsonField<PaymentMethod>,
         private val state: JsonField<State>,
@@ -1870,6 +1871,9 @@ private constructor(
             @JsonProperty("variantSelections")
             @ExcludeMissing
             variantSelections: JsonField<List<VariantSelection>> = JsonMissing.of(),
+            @JsonProperty("nextAction")
+            @ExcludeMissing
+            nextAction: JsonField<NextAction> = JsonMissing.of(),
             @JsonProperty("offer") @ExcludeMissing offer: JsonField<Offer> = JsonMissing.of(),
             @JsonProperty("paymentMethod")
             @ExcludeMissing
@@ -1885,6 +1889,7 @@ private constructor(
             discoverPromoCodes,
             promoCodes,
             variantSelections,
+            nextAction,
             offer,
             paymentMethod,
             state,
@@ -1965,6 +1970,13 @@ private constructor(
          */
         fun variantSelections(): Optional<List<VariantSelection>> =
             variantSelections.getOptional("variantSelections")
+
+        /**
+         * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type or
+         *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
+         *   value).
+         */
+        fun nextAction(): NextAction = nextAction.getRequired("nextAction")
 
         /**
          * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type or
@@ -2065,6 +2077,15 @@ private constructor(
         fun _variantSelections(): JsonField<List<VariantSelection>> = variantSelections
 
         /**
+         * Returns the raw JSON value of [nextAction].
+         *
+         * Unlike [nextAction], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("nextAction")
+        @ExcludeMissing
+        fun _nextAction(): JsonField<NextAction> = nextAction
+
+        /**
          * Returns the raw JSON value of [offer].
          *
          * Unlike [offer], this method doesn't throw if the JSON field has an unexpected type.
@@ -2104,7 +2125,7 @@ private constructor(
 
             /**
              * Returns a mutable builder for constructing an instance of
-             * [AwaitingPaymentCheckoutIntent].
+             * [RequiresActionCheckoutIntent].
              *
              * The following fields are required:
              * ```java
@@ -2113,6 +2134,7 @@ private constructor(
              * .createdAt()
              * .productUrl()
              * .quantity()
+             * .nextAction()
              * .offer()
              * .paymentMethod()
              * .state()
@@ -2121,7 +2143,7 @@ private constructor(
             @JvmStatic fun builder() = Builder()
         }
 
-        /** A builder for [AwaitingPaymentCheckoutIntent]. */
+        /** A builder for [RequiresActionCheckoutIntent]. */
         class Builder internal constructor() {
 
             private var id: JsonField<String>? = null
@@ -2133,30 +2155,31 @@ private constructor(
             private var discoverPromoCodes: JsonField<Boolean> = JsonMissing.of()
             private var promoCodes: JsonField<MutableList<String>>? = null
             private var variantSelections: JsonField<MutableList<VariantSelection>>? = null
+            private var nextAction: JsonField<NextAction>? = null
             private var offer: JsonField<Offer>? = null
             private var paymentMethod: JsonField<PaymentMethod>? = null
             private var state: JsonField<State>? = null
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
-            internal fun from(awaitingPaymentCheckoutIntent: AwaitingPaymentCheckoutIntent) =
-                apply {
-                    id = awaitingPaymentCheckoutIntent.id
-                    buyer = awaitingPaymentCheckoutIntent.buyer
-                    createdAt = awaitingPaymentCheckoutIntent.createdAt
-                    productUrl = awaitingPaymentCheckoutIntent.productUrl
-                    quantity = awaitingPaymentCheckoutIntent.quantity
-                    constraints = awaitingPaymentCheckoutIntent.constraints
-                    discoverPromoCodes = awaitingPaymentCheckoutIntent.discoverPromoCodes
-                    promoCodes = awaitingPaymentCheckoutIntent.promoCodes.map { it.toMutableList() }
-                    variantSelections =
-                        awaitingPaymentCheckoutIntent.variantSelections.map { it.toMutableList() }
-                    offer = awaitingPaymentCheckoutIntent.offer
-                    paymentMethod = awaitingPaymentCheckoutIntent.paymentMethod
-                    state = awaitingPaymentCheckoutIntent.state
-                    additionalProperties =
-                        awaitingPaymentCheckoutIntent.additionalProperties.toMutableMap()
-                }
+            internal fun from(requiresActionCheckoutIntent: RequiresActionCheckoutIntent) = apply {
+                id = requiresActionCheckoutIntent.id
+                buyer = requiresActionCheckoutIntent.buyer
+                createdAt = requiresActionCheckoutIntent.createdAt
+                productUrl = requiresActionCheckoutIntent.productUrl
+                quantity = requiresActionCheckoutIntent.quantity
+                constraints = requiresActionCheckoutIntent.constraints
+                discoverPromoCodes = requiresActionCheckoutIntent.discoverPromoCodes
+                promoCodes = requiresActionCheckoutIntent.promoCodes.map { it.toMutableList() }
+                variantSelections =
+                    requiresActionCheckoutIntent.variantSelections.map { it.toMutableList() }
+                nextAction = requiresActionCheckoutIntent.nextAction
+                offer = requiresActionCheckoutIntent.offer
+                paymentMethod = requiresActionCheckoutIntent.paymentMethod
+                state = requiresActionCheckoutIntent.state
+                additionalProperties =
+                    requiresActionCheckoutIntent.additionalProperties.toMutableMap()
+            }
 
             fun id(id: String) = id(JsonField.of(id))
 
@@ -2294,6 +2317,19 @@ private constructor(
                     }
             }
 
+            fun nextAction(nextAction: NextAction) = nextAction(JsonField.of(nextAction))
+
+            /**
+             * Sets [Builder.nextAction] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.nextAction] with a well-typed [NextAction] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun nextAction(nextAction: JsonField<NextAction>) = apply {
+                this.nextAction = nextAction
+            }
+
             fun offer(offer: Offer) = offer(JsonField.of(offer))
 
             /**
@@ -2378,7 +2414,7 @@ private constructor(
             }
 
             /**
-             * Returns an immutable instance of [AwaitingPaymentCheckoutIntent].
+             * Returns an immutable instance of [RequiresActionCheckoutIntent].
              *
              * Further updates to this [Builder] will not mutate the returned instance.
              *
@@ -2389,6 +2425,7 @@ private constructor(
              * .createdAt()
              * .productUrl()
              * .quantity()
+             * .nextAction()
              * .offer()
              * .paymentMethod()
              * .state()
@@ -2396,8 +2433,8 @@ private constructor(
              *
              * @throws IllegalStateException if any required field is unset.
              */
-            fun build(): AwaitingPaymentCheckoutIntent =
-                AwaitingPaymentCheckoutIntent(
+            fun build(): RequiresActionCheckoutIntent =
+                RequiresActionCheckoutIntent(
                     checkRequired("id", id),
                     checkRequired("buyer", buyer),
                     checkRequired("createdAt", createdAt),
@@ -2407,6 +2444,7 @@ private constructor(
                     discoverPromoCodes,
                     (promoCodes ?: JsonMissing.of()).map { it.toImmutable() },
                     (variantSelections ?: JsonMissing.of()).map { it.toImmutable() },
+                    checkRequired("nextAction", nextAction),
                     checkRequired("offer", offer),
                     checkRequired("paymentMethod", paymentMethod),
                     checkRequired("state", state),
@@ -2416,7 +2454,7 @@ private constructor(
 
         private var validated: Boolean = false
 
-        fun validate(): AwaitingPaymentCheckoutIntent = apply {
+        fun validate(): RequiresActionCheckoutIntent = apply {
             if (validated) {
                 return@apply
             }
@@ -2430,6 +2468,7 @@ private constructor(
             discoverPromoCodes()
             promoCodes()
             variantSelections().ifPresent { it.forEach { it.validate() } }
+            nextAction().validate()
             offer().validate()
             paymentMethod().validate()
             state().validate()
@@ -2461,9 +2500,980 @@ private constructor(
                 (if (discoverPromoCodes.asKnown().isPresent) 1 else 0) +
                 (promoCodes.asKnown().getOrNull()?.size ?: 0) +
                 (variantSelections.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
+                (nextAction.asKnown().getOrNull()?.validity() ?: 0) +
                 (offer.asKnown().getOrNull()?.validity() ?: 0) +
                 (paymentMethod.asKnown().getOrNull()?.validity() ?: 0) +
                 (state.asKnown().getOrNull()?.validity() ?: 0)
+
+        class NextAction
+        @JsonCreator(mode = JsonCreator.Mode.DISABLED)
+        private constructor(
+            private val type: JsonField<Type>,
+            private val x402: JsonField<X402>,
+            private val additionalProperties: MutableMap<String, JsonValue>,
+        ) {
+
+            @JsonCreator
+            private constructor(
+                @JsonProperty("type") @ExcludeMissing type: JsonField<Type> = JsonMissing.of(),
+                @JsonProperty("x402") @ExcludeMissing x402: JsonField<X402> = JsonMissing.of(),
+            ) : this(type, x402, mutableMapOf())
+
+            /**
+             * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type
+             *   or is unexpectedly missing or null (e.g. if the server responded with an unexpected
+             *   value).
+             */
+            fun type(): Type = type.getRequired("type")
+
+            /**
+             * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type
+             *   or is unexpectedly missing or null (e.g. if the server responded with an unexpected
+             *   value).
+             */
+            fun x402(): X402 = x402.getRequired("x402")
+
+            /**
+             * Returns the raw JSON value of [type].
+             *
+             * Unlike [type], this method doesn't throw if the JSON field has an unexpected type.
+             */
+            @JsonProperty("type") @ExcludeMissing fun _type(): JsonField<Type> = type
+
+            /**
+             * Returns the raw JSON value of [x402].
+             *
+             * Unlike [x402], this method doesn't throw if the JSON field has an unexpected type.
+             */
+            @JsonProperty("x402") @ExcludeMissing fun _x402(): JsonField<X402> = x402
+
+            @JsonAnySetter
+            private fun putAdditionalProperty(key: String, value: JsonValue) {
+                additionalProperties.put(key, value)
+            }
+
+            @JsonAnyGetter
+            @ExcludeMissing
+            fun _additionalProperties(): Map<String, JsonValue> =
+                Collections.unmodifiableMap(additionalProperties)
+
+            fun toBuilder() = Builder().from(this)
+
+            companion object {
+
+                /**
+                 * Returns a mutable builder for constructing an instance of [NextAction].
+                 *
+                 * The following fields are required:
+                 * ```java
+                 * .type()
+                 * .x402()
+                 * ```
+                 */
+                @JvmStatic fun builder() = Builder()
+            }
+
+            /** A builder for [NextAction]. */
+            class Builder internal constructor() {
+
+                private var type: JsonField<Type>? = null
+                private var x402: JsonField<X402>? = null
+                private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
+
+                @JvmSynthetic
+                internal fun from(nextAction: NextAction) = apply {
+                    type = nextAction.type
+                    x402 = nextAction.x402
+                    additionalProperties = nextAction.additionalProperties.toMutableMap()
+                }
+
+                fun type(type: Type) = type(JsonField.of(type))
+
+                /**
+                 * Sets [Builder.type] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.type] with a well-typed [Type] value instead.
+                 * This method is primarily for setting the field to an undocumented or not yet
+                 * supported value.
+                 */
+                fun type(type: JsonField<Type>) = apply { this.type = type }
+
+                fun x402(x402: X402) = x402(JsonField.of(x402))
+
+                /**
+                 * Sets [Builder.x402] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.x402] with a well-typed [X402] value instead.
+                 * This method is primarily for setting the field to an undocumented or not yet
+                 * supported value.
+                 */
+                fun x402(x402: JsonField<X402>) = apply { this.x402 = x402 }
+
+                fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                    this.additionalProperties.clear()
+                    putAllAdditionalProperties(additionalProperties)
+                }
+
+                fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+                    additionalProperties.put(key, value)
+                }
+
+                fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+                    apply {
+                        this.additionalProperties.putAll(additionalProperties)
+                    }
+
+                fun removeAdditionalProperty(key: String) = apply {
+                    additionalProperties.remove(key)
+                }
+
+                fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                    keys.forEach(::removeAdditionalProperty)
+                }
+
+                /**
+                 * Returns an immutable instance of [NextAction].
+                 *
+                 * Further updates to this [Builder] will not mutate the returned instance.
+                 *
+                 * The following fields are required:
+                 * ```java
+                 * .type()
+                 * .x402()
+                 * ```
+                 *
+                 * @throws IllegalStateException if any required field is unset.
+                 */
+                fun build(): NextAction =
+                    NextAction(
+                        checkRequired("type", type),
+                        checkRequired("x402", x402),
+                        additionalProperties.toMutableMap(),
+                    )
+            }
+
+            private var validated: Boolean = false
+
+            fun validate(): NextAction = apply {
+                if (validated) {
+                    return@apply
+                }
+
+                type().validate()
+                x402().validate()
+                validated = true
+            }
+
+            fun isValid(): Boolean =
+                try {
+                    validate()
+                    true
+                } catch (e: CheckoutIntentsInvalidDataException) {
+                    false
+                }
+
+            /**
+             * Returns a score indicating how many valid values are contained in this object
+             * recursively.
+             *
+             * Used for best match union deserialization.
+             */
+            @JvmSynthetic
+            internal fun validity(): Int =
+                (type.asKnown().getOrNull()?.validity() ?: 0) +
+                    (x402.asKnown().getOrNull()?.validity() ?: 0)
+
+            class Type @JsonCreator private constructor(private val value: JsonField<String>) :
+                Enum {
+
+                /**
+                 * Returns this class instance's raw value.
+                 *
+                 * This is usually only useful if this instance was deserialized from data that
+                 * doesn't match any known member, and you want to know that value. For example, if
+                 * the SDK is on an older version than the API, then the API may respond with new
+                 * members that the SDK is unaware of.
+                 */
+                @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+
+                companion object {
+
+                    @JvmField val X402 = of("x402")
+
+                    @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+                }
+
+                /** An enum containing [Type]'s known values. */
+                enum class Known {
+                    X402
+                }
+
+                /**
+                 * An enum containing [Type]'s known values, as well as an [_UNKNOWN] member.
+                 *
+                 * An instance of [Type] can contain an unknown value in a couple of cases:
+                 * - It was deserialized from data that doesn't match any known member. For example,
+                 *   if the SDK is on an older version than the API, then the API may respond with
+                 *   new members that the SDK is unaware of.
+                 * - It was constructed with an arbitrary value using the [of] method.
+                 */
+                enum class Value {
+                    X402,
+                    /**
+                     * An enum member indicating that [Type] was instantiated with an unknown value.
+                     */
+                    _UNKNOWN,
+                }
+
+                /**
+                 * Returns an enum member corresponding to this class instance's value, or
+                 * [Value._UNKNOWN] if the class was instantiated with an unknown value.
+                 *
+                 * Use the [known] method instead if you're certain the value is always known or if
+                 * you want to throw for the unknown case.
+                 */
+                fun value(): Value =
+                    when (this) {
+                        X402 -> Value.X402
+                        else -> Value._UNKNOWN
+                    }
+
+                /**
+                 * Returns an enum member corresponding to this class instance's value.
+                 *
+                 * Use the [value] method instead if you're uncertain the value is always known and
+                 * don't want to throw for the unknown case.
+                 *
+                 * @throws CheckoutIntentsInvalidDataException if this class instance's value is a
+                 *   not a known member.
+                 */
+                fun known(): Known =
+                    when (this) {
+                        X402 -> Known.X402
+                        else -> throw CheckoutIntentsInvalidDataException("Unknown Type: $value")
+                    }
+
+                /**
+                 * Returns this class instance's primitive wire representation.
+                 *
+                 * This differs from the [toString] method because that method is primarily for
+                 * debugging and generally doesn't throw.
+                 *
+                 * @throws CheckoutIntentsInvalidDataException if this class instance's value does
+                 *   not have the expected primitive type.
+                 */
+                fun asString(): String =
+                    _value().asString().orElseThrow {
+                        CheckoutIntentsInvalidDataException("Value is not a String")
+                    }
+
+                private var validated: Boolean = false
+
+                fun validate(): Type = apply {
+                    if (validated) {
+                        return@apply
+                    }
+
+                    known()
+                    validated = true
+                }
+
+                fun isValid(): Boolean =
+                    try {
+                        validate()
+                        true
+                    } catch (e: CheckoutIntentsInvalidDataException) {
+                        false
+                    }
+
+                /**
+                 * Returns a score indicating how many valid values are contained in this object
+                 * recursively.
+                 *
+                 * Used for best match union deserialization.
+                 */
+                @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+
+                override fun equals(other: Any?): Boolean {
+                    if (this === other) {
+                        return true
+                    }
+
+                    return other is Type && value == other.value
+                }
+
+                override fun hashCode() = value.hashCode()
+
+                override fun toString() = value.toString()
+            }
+
+            class X402
+            @JsonCreator(mode = JsonCreator.Mode.DISABLED)
+            private constructor(
+                private val currency: JsonField<Currency>,
+                private val expiresAt: JsonField<String>,
+                private val maxAmountRequired: JsonField<String>,
+                private val network: JsonField<String>,
+                private val recipient: JsonField<String>,
+                private val scheme: JsonField<Scheme>,
+                private val additionalProperties: MutableMap<String, JsonValue>,
+            ) {
+
+                @JsonCreator
+                private constructor(
+                    @JsonProperty("currency")
+                    @ExcludeMissing
+                    currency: JsonField<Currency> = JsonMissing.of(),
+                    @JsonProperty("expiresAt")
+                    @ExcludeMissing
+                    expiresAt: JsonField<String> = JsonMissing.of(),
+                    @JsonProperty("maxAmountRequired")
+                    @ExcludeMissing
+                    maxAmountRequired: JsonField<String> = JsonMissing.of(),
+                    @JsonProperty("network")
+                    @ExcludeMissing
+                    network: JsonField<String> = JsonMissing.of(),
+                    @JsonProperty("recipient")
+                    @ExcludeMissing
+                    recipient: JsonField<String> = JsonMissing.of(),
+                    @JsonProperty("scheme")
+                    @ExcludeMissing
+                    scheme: JsonField<Scheme> = JsonMissing.of(),
+                ) : this(
+                    currency,
+                    expiresAt,
+                    maxAmountRequired,
+                    network,
+                    recipient,
+                    scheme,
+                    mutableMapOf(),
+                )
+
+                /**
+                 * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected
+                 *   type or is unexpectedly missing or null (e.g. if the server responded with an
+                 *   unexpected value).
+                 */
+                fun currency(): Currency = currency.getRequired("currency")
+
+                /**
+                 * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected
+                 *   type or is unexpectedly missing or null (e.g. if the server responded with an
+                 *   unexpected value).
+                 */
+                fun expiresAt(): String = expiresAt.getRequired("expiresAt")
+
+                /**
+                 * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected
+                 *   type or is unexpectedly missing or null (e.g. if the server responded with an
+                 *   unexpected value).
+                 */
+                fun maxAmountRequired(): String = maxAmountRequired.getRequired("maxAmountRequired")
+
+                /**
+                 * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected
+                 *   type or is unexpectedly missing or null (e.g. if the server responded with an
+                 *   unexpected value).
+                 */
+                fun network(): String = network.getRequired("network")
+
+                /**
+                 * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected
+                 *   type or is unexpectedly missing or null (e.g. if the server responded with an
+                 *   unexpected value).
+                 */
+                fun recipient(): String = recipient.getRequired("recipient")
+
+                /**
+                 * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected
+                 *   type or is unexpectedly missing or null (e.g. if the server responded with an
+                 *   unexpected value).
+                 */
+                fun scheme(): Scheme = scheme.getRequired("scheme")
+
+                /**
+                 * Returns the raw JSON value of [currency].
+                 *
+                 * Unlike [currency], this method doesn't throw if the JSON field has an unexpected
+                 * type.
+                 */
+                @JsonProperty("currency")
+                @ExcludeMissing
+                fun _currency(): JsonField<Currency> = currency
+
+                /**
+                 * Returns the raw JSON value of [expiresAt].
+                 *
+                 * Unlike [expiresAt], this method doesn't throw if the JSON field has an unexpected
+                 * type.
+                 */
+                @JsonProperty("expiresAt")
+                @ExcludeMissing
+                fun _expiresAt(): JsonField<String> = expiresAt
+
+                /**
+                 * Returns the raw JSON value of [maxAmountRequired].
+                 *
+                 * Unlike [maxAmountRequired], this method doesn't throw if the JSON field has an
+                 * unexpected type.
+                 */
+                @JsonProperty("maxAmountRequired")
+                @ExcludeMissing
+                fun _maxAmountRequired(): JsonField<String> = maxAmountRequired
+
+                /**
+                 * Returns the raw JSON value of [network].
+                 *
+                 * Unlike [network], this method doesn't throw if the JSON field has an unexpected
+                 * type.
+                 */
+                @JsonProperty("network") @ExcludeMissing fun _network(): JsonField<String> = network
+
+                /**
+                 * Returns the raw JSON value of [recipient].
+                 *
+                 * Unlike [recipient], this method doesn't throw if the JSON field has an unexpected
+                 * type.
+                 */
+                @JsonProperty("recipient")
+                @ExcludeMissing
+                fun _recipient(): JsonField<String> = recipient
+
+                /**
+                 * Returns the raw JSON value of [scheme].
+                 *
+                 * Unlike [scheme], this method doesn't throw if the JSON field has an unexpected
+                 * type.
+                 */
+                @JsonProperty("scheme") @ExcludeMissing fun _scheme(): JsonField<Scheme> = scheme
+
+                @JsonAnySetter
+                private fun putAdditionalProperty(key: String, value: JsonValue) {
+                    additionalProperties.put(key, value)
+                }
+
+                @JsonAnyGetter
+                @ExcludeMissing
+                fun _additionalProperties(): Map<String, JsonValue> =
+                    Collections.unmodifiableMap(additionalProperties)
+
+                fun toBuilder() = Builder().from(this)
+
+                companion object {
+
+                    /**
+                     * Returns a mutable builder for constructing an instance of [X402].
+                     *
+                     * The following fields are required:
+                     * ```java
+                     * .currency()
+                     * .expiresAt()
+                     * .maxAmountRequired()
+                     * .network()
+                     * .recipient()
+                     * .scheme()
+                     * ```
+                     */
+                    @JvmStatic fun builder() = Builder()
+                }
+
+                /** A builder for [X402]. */
+                class Builder internal constructor() {
+
+                    private var currency: JsonField<Currency>? = null
+                    private var expiresAt: JsonField<String>? = null
+                    private var maxAmountRequired: JsonField<String>? = null
+                    private var network: JsonField<String>? = null
+                    private var recipient: JsonField<String>? = null
+                    private var scheme: JsonField<Scheme>? = null
+                    private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
+
+                    @JvmSynthetic
+                    internal fun from(x402: X402) = apply {
+                        currency = x402.currency
+                        expiresAt = x402.expiresAt
+                        maxAmountRequired = x402.maxAmountRequired
+                        network = x402.network
+                        recipient = x402.recipient
+                        scheme = x402.scheme
+                        additionalProperties = x402.additionalProperties.toMutableMap()
+                    }
+
+                    fun currency(currency: Currency) = currency(JsonField.of(currency))
+
+                    /**
+                     * Sets [Builder.currency] to an arbitrary JSON value.
+                     *
+                     * You should usually call [Builder.currency] with a well-typed [Currency] value
+                     * instead. This method is primarily for setting the field to an undocumented or
+                     * not yet supported value.
+                     */
+                    fun currency(currency: JsonField<Currency>) = apply { this.currency = currency }
+
+                    fun expiresAt(expiresAt: String) = expiresAt(JsonField.of(expiresAt))
+
+                    /**
+                     * Sets [Builder.expiresAt] to an arbitrary JSON value.
+                     *
+                     * You should usually call [Builder.expiresAt] with a well-typed [String] value
+                     * instead. This method is primarily for setting the field to an undocumented or
+                     * not yet supported value.
+                     */
+                    fun expiresAt(expiresAt: JsonField<String>) = apply {
+                        this.expiresAt = expiresAt
+                    }
+
+                    fun maxAmountRequired(maxAmountRequired: String) =
+                        maxAmountRequired(JsonField.of(maxAmountRequired))
+
+                    /**
+                     * Sets [Builder.maxAmountRequired] to an arbitrary JSON value.
+                     *
+                     * You should usually call [Builder.maxAmountRequired] with a well-typed
+                     * [String] value instead. This method is primarily for setting the field to an
+                     * undocumented or not yet supported value.
+                     */
+                    fun maxAmountRequired(maxAmountRequired: JsonField<String>) = apply {
+                        this.maxAmountRequired = maxAmountRequired
+                    }
+
+                    fun network(network: String) = network(JsonField.of(network))
+
+                    /**
+                     * Sets [Builder.network] to an arbitrary JSON value.
+                     *
+                     * You should usually call [Builder.network] with a well-typed [String] value
+                     * instead. This method is primarily for setting the field to an undocumented or
+                     * not yet supported value.
+                     */
+                    fun network(network: JsonField<String>) = apply { this.network = network }
+
+                    fun recipient(recipient: String) = recipient(JsonField.of(recipient))
+
+                    /**
+                     * Sets [Builder.recipient] to an arbitrary JSON value.
+                     *
+                     * You should usually call [Builder.recipient] with a well-typed [String] value
+                     * instead. This method is primarily for setting the field to an undocumented or
+                     * not yet supported value.
+                     */
+                    fun recipient(recipient: JsonField<String>) = apply {
+                        this.recipient = recipient
+                    }
+
+                    fun scheme(scheme: Scheme) = scheme(JsonField.of(scheme))
+
+                    /**
+                     * Sets [Builder.scheme] to an arbitrary JSON value.
+                     *
+                     * You should usually call [Builder.scheme] with a well-typed [Scheme] value
+                     * instead. This method is primarily for setting the field to an undocumented or
+                     * not yet supported value.
+                     */
+                    fun scheme(scheme: JsonField<Scheme>) = apply { this.scheme = scheme }
+
+                    fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                        this.additionalProperties.clear()
+                        putAllAdditionalProperties(additionalProperties)
+                    }
+
+                    fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+                        additionalProperties.put(key, value)
+                    }
+
+                    fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+                        apply {
+                            this.additionalProperties.putAll(additionalProperties)
+                        }
+
+                    fun removeAdditionalProperty(key: String) = apply {
+                        additionalProperties.remove(key)
+                    }
+
+                    fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                        keys.forEach(::removeAdditionalProperty)
+                    }
+
+                    /**
+                     * Returns an immutable instance of [X402].
+                     *
+                     * Further updates to this [Builder] will not mutate the returned instance.
+                     *
+                     * The following fields are required:
+                     * ```java
+                     * .currency()
+                     * .expiresAt()
+                     * .maxAmountRequired()
+                     * .network()
+                     * .recipient()
+                     * .scheme()
+                     * ```
+                     *
+                     * @throws IllegalStateException if any required field is unset.
+                     */
+                    fun build(): X402 =
+                        X402(
+                            checkRequired("currency", currency),
+                            checkRequired("expiresAt", expiresAt),
+                            checkRequired("maxAmountRequired", maxAmountRequired),
+                            checkRequired("network", network),
+                            checkRequired("recipient", recipient),
+                            checkRequired("scheme", scheme),
+                            additionalProperties.toMutableMap(),
+                        )
+                }
+
+                private var validated: Boolean = false
+
+                fun validate(): X402 = apply {
+                    if (validated) {
+                        return@apply
+                    }
+
+                    currency().validate()
+                    expiresAt()
+                    maxAmountRequired()
+                    network()
+                    recipient()
+                    scheme().validate()
+                    validated = true
+                }
+
+                fun isValid(): Boolean =
+                    try {
+                        validate()
+                        true
+                    } catch (e: CheckoutIntentsInvalidDataException) {
+                        false
+                    }
+
+                /**
+                 * Returns a score indicating how many valid values are contained in this object
+                 * recursively.
+                 *
+                 * Used for best match union deserialization.
+                 */
+                @JvmSynthetic
+                internal fun validity(): Int =
+                    (currency.asKnown().getOrNull()?.validity() ?: 0) +
+                        (if (expiresAt.asKnown().isPresent) 1 else 0) +
+                        (if (maxAmountRequired.asKnown().isPresent) 1 else 0) +
+                        (if (network.asKnown().isPresent) 1 else 0) +
+                        (if (recipient.asKnown().isPresent) 1 else 0) +
+                        (scheme.asKnown().getOrNull()?.validity() ?: 0)
+
+                class Currency
+                @JsonCreator
+                private constructor(private val value: JsonField<String>) : Enum {
+
+                    /**
+                     * Returns this class instance's raw value.
+                     *
+                     * This is usually only useful if this instance was deserialized from data that
+                     * doesn't match any known member, and you want to know that value. For example,
+                     * if the SDK is on an older version than the API, then the API may respond with
+                     * new members that the SDK is unaware of.
+                     */
+                    @com.fasterxml.jackson.annotation.JsonValue
+                    fun _value(): JsonField<String> = value
+
+                    companion object {
+
+                        @JvmField val USDC = of("USDC")
+
+                        @JvmStatic fun of(value: String) = Currency(JsonField.of(value))
+                    }
+
+                    /** An enum containing [Currency]'s known values. */
+                    enum class Known {
+                        USDC
+                    }
+
+                    /**
+                     * An enum containing [Currency]'s known values, as well as an [_UNKNOWN]
+                     * member.
+                     *
+                     * An instance of [Currency] can contain an unknown value in a couple of cases:
+                     * - It was deserialized from data that doesn't match any known member. For
+                     *   example, if the SDK is on an older version than the API, then the API may
+                     *   respond with new members that the SDK is unaware of.
+                     * - It was constructed with an arbitrary value using the [of] method.
+                     */
+                    enum class Value {
+                        USDC,
+                        /**
+                         * An enum member indicating that [Currency] was instantiated with an
+                         * unknown value.
+                         */
+                        _UNKNOWN,
+                    }
+
+                    /**
+                     * Returns an enum member corresponding to this class instance's value, or
+                     * [Value._UNKNOWN] if the class was instantiated with an unknown value.
+                     *
+                     * Use the [known] method instead if you're certain the value is always known or
+                     * if you want to throw for the unknown case.
+                     */
+                    fun value(): Value =
+                        when (this) {
+                            USDC -> Value.USDC
+                            else -> Value._UNKNOWN
+                        }
+
+                    /**
+                     * Returns an enum member corresponding to this class instance's value.
+                     *
+                     * Use the [value] method instead if you're uncertain the value is always known
+                     * and don't want to throw for the unknown case.
+                     *
+                     * @throws CheckoutIntentsInvalidDataException if this class instance's value is
+                     *   a not a known member.
+                     */
+                    fun known(): Known =
+                        when (this) {
+                            USDC -> Known.USDC
+                            else ->
+                                throw CheckoutIntentsInvalidDataException(
+                                    "Unknown Currency: $value"
+                                )
+                        }
+
+                    /**
+                     * Returns this class instance's primitive wire representation.
+                     *
+                     * This differs from the [toString] method because that method is primarily for
+                     * debugging and generally doesn't throw.
+                     *
+                     * @throws CheckoutIntentsInvalidDataException if this class instance's value
+                     *   does not have the expected primitive type.
+                     */
+                    fun asString(): String =
+                        _value().asString().orElseThrow {
+                            CheckoutIntentsInvalidDataException("Value is not a String")
+                        }
+
+                    private var validated: Boolean = false
+
+                    fun validate(): Currency = apply {
+                        if (validated) {
+                            return@apply
+                        }
+
+                        known()
+                        validated = true
+                    }
+
+                    fun isValid(): Boolean =
+                        try {
+                            validate()
+                            true
+                        } catch (e: CheckoutIntentsInvalidDataException) {
+                            false
+                        }
+
+                    /**
+                     * Returns a score indicating how many valid values are contained in this object
+                     * recursively.
+                     *
+                     * Used for best match union deserialization.
+                     */
+                    @JvmSynthetic
+                    internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+
+                    override fun equals(other: Any?): Boolean {
+                        if (this === other) {
+                            return true
+                        }
+
+                        return other is Currency && value == other.value
+                    }
+
+                    override fun hashCode() = value.hashCode()
+
+                    override fun toString() = value.toString()
+                }
+
+                class Scheme
+                @JsonCreator
+                private constructor(private val value: JsonField<String>) : Enum {
+
+                    /**
+                     * Returns this class instance's raw value.
+                     *
+                     * This is usually only useful if this instance was deserialized from data that
+                     * doesn't match any known member, and you want to know that value. For example,
+                     * if the SDK is on an older version than the API, then the API may respond with
+                     * new members that the SDK is unaware of.
+                     */
+                    @com.fasterxml.jackson.annotation.JsonValue
+                    fun _value(): JsonField<String> = value
+
+                    companion object {
+
+                        @JvmField val EXACT = of("exact")
+
+                        @JvmStatic fun of(value: String) = Scheme(JsonField.of(value))
+                    }
+
+                    /** An enum containing [Scheme]'s known values. */
+                    enum class Known {
+                        EXACT
+                    }
+
+                    /**
+                     * An enum containing [Scheme]'s known values, as well as an [_UNKNOWN] member.
+                     *
+                     * An instance of [Scheme] can contain an unknown value in a couple of cases:
+                     * - It was deserialized from data that doesn't match any known member. For
+                     *   example, if the SDK is on an older version than the API, then the API may
+                     *   respond with new members that the SDK is unaware of.
+                     * - It was constructed with an arbitrary value using the [of] method.
+                     */
+                    enum class Value {
+                        EXACT,
+                        /**
+                         * An enum member indicating that [Scheme] was instantiated with an unknown
+                         * value.
+                         */
+                        _UNKNOWN,
+                    }
+
+                    /**
+                     * Returns an enum member corresponding to this class instance's value, or
+                     * [Value._UNKNOWN] if the class was instantiated with an unknown value.
+                     *
+                     * Use the [known] method instead if you're certain the value is always known or
+                     * if you want to throw for the unknown case.
+                     */
+                    fun value(): Value =
+                        when (this) {
+                            EXACT -> Value.EXACT
+                            else -> Value._UNKNOWN
+                        }
+
+                    /**
+                     * Returns an enum member corresponding to this class instance's value.
+                     *
+                     * Use the [value] method instead if you're uncertain the value is always known
+                     * and don't want to throw for the unknown case.
+                     *
+                     * @throws CheckoutIntentsInvalidDataException if this class instance's value is
+                     *   a not a known member.
+                     */
+                    fun known(): Known =
+                        when (this) {
+                            EXACT -> Known.EXACT
+                            else ->
+                                throw CheckoutIntentsInvalidDataException("Unknown Scheme: $value")
+                        }
+
+                    /**
+                     * Returns this class instance's primitive wire representation.
+                     *
+                     * This differs from the [toString] method because that method is primarily for
+                     * debugging and generally doesn't throw.
+                     *
+                     * @throws CheckoutIntentsInvalidDataException if this class instance's value
+                     *   does not have the expected primitive type.
+                     */
+                    fun asString(): String =
+                        _value().asString().orElseThrow {
+                            CheckoutIntentsInvalidDataException("Value is not a String")
+                        }
+
+                    private var validated: Boolean = false
+
+                    fun validate(): Scheme = apply {
+                        if (validated) {
+                            return@apply
+                        }
+
+                        known()
+                        validated = true
+                    }
+
+                    fun isValid(): Boolean =
+                        try {
+                            validate()
+                            true
+                        } catch (e: CheckoutIntentsInvalidDataException) {
+                            false
+                        }
+
+                    /**
+                     * Returns a score indicating how many valid values are contained in this object
+                     * recursively.
+                     *
+                     * Used for best match union deserialization.
+                     */
+                    @JvmSynthetic
+                    internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+
+                    override fun equals(other: Any?): Boolean {
+                        if (this === other) {
+                            return true
+                        }
+
+                        return other is Scheme && value == other.value
+                    }
+
+                    override fun hashCode() = value.hashCode()
+
+                    override fun toString() = value.toString()
+                }
+
+                override fun equals(other: Any?): Boolean {
+                    if (this === other) {
+                        return true
+                    }
+
+                    return other is X402 &&
+                        currency == other.currency &&
+                        expiresAt == other.expiresAt &&
+                        maxAmountRequired == other.maxAmountRequired &&
+                        network == other.network &&
+                        recipient == other.recipient &&
+                        scheme == other.scheme &&
+                        additionalProperties == other.additionalProperties
+                }
+
+                private val hashCode: Int by lazy {
+                    Objects.hash(
+                        currency,
+                        expiresAt,
+                        maxAmountRequired,
+                        network,
+                        recipient,
+                        scheme,
+                        additionalProperties,
+                    )
+                }
+
+                override fun hashCode(): Int = hashCode
+
+                override fun toString() =
+                    "X402{currency=$currency, expiresAt=$expiresAt, maxAmountRequired=$maxAmountRequired, network=$network, recipient=$recipient, scheme=$scheme, additionalProperties=$additionalProperties}"
+            }
+
+            override fun equals(other: Any?): Boolean {
+                if (this === other) {
+                    return true
+                }
+
+                return other is NextAction &&
+                    type == other.type &&
+                    x402 == other.x402 &&
+                    additionalProperties == other.additionalProperties
+            }
+
+            private val hashCode: Int by lazy { Objects.hash(type, x402, additionalProperties) }
+
+            override fun hashCode(): Int = hashCode
+
+            override fun toString() =
+                "NextAction{type=$type, x402=$x402, additionalProperties=$additionalProperties}"
+        }
 
         class State @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
@@ -2479,14 +3489,14 @@ private constructor(
 
             companion object {
 
-                @JvmField val AWAITING_PAYMENT = of("awaiting_payment")
+                @JvmField val REQUIRES_ACTION = of("requires_action")
 
                 @JvmStatic fun of(value: String) = State(JsonField.of(value))
             }
 
             /** An enum containing [State]'s known values. */
             enum class Known {
-                AWAITING_PAYMENT
+                REQUIRES_ACTION
             }
 
             /**
@@ -2499,7 +3509,7 @@ private constructor(
              * - It was constructed with an arbitrary value using the [of] method.
              */
             enum class Value {
-                AWAITING_PAYMENT,
+                REQUIRES_ACTION,
                 /**
                  * An enum member indicating that [State] was instantiated with an unknown value.
                  */
@@ -2515,7 +3525,7 @@ private constructor(
              */
             fun value(): Value =
                 when (this) {
-                    AWAITING_PAYMENT -> Value.AWAITING_PAYMENT
+                    REQUIRES_ACTION -> Value.REQUIRES_ACTION
                     else -> Value._UNKNOWN
                 }
 
@@ -2530,7 +3540,7 @@ private constructor(
              */
             fun known(): Known =
                 when (this) {
-                    AWAITING_PAYMENT -> Known.AWAITING_PAYMENT
+                    REQUIRES_ACTION -> Known.REQUIRES_ACTION
                     else -> throw CheckoutIntentsInvalidDataException("Unknown State: $value")
                 }
 
@@ -2593,7 +3603,7 @@ private constructor(
                 return true
             }
 
-            return other is AwaitingPaymentCheckoutIntent &&
+            return other is RequiresActionCheckoutIntent &&
                 id == other.id &&
                 buyer == other.buyer &&
                 createdAt == other.createdAt &&
@@ -2603,6 +3613,7 @@ private constructor(
                 discoverPromoCodes == other.discoverPromoCodes &&
                 promoCodes == other.promoCodes &&
                 variantSelections == other.variantSelections &&
+                nextAction == other.nextAction &&
                 offer == other.offer &&
                 paymentMethod == other.paymentMethod &&
                 state == other.state &&
@@ -2620,6 +3631,7 @@ private constructor(
                 discoverPromoCodes,
                 promoCodes,
                 variantSelections,
+                nextAction,
                 offer,
                 paymentMethod,
                 state,
@@ -2630,7 +3642,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "AwaitingPaymentCheckoutIntent{id=$id, buyer=$buyer, createdAt=$createdAt, productUrl=$productUrl, quantity=$quantity, constraints=$constraints, discoverPromoCodes=$discoverPromoCodes, promoCodes=$promoCodes, variantSelections=$variantSelections, offer=$offer, paymentMethod=$paymentMethod, state=$state, additionalProperties=$additionalProperties}"
+            "RequiresActionCheckoutIntent{id=$id, buyer=$buyer, createdAt=$createdAt, productUrl=$productUrl, quantity=$quantity, constraints=$constraints, discoverPromoCodes=$discoverPromoCodes, promoCodes=$promoCodes, variantSelections=$variantSelections, nextAction=$nextAction, offer=$offer, paymentMethod=$paymentMethod, state=$state, additionalProperties=$additionalProperties}"
     }
 
     class PlacingOrderCheckoutIntent

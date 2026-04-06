@@ -280,7 +280,7 @@ private constructor(
 
             @JvmField val AWAITING_CONFIRMATION = of("awaiting_confirmation")
 
-            @JvmField val AWAITING_PAYMENT = of("awaiting_payment")
+            @JvmField val REQUIRES_ACTION = of("requires_action")
 
             @JvmField val PLACING_ORDER = of("placing_order")
 
@@ -293,7 +293,7 @@ private constructor(
             FAILED,
             RETRIEVING_OFFER,
             AWAITING_CONFIRMATION,
-            AWAITING_PAYMENT,
+            REQUIRES_ACTION,
             PLACING_ORDER,
         }
 
@@ -311,7 +311,7 @@ private constructor(
             FAILED,
             RETRIEVING_OFFER,
             AWAITING_CONFIRMATION,
-            AWAITING_PAYMENT,
+            REQUIRES_ACTION,
             PLACING_ORDER,
             /** An enum member indicating that [State] was instantiated with an unknown value. */
             _UNKNOWN,
@@ -330,7 +330,7 @@ private constructor(
                 FAILED -> Value.FAILED
                 RETRIEVING_OFFER -> Value.RETRIEVING_OFFER
                 AWAITING_CONFIRMATION -> Value.AWAITING_CONFIRMATION
-                AWAITING_PAYMENT -> Value.AWAITING_PAYMENT
+                REQUIRES_ACTION -> Value.REQUIRES_ACTION
                 PLACING_ORDER -> Value.PLACING_ORDER
                 else -> Value._UNKNOWN
             }
@@ -350,7 +350,7 @@ private constructor(
                 FAILED -> Known.FAILED
                 RETRIEVING_OFFER -> Known.RETRIEVING_OFFER
                 AWAITING_CONFIRMATION -> Known.AWAITING_CONFIRMATION
-                AWAITING_PAYMENT -> Known.AWAITING_PAYMENT
+                REQUIRES_ACTION -> Known.REQUIRES_ACTION
                 PLACING_ORDER -> Known.PLACING_ORDER
                 else -> throw CheckoutIntentsInvalidDataException("Unknown State: $value")
             }
