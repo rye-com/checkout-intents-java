@@ -220,9 +220,9 @@ class CheckoutIntentServiceImpl internal constructor(private val clientOptions: 
                     awaitingConfirmation: CheckoutIntent.AwaitingConfirmationCheckoutIntent
                 ) = awaitingConfirmation.id()
 
-                override fun visitAwaitingPayment(
-                    awaitingPayment: CheckoutIntent.AwaitingPaymentCheckoutIntent
-                ) = awaitingPayment.id()
+                override fun visitRequiresAction(
+                    requiresAction: CheckoutIntent.RequiresActionCheckoutIntent
+                ) = requiresAction.id()
 
                 override fun visitPlacingOrder(
                     placingOrder: CheckoutIntent.PlacingOrderCheckoutIntent

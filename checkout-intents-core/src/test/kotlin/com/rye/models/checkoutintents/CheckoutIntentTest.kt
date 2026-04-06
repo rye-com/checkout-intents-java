@@ -61,7 +61,7 @@ internal class CheckoutIntentTest {
 
         assertThat(checkoutIntent.retrievingOffer()).contains(retrievingOffer)
         assertThat(checkoutIntent.awaitingConfirmation()).isEmpty
-        assertThat(checkoutIntent.awaitingPayment()).isEmpty
+        assertThat(checkoutIntent.requiresAction()).isEmpty
         assertThat(checkoutIntent.placingOrder()).isEmpty
         assertThat(checkoutIntent.completed()).isEmpty
         assertThat(checkoutIntent.failed()).isEmpty
@@ -235,7 +235,7 @@ internal class CheckoutIntentTest {
 
         assertThat(checkoutIntent.retrievingOffer()).isEmpty
         assertThat(checkoutIntent.awaitingConfirmation()).contains(awaitingConfirmation)
-        assertThat(checkoutIntent.awaitingPayment()).isEmpty
+        assertThat(checkoutIntent.requiresAction()).isEmpty
         assertThat(checkoutIntent.placingOrder()).isEmpty
         assertThat(checkoutIntent.completed()).isEmpty
         assertThat(checkoutIntent.failed()).isEmpty
@@ -383,9 +383,9 @@ internal class CheckoutIntentTest {
     }
 
     @Test
-    fun ofAwaitingPayment() {
-        val awaitingPayment =
-            CheckoutIntent.AwaitingPaymentCheckoutIntent.builder()
+    fun ofRequiresAction() {
+        val requiresAction =
+            CheckoutIntent.RequiresActionCheckoutIntent.builder()
                 .id("id")
                 .buyer(
                     Buyer.builder()
@@ -419,6 +419,29 @@ internal class CheckoutIntentTest {
                     VariantSelection.builder()
                         .label("Size, Color, etc.")
                         .value("Small, Red, XS, L, etc.")
+                        .build()
+                )
+                .nextAction(
+                    CheckoutIntent.RequiresActionCheckoutIntent.NextAction.builder()
+                        .type(CheckoutIntent.RequiresActionCheckoutIntent.NextAction.Type.X402)
+                        .x402(
+                            CheckoutIntent.RequiresActionCheckoutIntent.NextAction.X402.builder()
+                                .currency(
+                                    CheckoutIntent.RequiresActionCheckoutIntent.NextAction.X402
+                                        .Currency
+                                        .USDC
+                                )
+                                .expiresAt("expiresAt")
+                                .maxAmountRequired("maxAmountRequired")
+                                .network("network")
+                                .recipient("recipient")
+                                .scheme(
+                                    CheckoutIntent.RequiresActionCheckoutIntent.NextAction.X402
+                                        .Scheme
+                                        .EXACT
+                                )
+                                .build()
+                        )
                         .build()
                 )
                 .offer(
@@ -487,25 +510,25 @@ internal class CheckoutIntentTest {
                         .type(PaymentMethod.StripeTokenPaymentMethod.Type.STRIPE_TOKEN)
                         .build()
                 )
-                .state(CheckoutIntent.AwaitingPaymentCheckoutIntent.State.AWAITING_PAYMENT)
+                .state(CheckoutIntent.RequiresActionCheckoutIntent.State.REQUIRES_ACTION)
                 .build()
 
-        val checkoutIntent = CheckoutIntent.ofAwaitingPayment(awaitingPayment)
+        val checkoutIntent = CheckoutIntent.ofRequiresAction(requiresAction)
 
         assertThat(checkoutIntent.retrievingOffer()).isEmpty
         assertThat(checkoutIntent.awaitingConfirmation()).isEmpty
-        assertThat(checkoutIntent.awaitingPayment()).contains(awaitingPayment)
+        assertThat(checkoutIntent.requiresAction()).contains(requiresAction)
         assertThat(checkoutIntent.placingOrder()).isEmpty
         assertThat(checkoutIntent.completed()).isEmpty
         assertThat(checkoutIntent.failed()).isEmpty
     }
 
     @Test
-    fun ofAwaitingPaymentRoundtrip() {
+    fun ofRequiresActionRoundtrip() {
         val jsonMapper = jsonMapper()
         val checkoutIntent =
-            CheckoutIntent.ofAwaitingPayment(
-                CheckoutIntent.AwaitingPaymentCheckoutIntent.builder()
+            CheckoutIntent.ofRequiresAction(
+                CheckoutIntent.RequiresActionCheckoutIntent.builder()
                     .id("id")
                     .buyer(
                         Buyer.builder()
@@ -539,6 +562,30 @@ internal class CheckoutIntentTest {
                         VariantSelection.builder()
                             .label("Size, Color, etc.")
                             .value("Small, Red, XS, L, etc.")
+                            .build()
+                    )
+                    .nextAction(
+                        CheckoutIntent.RequiresActionCheckoutIntent.NextAction.builder()
+                            .type(CheckoutIntent.RequiresActionCheckoutIntent.NextAction.Type.X402)
+                            .x402(
+                                CheckoutIntent.RequiresActionCheckoutIntent.NextAction.X402
+                                    .builder()
+                                    .currency(
+                                        CheckoutIntent.RequiresActionCheckoutIntent.NextAction.X402
+                                            .Currency
+                                            .USDC
+                                    )
+                                    .expiresAt("expiresAt")
+                                    .maxAmountRequired("maxAmountRequired")
+                                    .network("network")
+                                    .recipient("recipient")
+                                    .scheme(
+                                        CheckoutIntent.RequiresActionCheckoutIntent.NextAction.X402
+                                            .Scheme
+                                            .EXACT
+                                    )
+                                    .build()
+                            )
                             .build()
                     )
                     .offer(
@@ -625,7 +672,7 @@ internal class CheckoutIntentTest {
                             .type(PaymentMethod.StripeTokenPaymentMethod.Type.STRIPE_TOKEN)
                             .build()
                     )
-                    .state(CheckoutIntent.AwaitingPaymentCheckoutIntent.State.AWAITING_PAYMENT)
+                    .state(CheckoutIntent.RequiresActionCheckoutIntent.State.REQUIRES_ACTION)
                     .build()
             )
 
@@ -750,7 +797,7 @@ internal class CheckoutIntentTest {
 
         assertThat(checkoutIntent.retrievingOffer()).isEmpty
         assertThat(checkoutIntent.awaitingConfirmation()).isEmpty
-        assertThat(checkoutIntent.awaitingPayment()).isEmpty
+        assertThat(checkoutIntent.requiresAction()).isEmpty
         assertThat(checkoutIntent.placingOrder()).contains(placingOrder)
         assertThat(checkoutIntent.completed()).isEmpty
         assertThat(checkoutIntent.failed()).isEmpty
@@ -1008,7 +1055,7 @@ internal class CheckoutIntentTest {
 
         assertThat(checkoutIntent.retrievingOffer()).isEmpty
         assertThat(checkoutIntent.awaitingConfirmation()).isEmpty
-        assertThat(checkoutIntent.awaitingPayment()).isEmpty
+        assertThat(checkoutIntent.requiresAction()).isEmpty
         assertThat(checkoutIntent.placingOrder()).isEmpty
         assertThat(checkoutIntent.completed()).contains(completed)
         assertThat(checkoutIntent.failed()).isEmpty
@@ -1275,7 +1322,7 @@ internal class CheckoutIntentTest {
 
         assertThat(checkoutIntent.retrievingOffer()).isEmpty
         assertThat(checkoutIntent.awaitingConfirmation()).isEmpty
-        assertThat(checkoutIntent.awaitingPayment()).isEmpty
+        assertThat(checkoutIntent.requiresAction()).isEmpty
         assertThat(checkoutIntent.placingOrder()).isEmpty
         assertThat(checkoutIntent.completed()).isEmpty
         assertThat(checkoutIntent.failed()).contains(failed)

@@ -139,9 +139,9 @@ private constructor(
         fun addData(awaitingConfirmation: CheckoutIntent.AwaitingConfirmationCheckoutIntent) =
             addData(CheckoutIntent.ofAwaitingConfirmation(awaitingConfirmation))
 
-        /** Alias for calling [addData] with `CheckoutIntent.ofAwaitingPayment(awaitingPayment)`. */
-        fun addData(awaitingPayment: CheckoutIntent.AwaitingPaymentCheckoutIntent) =
-            addData(CheckoutIntent.ofAwaitingPayment(awaitingPayment))
+        /** Alias for calling [addData] with `CheckoutIntent.ofRequiresAction(requiresAction)`. */
+        fun addData(requiresAction: CheckoutIntent.RequiresActionCheckoutIntent) =
+            addData(CheckoutIntent.ofRequiresAction(requiresAction))
 
         /** Alias for calling [addData] with `CheckoutIntent.ofPlacingOrder(placingOrder)`. */
         fun addData(placingOrder: CheckoutIntent.PlacingOrderCheckoutIntent) =
