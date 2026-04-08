@@ -1242,10 +1242,7 @@ internal class CheckoutIntentTest {
                 )
                 .failureReason(
                     CheckoutIntent.FailedCheckoutIntent.FailureReason.builder()
-                        .code(
-                            CheckoutIntent.FailedCheckoutIntent.FailureReason.Code
-                                .CHECKOUT_INTENT_EXPIRED
-                        )
+                        .code(CheckoutIntent.FailedCheckoutIntent.FailureReason.Code.UNKNOWN)
                         .message("message")
                         .build()
                 )
@@ -1371,10 +1368,7 @@ internal class CheckoutIntentTest {
                     )
                     .failureReason(
                         CheckoutIntent.FailedCheckoutIntent.FailureReason.builder()
-                            .code(
-                                CheckoutIntent.FailedCheckoutIntent.FailureReason.Code
-                                    .CHECKOUT_INTENT_EXPIRED
-                            )
+                            .code(CheckoutIntent.FailedCheckoutIntent.FailureReason.Code.UNKNOWN)
                             .message("message")
                             .build()
                     )
