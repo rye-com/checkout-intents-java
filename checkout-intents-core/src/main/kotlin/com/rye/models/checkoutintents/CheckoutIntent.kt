@@ -6212,6 +6212,8 @@ private constructor(
 
                 companion object {
 
+                    @JvmField val UNKNOWN = of("unknown")
+
                     @JvmField val CHECKOUT_INTENT_EXPIRED = of("checkout_intent_expired")
 
                     @JvmField val PAYMENT_FAILED = of("payment_failed")
@@ -6259,13 +6261,12 @@ private constructor(
                     @JvmField
                     val PROMO_CODE_DISCOVERY_NOT_ENABLED = of("promo_code_discovery_not_enabled")
 
-                    @JvmField val UNKNOWN = of("unknown")
-
                     @JvmStatic fun of(value: String) = Code(JsonField.of(value))
                 }
 
                 /** An enum containing [Code]'s known values. */
                 enum class Known {
+                    UNKNOWN,
                     CHECKOUT_INTENT_EXPIRED,
                     PAYMENT_FAILED,
                     INSUFFICIENT_STOCK,
@@ -6287,7 +6288,6 @@ private constructor(
                     CONSTRAINT_TOTAL_PRICE_EXCEEDED,
                     CONSTRAINT_SHIPPING_COST_EXCEEDED,
                     PROMO_CODE_DISCOVERY_NOT_ENABLED,
-                    UNKNOWN,
                 }
 
                 /**
@@ -6300,6 +6300,7 @@ private constructor(
                  * - It was constructed with an arbitrary value using the [of] method.
                  */
                 enum class Value {
+                    UNKNOWN,
                     CHECKOUT_INTENT_EXPIRED,
                     PAYMENT_FAILED,
                     INSUFFICIENT_STOCK,
@@ -6321,7 +6322,6 @@ private constructor(
                     CONSTRAINT_TOTAL_PRICE_EXCEEDED,
                     CONSTRAINT_SHIPPING_COST_EXCEEDED,
                     PROMO_CODE_DISCOVERY_NOT_ENABLED,
-                    UNKNOWN,
                     /**
                      * An enum member indicating that [Code] was instantiated with an unknown value.
                      */
@@ -6337,6 +6337,7 @@ private constructor(
                  */
                 fun value(): Value =
                     when (this) {
+                        UNKNOWN -> Value.UNKNOWN
                         CHECKOUT_INTENT_EXPIRED -> Value.CHECKOUT_INTENT_EXPIRED
                         PAYMENT_FAILED -> Value.PAYMENT_FAILED
                         INSUFFICIENT_STOCK -> Value.INSUFFICIENT_STOCK
@@ -6359,7 +6360,6 @@ private constructor(
                         CONSTRAINT_TOTAL_PRICE_EXCEEDED -> Value.CONSTRAINT_TOTAL_PRICE_EXCEEDED
                         CONSTRAINT_SHIPPING_COST_EXCEEDED -> Value.CONSTRAINT_SHIPPING_COST_EXCEEDED
                         PROMO_CODE_DISCOVERY_NOT_ENABLED -> Value.PROMO_CODE_DISCOVERY_NOT_ENABLED
-                        UNKNOWN -> Value.UNKNOWN
                         else -> Value._UNKNOWN
                     }
 
@@ -6374,6 +6374,7 @@ private constructor(
                  */
                 fun known(): Known =
                     when (this) {
+                        UNKNOWN -> Known.UNKNOWN
                         CHECKOUT_INTENT_EXPIRED -> Known.CHECKOUT_INTENT_EXPIRED
                         PAYMENT_FAILED -> Known.PAYMENT_FAILED
                         INSUFFICIENT_STOCK -> Known.INSUFFICIENT_STOCK
@@ -6396,7 +6397,6 @@ private constructor(
                         CONSTRAINT_TOTAL_PRICE_EXCEEDED -> Known.CONSTRAINT_TOTAL_PRICE_EXCEEDED
                         CONSTRAINT_SHIPPING_COST_EXCEEDED -> Known.CONSTRAINT_SHIPPING_COST_EXCEEDED
                         PROMO_CODE_DISCOVERY_NOT_ENABLED -> Known.PROMO_CODE_DISCOVERY_NOT_ENABLED
-                        UNKNOWN -> Known.UNKNOWN
                         else -> throw CheckoutIntentsInvalidDataException("Unknown Code: $value")
                     }
 
