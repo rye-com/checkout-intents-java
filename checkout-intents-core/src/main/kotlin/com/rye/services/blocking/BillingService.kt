@@ -5,7 +5,11 @@ package com.rye.services.blocking
 import com.google.errorprone.annotations.MustBeClosed
 import com.rye.core.ClientOptions
 import com.rye.core.RequestOptions
+import com.rye.core.http.HttpResponse
 import com.rye.core.http.HttpResponseFor
+import com.rye.models.billing.BillingCancelTopupInvoiceParams
+import com.rye.models.billing.BillingCreateTopupInvoiceParams
+import com.rye.models.billing.BillingCreateTopupInvoiceResponse
 import com.rye.models.billing.BillingGetBalanceParams
 import com.rye.models.billing.BillingGetBalanceResponse
 import com.rye.models.billing.BillingListTransactionsPage
@@ -25,6 +29,51 @@ interface BillingService {
      * The original service is not modified.
      */
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): BillingService
+
+    /** Cancel/void an unpaid top-up invoice. Only invoices in open state can be cancelled. */
+    fun cancelTopupInvoice(invoiceId: String) =
+        cancelTopupInvoice(invoiceId, BillingCancelTopupInvoiceParams.none())
+
+    /** @see cancelTopupInvoice */
+    fun cancelTopupInvoice(
+        invoiceId: String,
+        params: BillingCancelTopupInvoiceParams = BillingCancelTopupInvoiceParams.none(),
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ) = cancelTopupInvoice(params.toBuilder().invoiceId(invoiceId).build(), requestOptions)
+
+    /** @see cancelTopupInvoice */
+    fun cancelTopupInvoice(
+        invoiceId: String,
+        params: BillingCancelTopupInvoiceParams = BillingCancelTopupInvoiceParams.none(),
+    ) = cancelTopupInvoice(invoiceId, params, RequestOptions.none())
+
+    /** @see cancelTopupInvoice */
+    fun cancelTopupInvoice(
+        params: BillingCancelTopupInvoiceParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    )
+
+    /** @see cancelTopupInvoice */
+    fun cancelTopupInvoice(params: BillingCancelTopupInvoiceParams) =
+        cancelTopupInvoice(params, RequestOptions.none())
+
+    /** @see cancelTopupInvoice */
+    fun cancelTopupInvoice(invoiceId: String, requestOptions: RequestOptions) =
+        cancelTopupInvoice(invoiceId, BillingCancelTopupInvoiceParams.none(), requestOptions)
+
+    /**
+     * Request an on-demand top-up invoice.. Requires drawdown billing to be enabled. Only one
+     * unpaid top-up invoice is allowed at a time.
+     */
+    fun createTopupInvoice(
+        params: BillingCreateTopupInvoiceParams
+    ): BillingCreateTopupInvoiceResponse = createTopupInvoice(params, RequestOptions.none())
+
+    /** @see createTopupInvoice */
+    fun createTopupInvoice(
+        params: BillingCreateTopupInvoiceParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): BillingCreateTopupInvoiceResponse
 
     /** Get current drawdown balance for the authenticated developer */
     fun getBalance(): BillingGetBalanceResponse = getBalance(BillingGetBalanceParams.none())
@@ -72,6 +121,64 @@ interface BillingService {
          * The original service is not modified.
          */
         fun withOptions(modifier: Consumer<ClientOptions.Builder>): BillingService.WithRawResponse
+
+        /**
+         * Returns a raw HTTP response for `delete /api/v1/billing/drawdown/topup/{invoiceId}`, but
+         * is otherwise the same as [BillingService.cancelTopupInvoice].
+         */
+        @MustBeClosed
+        fun cancelTopupInvoice(invoiceId: String): HttpResponse =
+            cancelTopupInvoice(invoiceId, BillingCancelTopupInvoiceParams.none())
+
+        /** @see cancelTopupInvoice */
+        @MustBeClosed
+        fun cancelTopupInvoice(
+            invoiceId: String,
+            params: BillingCancelTopupInvoiceParams = BillingCancelTopupInvoiceParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponse =
+            cancelTopupInvoice(params.toBuilder().invoiceId(invoiceId).build(), requestOptions)
+
+        /** @see cancelTopupInvoice */
+        @MustBeClosed
+        fun cancelTopupInvoice(
+            invoiceId: String,
+            params: BillingCancelTopupInvoiceParams = BillingCancelTopupInvoiceParams.none(),
+        ): HttpResponse = cancelTopupInvoice(invoiceId, params, RequestOptions.none())
+
+        /** @see cancelTopupInvoice */
+        @MustBeClosed
+        fun cancelTopupInvoice(
+            params: BillingCancelTopupInvoiceParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponse
+
+        /** @see cancelTopupInvoice */
+        @MustBeClosed
+        fun cancelTopupInvoice(params: BillingCancelTopupInvoiceParams): HttpResponse =
+            cancelTopupInvoice(params, RequestOptions.none())
+
+        /** @see cancelTopupInvoice */
+        @MustBeClosed
+        fun cancelTopupInvoice(invoiceId: String, requestOptions: RequestOptions): HttpResponse =
+            cancelTopupInvoice(invoiceId, BillingCancelTopupInvoiceParams.none(), requestOptions)
+
+        /**
+         * Returns a raw HTTP response for `post /api/v1/billing/drawdown/topup`, but is otherwise
+         * the same as [BillingService.createTopupInvoice].
+         */
+        @MustBeClosed
+        fun createTopupInvoice(
+            params: BillingCreateTopupInvoiceParams
+        ): HttpResponseFor<BillingCreateTopupInvoiceResponse> =
+            createTopupInvoice(params, RequestOptions.none())
+
+        /** @see createTopupInvoice */
+        @MustBeClosed
+        fun createTopupInvoice(
+            params: BillingCreateTopupInvoiceParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<BillingCreateTopupInvoiceResponse>
 
         /**
          * Returns a raw HTTP response for `get /api/v1/billing/balance`, but is otherwise the same
