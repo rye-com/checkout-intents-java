@@ -4,6 +4,8 @@ package com.rye.services.blocking
 
 import com.rye.core.ClientOptions
 import com.rye.core.RequestOptions
+import com.rye.core.checkRequired
+import com.rye.core.handlers.emptyHandler
 import com.rye.core.handlers.errorBodyHandler
 import com.rye.core.handlers.errorHandler
 import com.rye.core.handlers.jsonHandler
@@ -12,14 +14,19 @@ import com.rye.core.http.HttpRequest
 import com.rye.core.http.HttpResponse
 import com.rye.core.http.HttpResponse.Handler
 import com.rye.core.http.HttpResponseFor
+import com.rye.core.http.json
 import com.rye.core.http.parseable
 import com.rye.core.prepare
+import com.rye.models.billing.BillingCancelTopupInvoiceParams
+import com.rye.models.billing.BillingCreateTopupInvoiceParams
+import com.rye.models.billing.BillingCreateTopupInvoiceResponse
 import com.rye.models.billing.BillingGetBalanceParams
 import com.rye.models.billing.BillingGetBalanceResponse
 import com.rye.models.billing.BillingListTransactionsPage
 import com.rye.models.billing.BillingListTransactionsPageResponse
 import com.rye.models.billing.BillingListTransactionsParams
 import java.util.function.Consumer
+import kotlin.jvm.optionals.getOrNull
 
 class BillingServiceImpl internal constructor(private val clientOptions: ClientOptions) :
     BillingService {
@@ -32,6 +39,21 @@ class BillingServiceImpl internal constructor(private val clientOptions: ClientO
 
     override fun withOptions(modifier: Consumer<ClientOptions.Builder>): BillingService =
         BillingServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
+
+    override fun cancelTopupInvoice(
+        params: BillingCancelTopupInvoiceParams,
+        requestOptions: RequestOptions,
+    ) {
+        // delete /api/v1/billing/drawdown/topup/{invoiceId}
+        withRawResponse().cancelTopupInvoice(params, requestOptions)
+    }
+
+    override fun createTopupInvoice(
+        params: BillingCreateTopupInvoiceParams,
+        requestOptions: RequestOptions,
+    ): BillingCreateTopupInvoiceResponse =
+        // post /api/v1/billing/drawdown/topup
+        withRawResponse().createTopupInvoice(params, requestOptions).parse()
 
     override fun getBalance(
         params: BillingGetBalanceParams,
@@ -59,6 +81,65 @@ class BillingServiceImpl internal constructor(private val clientOptions: ClientO
             BillingServiceImpl.WithRawResponseImpl(
                 clientOptions.toBuilder().apply(modifier::accept).build()
             )
+
+        private val cancelTopupInvoiceHandler: Handler<Void?> = emptyHandler()
+
+        override fun cancelTopupInvoice(
+            params: BillingCancelTopupInvoiceParams,
+            requestOptions: RequestOptions,
+        ): HttpResponse {
+            // We check here instead of in the params builder because this can be specified
+            // positionally or in the params class.
+            checkRequired("invoiceId", params.invoiceId().getOrNull())
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.DELETE)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments(
+                        "api",
+                        "v1",
+                        "billing",
+                        "drawdown",
+                        "topup",
+                        params._pathParam(0),
+                    )
+                    .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
+                    .build()
+                    .prepare(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val response = clientOptions.httpClient.execute(request, requestOptions)
+            return errorHandler.handle(response).parseable {
+                response.use { cancelTopupInvoiceHandler.handle(it) }
+            }
+        }
+
+        private val createTopupInvoiceHandler: Handler<BillingCreateTopupInvoiceResponse> =
+            jsonHandler<BillingCreateTopupInvoiceResponse>(clientOptions.jsonMapper)
+
+        override fun createTopupInvoice(
+            params: BillingCreateTopupInvoiceParams,
+            requestOptions: RequestOptions,
+        ): HttpResponseFor<BillingCreateTopupInvoiceResponse> {
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.POST)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments("api", "v1", "billing", "drawdown", "topup")
+                    .body(json(clientOptions.jsonMapper, params._body()))
+                    .build()
+                    .prepare(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val response = clientOptions.httpClient.execute(request, requestOptions)
+            return errorHandler.handle(response).parseable {
+                response
+                    .use { createTopupInvoiceHandler.handle(it) }
+                    .also {
+                        if (requestOptions.responseValidation!!) {
+                            it.validate()
+                        }
+                    }
+            }
+        }
 
         private val getBalanceHandler: Handler<BillingGetBalanceResponse> =
             jsonHandler<BillingGetBalanceResponse>(clientOptions.jsonMapper)
