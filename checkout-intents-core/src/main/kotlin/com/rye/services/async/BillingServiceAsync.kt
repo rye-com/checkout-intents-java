@@ -4,7 +4,11 @@ package com.rye.services.async
 
 import com.rye.core.ClientOptions
 import com.rye.core.RequestOptions
+import com.rye.core.http.HttpResponse
 import com.rye.core.http.HttpResponseFor
+import com.rye.models.billing.BillingCancelTopupInvoiceParams
+import com.rye.models.billing.BillingCreateTopupInvoiceParams
+import com.rye.models.billing.BillingCreateTopupInvoiceResponse
 import com.rye.models.billing.BillingGetBalanceParams
 import com.rye.models.billing.BillingGetBalanceResponse
 import com.rye.models.billing.BillingListTransactionsPageAsync
@@ -25,6 +29,56 @@ interface BillingServiceAsync {
      * The original service is not modified.
      */
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): BillingServiceAsync
+
+    /** Cancel/void an unpaid top-up invoice. Only invoices in open state can be cancelled. */
+    fun cancelTopupInvoice(invoiceId: String): CompletableFuture<Void?> =
+        cancelTopupInvoice(invoiceId, BillingCancelTopupInvoiceParams.none())
+
+    /** @see cancelTopupInvoice */
+    fun cancelTopupInvoice(
+        invoiceId: String,
+        params: BillingCancelTopupInvoiceParams = BillingCancelTopupInvoiceParams.none(),
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<Void?> =
+        cancelTopupInvoice(params.toBuilder().invoiceId(invoiceId).build(), requestOptions)
+
+    /** @see cancelTopupInvoice */
+    fun cancelTopupInvoice(
+        invoiceId: String,
+        params: BillingCancelTopupInvoiceParams = BillingCancelTopupInvoiceParams.none(),
+    ): CompletableFuture<Void?> = cancelTopupInvoice(invoiceId, params, RequestOptions.none())
+
+    /** @see cancelTopupInvoice */
+    fun cancelTopupInvoice(
+        params: BillingCancelTopupInvoiceParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<Void?>
+
+    /** @see cancelTopupInvoice */
+    fun cancelTopupInvoice(params: BillingCancelTopupInvoiceParams): CompletableFuture<Void?> =
+        cancelTopupInvoice(params, RequestOptions.none())
+
+    /** @see cancelTopupInvoice */
+    fun cancelTopupInvoice(
+        invoiceId: String,
+        requestOptions: RequestOptions,
+    ): CompletableFuture<Void?> =
+        cancelTopupInvoice(invoiceId, BillingCancelTopupInvoiceParams.none(), requestOptions)
+
+    /**
+     * Request an on-demand top-up invoice.. Requires drawdown billing to be enabled. Only one
+     * unpaid top-up invoice is allowed at a time.
+     */
+    fun createTopupInvoice(
+        params: BillingCreateTopupInvoiceParams
+    ): CompletableFuture<BillingCreateTopupInvoiceResponse> =
+        createTopupInvoice(params, RequestOptions.none())
+
+    /** @see createTopupInvoice */
+    fun createTopupInvoice(
+        params: BillingCreateTopupInvoiceParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<BillingCreateTopupInvoiceResponse>
 
     /** Get current drawdown balance for the authenticated developer */
     fun getBalance(): CompletableFuture<BillingGetBalanceResponse> =
@@ -80,6 +134,61 @@ interface BillingServiceAsync {
         fun withOptions(
             modifier: Consumer<ClientOptions.Builder>
         ): BillingServiceAsync.WithRawResponse
+
+        /**
+         * Returns a raw HTTP response for `delete /api/v1/billing/drawdown/topup/{invoiceId}`, but
+         * is otherwise the same as [BillingServiceAsync.cancelTopupInvoice].
+         */
+        fun cancelTopupInvoice(invoiceId: String): CompletableFuture<HttpResponse> =
+            cancelTopupInvoice(invoiceId, BillingCancelTopupInvoiceParams.none())
+
+        /** @see cancelTopupInvoice */
+        fun cancelTopupInvoice(
+            invoiceId: String,
+            params: BillingCancelTopupInvoiceParams = BillingCancelTopupInvoiceParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponse> =
+            cancelTopupInvoice(params.toBuilder().invoiceId(invoiceId).build(), requestOptions)
+
+        /** @see cancelTopupInvoice */
+        fun cancelTopupInvoice(
+            invoiceId: String,
+            params: BillingCancelTopupInvoiceParams = BillingCancelTopupInvoiceParams.none(),
+        ): CompletableFuture<HttpResponse> =
+            cancelTopupInvoice(invoiceId, params, RequestOptions.none())
+
+        /** @see cancelTopupInvoice */
+        fun cancelTopupInvoice(
+            params: BillingCancelTopupInvoiceParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponse>
+
+        /** @see cancelTopupInvoice */
+        fun cancelTopupInvoice(
+            params: BillingCancelTopupInvoiceParams
+        ): CompletableFuture<HttpResponse> = cancelTopupInvoice(params, RequestOptions.none())
+
+        /** @see cancelTopupInvoice */
+        fun cancelTopupInvoice(
+            invoiceId: String,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponse> =
+            cancelTopupInvoice(invoiceId, BillingCancelTopupInvoiceParams.none(), requestOptions)
+
+        /**
+         * Returns a raw HTTP response for `post /api/v1/billing/drawdown/topup`, but is otherwise
+         * the same as [BillingServiceAsync.createTopupInvoice].
+         */
+        fun createTopupInvoice(
+            params: BillingCreateTopupInvoiceParams
+        ): CompletableFuture<HttpResponseFor<BillingCreateTopupInvoiceResponse>> =
+            createTopupInvoice(params, RequestOptions.none())
+
+        /** @see createTopupInvoice */
+        fun createTopupInvoice(
+            params: BillingCreateTopupInvoiceParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<BillingCreateTopupInvoiceResponse>>
 
         /**
          * Returns a raw HTTP response for `get /api/v1/billing/balance`, but is otherwise the same

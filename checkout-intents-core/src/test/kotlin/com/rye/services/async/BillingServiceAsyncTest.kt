@@ -3,10 +3,40 @@
 package com.rye.services.async
 
 import com.rye.client.okhttp.CheckoutIntentsOkHttpClientAsync
+import com.rye.models.billing.BillingCreateTopupInvoiceParams
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 
 internal class BillingServiceAsyncTest {
+
+    @Disabled("Mock server tests are disabled")
+    @Test
+    fun cancelTopupInvoice() {
+        val client = CheckoutIntentsOkHttpClientAsync.builder().apiKey("My API Key").build()
+        val billingServiceAsync = client.billing()
+
+        val future = billingServiceAsync.cancelTopupInvoice("invoiceId")
+
+        val response = future.get()
+    }
+
+    @Disabled("Mock server tests are disabled")
+    @Test
+    fun createTopupInvoice() {
+        val client = CheckoutIntentsOkHttpClientAsync.builder().apiKey("My API Key").build()
+        val billingServiceAsync = client.billing()
+
+        val responseFuture =
+            billingServiceAsync.createTopupInvoice(
+                BillingCreateTopupInvoiceParams.builder()
+                    .amountSubunits(500000)
+                    .chargeAutomatically(false)
+                    .build()
+            )
+
+        val response = responseFuture.get()
+        response.validate()
+    }
 
     @Disabled("Mock server tests are disabled")
     @Test
