@@ -6261,6 +6261,8 @@ private constructor(
                     @JvmField
                     val PROMO_CODE_DISCOVERY_NOT_ENABLED = of("promo_code_discovery_not_enabled")
 
+                    @JvmField val PRODUCT_NOT_FOUND = of("product_not_found")
+
                     @JvmStatic fun of(value: String) = Code(JsonField.of(value))
                 }
 
@@ -6288,6 +6290,7 @@ private constructor(
                     CONSTRAINT_TOTAL_PRICE_EXCEEDED,
                     CONSTRAINT_SHIPPING_COST_EXCEEDED,
                     PROMO_CODE_DISCOVERY_NOT_ENABLED,
+                    PRODUCT_NOT_FOUND,
                 }
 
                 /**
@@ -6322,6 +6325,7 @@ private constructor(
                     CONSTRAINT_TOTAL_PRICE_EXCEEDED,
                     CONSTRAINT_SHIPPING_COST_EXCEEDED,
                     PROMO_CODE_DISCOVERY_NOT_ENABLED,
+                    PRODUCT_NOT_FOUND,
                     /**
                      * An enum member indicating that [Code] was instantiated with an unknown value.
                      */
@@ -6360,6 +6364,7 @@ private constructor(
                         CONSTRAINT_TOTAL_PRICE_EXCEEDED -> Value.CONSTRAINT_TOTAL_PRICE_EXCEEDED
                         CONSTRAINT_SHIPPING_COST_EXCEEDED -> Value.CONSTRAINT_SHIPPING_COST_EXCEEDED
                         PROMO_CODE_DISCOVERY_NOT_ENABLED -> Value.PROMO_CODE_DISCOVERY_NOT_ENABLED
+                        PRODUCT_NOT_FOUND -> Value.PRODUCT_NOT_FOUND
                         else -> Value._UNKNOWN
                     }
 
@@ -6397,6 +6402,7 @@ private constructor(
                         CONSTRAINT_TOTAL_PRICE_EXCEEDED -> Known.CONSTRAINT_TOTAL_PRICE_EXCEEDED
                         CONSTRAINT_SHIPPING_COST_EXCEEDED -> Known.CONSTRAINT_SHIPPING_COST_EXCEEDED
                         PROMO_CODE_DISCOVERY_NOT_ENABLED -> Known.PROMO_CODE_DISCOVERY_NOT_ENABLED
+                        PRODUCT_NOT_FOUND -> Known.PRODUCT_NOT_FOUND
                         else -> throw CheckoutIntentsInvalidDataException("Unknown Code: $value")
                     }
 
