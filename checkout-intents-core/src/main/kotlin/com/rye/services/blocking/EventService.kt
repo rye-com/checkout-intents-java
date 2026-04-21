@@ -6,11 +6,11 @@ import com.google.errorprone.annotations.MustBeClosed
 import com.rye.core.ClientOptions
 import com.rye.core.RequestOptions
 import com.rye.core.http.HttpResponseFor
+import com.rye.errors.WebhookSignatureVerificationException
 import com.rye.models.events.Event
 import com.rye.models.events.EventListPage
 import com.rye.models.events.EventListParams
 import com.rye.models.events.EventRetrieveParams
-import com.rye.models.events.WebhookSignatureVerificationException
 import java.util.function.Consumer
 
 interface EventService {
