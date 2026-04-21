@@ -140,13 +140,15 @@ internal class EventServiceTest {
         val client = CheckoutIntentsOkHttpClient.builder().apiKey("My API Key").build()
         val eventService = client.events()
 
-        val body = """{"id":"evt_ci_acf8e2c44f4c4583bd5b58d291242bb2_awaiting_confirmation","object":"event","type":"checkout_intent.offer_retrieved","createdAt":"2026-04-21T03:27:50.000Z","source":{"type":"checkout_intent","id":"ci_acf8e2c44f4c4583bd5b58d291242bb2"}}"""
+        val body =
+            """{"id":"evt_ci_acf8e2c44f4c4583bd5b58d291242bb2_awaiting_confirmation","object":"event","type":"checkout_intent.offer_retrieved","createdAt":"2026-04-21T03:27:50.000Z","source":{"type":"checkout_intent","id":"ci_acf8e2c44f4c4583bd5b58d291242bb2"}}"""
         val signature = "v0=a296fa9084469414e018aa8c33f68d315f88a0b503babb3825f7de87f473803e"
         val secret = "6b2f15a9c9ee825fcf6f6447351a810c"
 
         val event = eventService.unwrap(body, signature, secret)
 
-        assertThat(event.id()).isEqualTo("evt_ci_acf8e2c44f4c4583bd5b58d291242bb2_awaiting_confirmation")
+        assertThat(event.id())
+            .isEqualTo("evt_ci_acf8e2c44f4c4583bd5b58d291242bb2_awaiting_confirmation")
         assertThat(event.type()).isEqualTo(Event.Type.CHECKOUT_INTENT_OFFER_RETRIEVED)
         assertThat(event.source().id()).isEqualTo("ci_acf8e2c44f4c4583bd5b58d291242bb2")
         assertThat(event.source().type()).isEqualTo(Event.Source.Type.CHECKOUT_INTENT)
