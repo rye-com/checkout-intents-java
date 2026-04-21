@@ -7,6 +7,7 @@ import com.rye.services.async.BetaServiceAsync
 import com.rye.services.async.BillingServiceAsync
 import com.rye.services.async.BrandServiceAsync
 import com.rye.services.async.CheckoutIntentServiceAsync
+import com.rye.services.async.EventServiceAsync
 import com.rye.services.async.PaymentGatewayServiceAsync
 import com.rye.services.async.ProductServiceAsync
 import com.rye.services.async.ShipmentServiceAsync
@@ -62,6 +63,8 @@ interface CheckoutIntentsClientAsync {
 
     fun billing(): BillingServiceAsync
 
+    fun events(): EventServiceAsync
+
     /**
      * Closes this client, relinquishing any underlying resources.
      *
@@ -103,5 +106,7 @@ interface CheckoutIntentsClientAsync {
         fun paymentGateways(): PaymentGatewayServiceAsync.WithRawResponse
 
         fun billing(): BillingServiceAsync.WithRawResponse
+
+        fun events(): EventServiceAsync.WithRawResponse
     }
 }
