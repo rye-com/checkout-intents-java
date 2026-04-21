@@ -639,6 +639,8 @@ private constructor(
 
                 @JvmField val SHIPMENT = of("shipment")
 
+                @JvmField val WEBHOOK_ENDPOINT = of("webhook_endpoint")
+
                 @JvmStatic fun of(value: String) = Type(JsonField.of(value))
             }
 
@@ -646,6 +648,7 @@ private constructor(
             enum class Known {
                 CHECKOUT_INTENT,
                 SHIPMENT,
+                WEBHOOK_ENDPOINT,
             }
 
             /**
@@ -660,6 +663,7 @@ private constructor(
             enum class Value {
                 CHECKOUT_INTENT,
                 SHIPMENT,
+                WEBHOOK_ENDPOINT,
                 /** An enum member indicating that [Type] was instantiated with an unknown value. */
                 _UNKNOWN,
             }
@@ -675,6 +679,7 @@ private constructor(
                 when (this) {
                     CHECKOUT_INTENT -> Value.CHECKOUT_INTENT
                     SHIPMENT -> Value.SHIPMENT
+                    WEBHOOK_ENDPOINT -> Value.WEBHOOK_ENDPOINT
                     else -> Value._UNKNOWN
                 }
 
@@ -691,6 +696,7 @@ private constructor(
                 when (this) {
                     CHECKOUT_INTENT -> Known.CHECKOUT_INTENT
                     SHIPMENT -> Known.SHIPMENT
+                    WEBHOOK_ENDPOINT -> Known.WEBHOOK_ENDPOINT
                     else -> throw CheckoutIntentsInvalidDataException("Unknown Type: $value")
                 }
 
@@ -799,6 +805,10 @@ private constructor(
 
             @JvmField val SHIPMENT_UPDATED = of("shipment.updated")
 
+            @JvmField
+            val WEBHOOK_ENDPOINT_VERIFICATION_CHALLENGE =
+                of("webhook_endpoint.verification_challenge")
+
             @JvmStatic fun of(value: String) = Type(JsonField.of(value))
         }
 
@@ -810,6 +820,7 @@ private constructor(
             CHECKOUT_INTENT_ORDER_FAILED,
             SHIPMENT_CREATED,
             SHIPMENT_UPDATED,
+            WEBHOOK_ENDPOINT_VERIFICATION_CHALLENGE,
         }
 
         /**
@@ -828,6 +839,7 @@ private constructor(
             CHECKOUT_INTENT_ORDER_FAILED,
             SHIPMENT_CREATED,
             SHIPMENT_UPDATED,
+            WEBHOOK_ENDPOINT_VERIFICATION_CHALLENGE,
             /** An enum member indicating that [Type] was instantiated with an unknown value. */
             _UNKNOWN,
         }
@@ -847,6 +859,8 @@ private constructor(
                 CHECKOUT_INTENT_ORDER_FAILED -> Value.CHECKOUT_INTENT_ORDER_FAILED
                 SHIPMENT_CREATED -> Value.SHIPMENT_CREATED
                 SHIPMENT_UPDATED -> Value.SHIPMENT_UPDATED
+                WEBHOOK_ENDPOINT_VERIFICATION_CHALLENGE ->
+                    Value.WEBHOOK_ENDPOINT_VERIFICATION_CHALLENGE
                 else -> Value._UNKNOWN
             }
 
@@ -867,6 +881,8 @@ private constructor(
                 CHECKOUT_INTENT_ORDER_FAILED -> Known.CHECKOUT_INTENT_ORDER_FAILED
                 SHIPMENT_CREATED -> Known.SHIPMENT_CREATED
                 SHIPMENT_UPDATED -> Known.SHIPMENT_UPDATED
+                WEBHOOK_ENDPOINT_VERIFICATION_CHALLENGE ->
+                    Known.WEBHOOK_ENDPOINT_VERIFICATION_CHALLENGE
                 else -> throw CheckoutIntentsInvalidDataException("Unknown Type: $value")
             }
 
