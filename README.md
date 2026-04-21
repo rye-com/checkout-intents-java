@@ -370,6 +370,62 @@ intentFuture.thenAccept(intent -> {
 });
 ```
 
+## Webhook verification
+
+To verify webhook signatures and parse events, use `client.events().unwrap()`. This method verifies the HMAC-SHA256 signature and parses the JSON payload, throwing `WebhookSignatureVerificationException` if verification fails.
+
+Webhook events are thin—they contain a reference to the source object, not the full data. Use `source().id()` to fetch the complete object:
+
+```java
+import com.rye.client.CheckoutIntentsClient;
+import com.rye.client.okhttp.CheckoutIntentsOkHttpClient;
+import com.rye.models.checkoutintents.CheckoutIntent;
+import com.rye.models.events.Event;
+import com.rye.models.events.WebhookSignatureVerificationException;
+import com.rye.models.shipments.Shipment;
+import jakarta.ws.rs.HeaderParam;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.core.Response;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
+
+@Path("/webhook")
+public class WebhookResource {
+
+    private final CheckoutIntentsClient client = CheckoutIntentsOkHttpClient.fromEnv();
+
+    @ConfigProperty(name = "rye.hmac.secret")
+    String webhookSecret;
+
+    @POST
+    public Response handleWebhook(
+            byte[] body,
+            @HeaderParam("x-rye-signature") String signature) {
+        Event event;
+        try {
+            event = client.events().unwrap(body, signature, webhookSecret);
+        } catch (WebhookSignatureVerificationException e) {
+            return Response.status(401).build();
+        }
+
+        String sourceId = event.source().id();
+
+        switch (event.type().known()) {
+            case CHECKOUT_INTENT_COMPLETED -> {
+                CheckoutIntent intent = client.checkoutIntents().retrieve(sourceId);
+                System.out.println("Order completed: " + intent.asCompleted().orderIds());
+            }
+            case SHIPMENT_UPDATED -> {
+                Shipment shipment = client.shipments().retrieve(sourceId);
+                System.out.println("Shipment status: " + shipment.status());
+            }
+        }
+
+        return Response.ok().build();
+    }
+}
+```
+
 ## Raw responses
 
 The SDK defines methods that deserialize responses into instances of Java classes. However, these methods don't provide access to the response headers, status code, or the raw response body.
