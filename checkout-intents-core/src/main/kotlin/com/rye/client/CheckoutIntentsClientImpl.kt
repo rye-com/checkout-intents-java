@@ -12,6 +12,8 @@ import com.rye.services.blocking.BrandService
 import com.rye.services.blocking.BrandServiceImpl
 import com.rye.services.blocking.CheckoutIntentService
 import com.rye.services.blocking.CheckoutIntentServiceImpl
+import com.rye.services.blocking.EventService
+import com.rye.services.blocking.EventServiceImpl
 import com.rye.services.blocking.PaymentGatewayService
 import com.rye.services.blocking.PaymentGatewayServiceImpl
 import com.rye.services.blocking.ProductService
@@ -59,6 +61,8 @@ class CheckoutIntentsClientImpl(private val clientOptions: ClientOptions) : Chec
 
     private val billing: BillingService by lazy { BillingServiceImpl(clientOptionsWithUserAgent) }
 
+    private val events: EventService by lazy { EventServiceImpl(clientOptionsWithUserAgent) }
+
     override fun async(): CheckoutIntentsClientAsync = async
 
     override fun withRawResponse(): CheckoutIntentsClient.WithRawResponse = withRawResponse
@@ -79,6 +83,8 @@ class CheckoutIntentsClientImpl(private val clientOptions: ClientOptions) : Chec
     override fun paymentGateways(): PaymentGatewayService = paymentGateways
 
     override fun billing(): BillingService = billing
+
+    override fun events(): EventService = events
 
     override fun close() = clientOptions.close()
 
@@ -113,6 +119,10 @@ class CheckoutIntentsClientImpl(private val clientOptions: ClientOptions) : Chec
             BillingServiceImpl.WithRawResponseImpl(clientOptions)
         }
 
+        private val events: EventService.WithRawResponse by lazy {
+            EventServiceImpl.WithRawResponseImpl(clientOptions)
+        }
+
         override fun withOptions(
             modifier: Consumer<ClientOptions.Builder>
         ): CheckoutIntentsClient.WithRawResponse =
@@ -133,5 +143,7 @@ class CheckoutIntentsClientImpl(private val clientOptions: ClientOptions) : Chec
         override fun paymentGateways(): PaymentGatewayService.WithRawResponse = paymentGateways
 
         override fun billing(): BillingService.WithRawResponse = billing
+
+        override fun events(): EventService.WithRawResponse = events
     }
 }

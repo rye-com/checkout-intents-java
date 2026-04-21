@@ -12,6 +12,8 @@ import com.rye.services.async.BrandServiceAsync
 import com.rye.services.async.BrandServiceAsyncImpl
 import com.rye.services.async.CheckoutIntentServiceAsync
 import com.rye.services.async.CheckoutIntentServiceAsyncImpl
+import com.rye.services.async.EventServiceAsync
+import com.rye.services.async.EventServiceAsyncImpl
 import com.rye.services.async.PaymentGatewayServiceAsync
 import com.rye.services.async.PaymentGatewayServiceAsyncImpl
 import com.rye.services.async.ProductServiceAsync
@@ -64,6 +66,10 @@ class CheckoutIntentsClientAsyncImpl(private val clientOptions: ClientOptions) :
         BillingServiceAsyncImpl(clientOptionsWithUserAgent)
     }
 
+    private val events: EventServiceAsync by lazy {
+        EventServiceAsyncImpl(clientOptionsWithUserAgent)
+    }
+
     override fun sync(): CheckoutIntentsClient = sync
 
     override fun withRawResponse(): CheckoutIntentsClientAsync.WithRawResponse = withRawResponse
@@ -86,6 +92,8 @@ class CheckoutIntentsClientAsyncImpl(private val clientOptions: ClientOptions) :
     override fun paymentGateways(): PaymentGatewayServiceAsync = paymentGateways
 
     override fun billing(): BillingServiceAsync = billing
+
+    override fun events(): EventServiceAsync = events
 
     override fun close() = clientOptions.close()
 
@@ -120,6 +128,10 @@ class CheckoutIntentsClientAsyncImpl(private val clientOptions: ClientOptions) :
             BillingServiceAsyncImpl.WithRawResponseImpl(clientOptions)
         }
 
+        private val events: EventServiceAsync.WithRawResponse by lazy {
+            EventServiceAsyncImpl.WithRawResponseImpl(clientOptions)
+        }
+
         override fun withOptions(
             modifier: Consumer<ClientOptions.Builder>
         ): CheckoutIntentsClientAsync.WithRawResponse =
@@ -140,5 +152,7 @@ class CheckoutIntentsClientAsyncImpl(private val clientOptions: ClientOptions) :
         override fun paymentGateways(): PaymentGatewayServiceAsync.WithRawResponse = paymentGateways
 
         override fun billing(): BillingServiceAsync.WithRawResponse = billing
+
+        override fun events(): EventServiceAsync.WithRawResponse = events
     }
 }
