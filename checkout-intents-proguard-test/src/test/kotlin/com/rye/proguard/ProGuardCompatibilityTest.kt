@@ -59,7 +59,6 @@ internal class ProGuardCompatibilityTest {
         assertThat(client.shipments()).isNotNull()
         assertThat(client.paymentGateways()).isNotNull()
         assertThat(client.billing()).isNotNull()
-        assertThat(client.events()).isNotNull()
     }
 
     @Test
