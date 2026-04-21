@@ -20,6 +20,7 @@ import com.rye.models.events.EventListPageAsync
 import com.rye.models.events.EventListPageResponse
 import com.rye.models.events.EventListParams
 import com.rye.models.events.EventRetrieveParams
+import com.rye.models.events.EventSignature
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
@@ -35,6 +36,9 @@ class EventServiceAsyncImpl internal constructor(private val clientOptions: Clie
 
     override fun withOptions(modifier: Consumer<ClientOptions.Builder>): EventServiceAsync =
         EventServiceAsyncImpl(clientOptions.toBuilder().apply(modifier::accept).build())
+
+    override fun unwrap(body: ByteArray, signatureHeader: String?, secret: String): Event =
+        EventSignature(secret).unwrap(body, signatureHeader)
 
     override fun retrieve(
         params: EventRetrieveParams,
