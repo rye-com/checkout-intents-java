@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.11.0 (2026-04-22)
+
+Full Changelog: [v0.10.0...v0.11.0](https://github.com/rye-com/checkout-intents-java/compare/v0.10.0...v0.11.0)
+
+### Features
+
+* Add `webhook_endpoint.verification_challenge` event type ([15641f6](https://github.com/rye-com/checkout-intents-java/commit/15641f6df0035b2cd4417b67e7284014ef808a3a))
+* Add events endpoints ([fbeaaf2](https://github.com/rye-com/checkout-intents-java/commit/fbeaaf2933500d3ffe6a4e23fa94731f98b21a51))
+* **api:** add events endpoints ([f5c7617](https://github.com/rye-com/checkout-intents-java/commit/f5c761762b0696d799fa57ddaf19d94d8de1f713))
+
+
+### Chores
+
+* **internal:** improvements ([106ca4e](https://github.com/rye-com/checkout-intents-java/commit/106ca4e2adf4aa09ac62b5d056eb056e28db3d87))
+
 ## 0.10.0 (2026-04-14)
 
 Full Changelog: [v0.9.0...v0.10.0](https://github.com/rye-com/checkout-intents-java/compare/v0.9.0...v0.10.0)
