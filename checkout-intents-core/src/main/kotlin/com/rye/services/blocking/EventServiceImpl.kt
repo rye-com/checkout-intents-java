@@ -15,6 +15,7 @@ import com.rye.core.http.HttpResponse.Handler
 import com.rye.core.http.HttpResponseFor
 import com.rye.core.http.parseable
 import com.rye.core.prepare
+import com.rye.helpers.EventSignature
 import com.rye.models.events.Event
 import com.rye.models.events.EventListPage
 import com.rye.models.events.EventListPageResponse
@@ -34,6 +35,9 @@ class EventServiceImpl internal constructor(private val clientOptions: ClientOpt
 
     override fun withOptions(modifier: Consumer<ClientOptions.Builder>): EventService =
         EventServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
+
+    override fun unwrap(body: ByteArray, signatureHeader: String?, secret: String): Event =
+        EventSignature.unwrap(body, signatureHeader, secret)
 
     override fun retrieve(params: EventRetrieveParams, requestOptions: RequestOptions): Event =
         // get /api/v1/events/{id}

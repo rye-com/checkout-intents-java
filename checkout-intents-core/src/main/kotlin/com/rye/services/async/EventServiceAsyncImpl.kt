@@ -15,6 +15,7 @@ import com.rye.core.http.HttpResponse.Handler
 import com.rye.core.http.HttpResponseFor
 import com.rye.core.http.parseable
 import com.rye.core.prepareAsync
+import com.rye.helpers.EventSignature
 import com.rye.models.events.Event
 import com.rye.models.events.EventListPageAsync
 import com.rye.models.events.EventListPageResponse
@@ -35,6 +36,9 @@ class EventServiceAsyncImpl internal constructor(private val clientOptions: Clie
 
     override fun withOptions(modifier: Consumer<ClientOptions.Builder>): EventServiceAsync =
         EventServiceAsyncImpl(clientOptions.toBuilder().apply(modifier::accept).build())
+
+    override fun unwrap(body: ByteArray, signatureHeader: String?, secret: String): Event =
+        EventSignature.unwrap(body, signatureHeader, secret)
 
     override fun retrieve(
         params: EventRetrieveParams,
