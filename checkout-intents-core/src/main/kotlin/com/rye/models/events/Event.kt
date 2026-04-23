@@ -12,9 +12,11 @@ import com.rye.core.JsonField
 import com.rye.core.JsonMissing
 import com.rye.core.JsonValue
 import com.rye.core.checkRequired
+import com.rye.core.toImmutable
 import com.rye.errors.CheckoutIntentsInvalidDataException
 import java.util.Collections
 import java.util.Objects
+import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 class Event
@@ -25,6 +27,7 @@ private constructor(
     private val object_: JsonField<Object>,
     private val source: JsonField<Source>,
     private val type: JsonField<Type>,
+    private val data: JsonField<Data>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -35,7 +38,8 @@ private constructor(
         @JsonProperty("object") @ExcludeMissing object_: JsonField<Object> = JsonMissing.of(),
         @JsonProperty("source") @ExcludeMissing source: JsonField<Source> = JsonMissing.of(),
         @JsonProperty("type") @ExcludeMissing type: JsonField<Type> = JsonMissing.of(),
-    ) : this(id, createdAt, object_, source, type, mutableMapOf())
+        @JsonProperty("data") @ExcludeMissing data: JsonField<Data> = JsonMissing.of(),
+    ) : this(id, createdAt, object_, source, type, data, mutableMapOf())
 
     /**
      * Unique identifier for the event. This can be used as an idempotency key to avoid
@@ -82,6 +86,17 @@ private constructor(
     fun type(): Type = type.getRequired("type")
 
     /**
+     * The event data payload. The concrete shape depends on `source.type`.
+     *
+     * Refer to [webhook event types](https://docs.rye.com/api-v2/webhooks/types) for the payload
+     * shape associated with each `source.type`.
+     *
+     * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
+    fun data(): Optional<Data> = data.getOptional("data")
+
+    /**
      * Returns the raw JSON value of [id].
      *
      * Unlike [id], this method doesn't throw if the JSON field has an unexpected type.
@@ -115,6 +130,13 @@ private constructor(
      * Unlike [type], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("type") @ExcludeMissing fun _type(): JsonField<Type> = type
+
+    /**
+     * Returns the raw JSON value of [data].
+     *
+     * Unlike [data], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("data") @ExcludeMissing fun _data(): JsonField<Data> = data
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -153,6 +175,7 @@ private constructor(
         private var object_: JsonField<Object>? = null
         private var source: JsonField<Source>? = null
         private var type: JsonField<Type>? = null
+        private var data: JsonField<Data> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -162,6 +185,7 @@ private constructor(
             object_ = event.object_
             source = event.source
             type = event.type
+            data = event.data
             additionalProperties = event.additionalProperties.toMutableMap()
         }
 
@@ -232,6 +256,22 @@ private constructor(
          */
         fun type(type: JsonField<Type>) = apply { this.type = type }
 
+        /**
+         * The event data payload. The concrete shape depends on `source.type`.
+         *
+         * Refer to [webhook event types](https://docs.rye.com/api-v2/webhooks/types) for the
+         * payload shape associated with each `source.type`.
+         */
+        fun data(data: Data) = data(JsonField.of(data))
+
+        /**
+         * Sets [Builder.data] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.data] with a well-typed [Data] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun data(data: JsonField<Data>) = apply { this.data = data }
+
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
             putAllAdditionalProperties(additionalProperties)
@@ -274,6 +314,7 @@ private constructor(
                 checkRequired("object_", object_),
                 checkRequired("source", source),
                 checkRequired("type", type),
+                data,
                 additionalProperties.toMutableMap(),
             )
     }
@@ -290,6 +331,7 @@ private constructor(
         object_().validate()
         source().validate()
         type().validate()
+        data().ifPresent { it.validate() }
         validated = true
     }
 
@@ -312,7 +354,8 @@ private constructor(
             (if (createdAt.asKnown().isPresent) 1 else 0) +
             (object_.asKnown().getOrNull()?.validity() ?: 0) +
             (source.asKnown().getOrNull()?.validity() ?: 0) +
-            (type.asKnown().getOrNull()?.validity() ?: 0)
+            (type.asKnown().getOrNull()?.validity() ?: 0) +
+            (data.asKnown().getOrNull()?.validity() ?: 0)
 
     class Object @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
@@ -639,6 +682,8 @@ private constructor(
 
                 @JvmField val SHIPMENT = of("shipment")
 
+                @JvmField val PRODUCT = of("product")
+
                 @JvmField val WEBHOOK_ENDPOINT = of("webhook_endpoint")
 
                 @JvmStatic fun of(value: String) = Type(JsonField.of(value))
@@ -648,6 +693,7 @@ private constructor(
             enum class Known {
                 CHECKOUT_INTENT,
                 SHIPMENT,
+                PRODUCT,
                 WEBHOOK_ENDPOINT,
             }
 
@@ -663,6 +709,7 @@ private constructor(
             enum class Value {
                 CHECKOUT_INTENT,
                 SHIPMENT,
+                PRODUCT,
                 WEBHOOK_ENDPOINT,
                 /** An enum member indicating that [Type] was instantiated with an unknown value. */
                 _UNKNOWN,
@@ -679,6 +726,7 @@ private constructor(
                 when (this) {
                     CHECKOUT_INTENT -> Value.CHECKOUT_INTENT
                     SHIPMENT -> Value.SHIPMENT
+                    PRODUCT -> Value.PRODUCT
                     WEBHOOK_ENDPOINT -> Value.WEBHOOK_ENDPOINT
                     else -> Value._UNKNOWN
                 }
@@ -696,6 +744,7 @@ private constructor(
                 when (this) {
                     CHECKOUT_INTENT -> Known.CHECKOUT_INTENT
                     SHIPMENT -> Known.SHIPMENT
+                    PRODUCT -> Known.PRODUCT
                     WEBHOOK_ENDPOINT -> Known.WEBHOOK_ENDPOINT
                     else -> throw CheckoutIntentsInvalidDataException("Unknown Type: $value")
                 }
@@ -805,6 +854,10 @@ private constructor(
 
             @JvmField val SHIPMENT_UPDATED = of("shipment.updated")
 
+            @JvmField val PRODUCT_UPDATED = of("product.updated")
+
+            @JvmField val PRODUCT_REMOVED = of("product.removed")
+
             @JvmField
             val WEBHOOK_ENDPOINT_VERIFICATION_CHALLENGE =
                 of("webhook_endpoint.verification_challenge")
@@ -820,6 +873,8 @@ private constructor(
             CHECKOUT_INTENT_ORDER_FAILED,
             SHIPMENT_CREATED,
             SHIPMENT_UPDATED,
+            PRODUCT_UPDATED,
+            PRODUCT_REMOVED,
             WEBHOOK_ENDPOINT_VERIFICATION_CHALLENGE,
         }
 
@@ -839,6 +894,8 @@ private constructor(
             CHECKOUT_INTENT_ORDER_FAILED,
             SHIPMENT_CREATED,
             SHIPMENT_UPDATED,
+            PRODUCT_UPDATED,
+            PRODUCT_REMOVED,
             WEBHOOK_ENDPOINT_VERIFICATION_CHALLENGE,
             /** An enum member indicating that [Type] was instantiated with an unknown value. */
             _UNKNOWN,
@@ -859,6 +916,8 @@ private constructor(
                 CHECKOUT_INTENT_ORDER_FAILED -> Value.CHECKOUT_INTENT_ORDER_FAILED
                 SHIPMENT_CREATED -> Value.SHIPMENT_CREATED
                 SHIPMENT_UPDATED -> Value.SHIPMENT_UPDATED
+                PRODUCT_UPDATED -> Value.PRODUCT_UPDATED
+                PRODUCT_REMOVED -> Value.PRODUCT_REMOVED
                 WEBHOOK_ENDPOINT_VERIFICATION_CHALLENGE ->
                     Value.WEBHOOK_ENDPOINT_VERIFICATION_CHALLENGE
                 else -> Value._UNKNOWN
@@ -881,6 +940,8 @@ private constructor(
                 CHECKOUT_INTENT_ORDER_FAILED -> Known.CHECKOUT_INTENT_ORDER_FAILED
                 SHIPMENT_CREATED -> Known.SHIPMENT_CREATED
                 SHIPMENT_UPDATED -> Known.SHIPMENT_UPDATED
+                PRODUCT_UPDATED -> Known.PRODUCT_UPDATED
+                PRODUCT_REMOVED -> Known.PRODUCT_REMOVED
                 WEBHOOK_ENDPOINT_VERIFICATION_CHALLENGE ->
                     Known.WEBHOOK_ENDPOINT_VERIFICATION_CHALLENGE
                 else -> throw CheckoutIntentsInvalidDataException("Unknown Type: $value")
@@ -940,6 +1001,111 @@ private constructor(
         override fun toString() = value.toString()
     }
 
+    /**
+     * The event data payload. The concrete shape depends on `source.type`.
+     *
+     * Refer to [webhook event types](https://docs.rye.com/api-v2/webhooks/types) for the payload
+     * shape associated with each `source.type`.
+     */
+    class Data
+    @JsonCreator
+    private constructor(
+        @com.fasterxml.jackson.annotation.JsonValue
+        private val additionalProperties: Map<String, JsonValue>
+    ) {
+
+        @JsonAnyGetter
+        @ExcludeMissing
+        fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
+
+        fun toBuilder() = Builder().from(this)
+
+        companion object {
+
+            /** Returns a mutable builder for constructing an instance of [Data]. */
+            @JvmStatic fun builder() = Builder()
+        }
+
+        /** A builder for [Data]. */
+        class Builder internal constructor() {
+
+            private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
+
+            @JvmSynthetic
+            internal fun from(data: Data) = apply {
+                additionalProperties = data.additionalProperties.toMutableMap()
+            }
+
+            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                this.additionalProperties.clear()
+                putAllAdditionalProperties(additionalProperties)
+            }
+
+            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+                additionalProperties.put(key, value)
+            }
+
+            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                this.additionalProperties.putAll(additionalProperties)
+            }
+
+            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+
+            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                keys.forEach(::removeAdditionalProperty)
+            }
+
+            /**
+             * Returns an immutable instance of [Data].
+             *
+             * Further updates to this [Builder] will not mutate the returned instance.
+             */
+            fun build(): Data = Data(additionalProperties.toImmutable())
+        }
+
+        private var validated: Boolean = false
+
+        fun validate(): Data = apply {
+            if (validated) {
+                return@apply
+            }
+
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: CheckoutIntentsInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic
+        internal fun validity(): Int =
+            additionalProperties.count { (_, value) -> !value.isNull() && !value.isMissing() }
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is Data && additionalProperties == other.additionalProperties
+        }
+
+        private val hashCode: Int by lazy { Objects.hash(additionalProperties) }
+
+        override fun hashCode(): Int = hashCode
+
+        override fun toString() = "Data{additionalProperties=$additionalProperties}"
+    }
+
     override fun equals(other: Any?): Boolean {
         if (this === other) {
             return true
@@ -951,15 +1117,16 @@ private constructor(
             object_ == other.object_ &&
             source == other.source &&
             type == other.type &&
+            data == other.data &&
             additionalProperties == other.additionalProperties
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(id, createdAt, object_, source, type, additionalProperties)
+        Objects.hash(id, createdAt, object_, source, type, data, additionalProperties)
     }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "Event{id=$id, createdAt=$createdAt, object_=$object_, source=$source, type=$type, additionalProperties=$additionalProperties}"
+        "Event{id=$id, createdAt=$createdAt, object_=$object_, source=$source, type=$type, data=$data, additionalProperties=$additionalProperties}"
 }

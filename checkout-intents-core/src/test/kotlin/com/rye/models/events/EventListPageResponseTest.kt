@@ -3,6 +3,7 @@
 package com.rye.models.events
 
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import com.rye.core.JsonValue
 import com.rye.core.jsonMapper
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -25,6 +26,11 @@ internal class EventListPageResponseTest {
                                 .build()
                         )
                         .type(Event.Type.CHECKOUT_INTENT_OFFER_RETRIEVED)
+                        .data(
+                            Event.Data.builder()
+                                .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                .build()
+                        )
                         .build()
                 )
                 .pageInfo(
@@ -50,6 +56,11 @@ internal class EventListPageResponseTest {
                             .build()
                     )
                     .type(Event.Type.CHECKOUT_INTENT_OFFER_RETRIEVED)
+                    .data(
+                        Event.Data.builder()
+                            .putAdditionalProperty("foo", JsonValue.from("bar"))
+                            .build()
+                    )
                     .build()
             )
         assertThat(eventListPageResponse.pageInfo())
@@ -80,6 +91,11 @@ internal class EventListPageResponseTest {
                                 .build()
                         )
                         .type(Event.Type.CHECKOUT_INTENT_OFFER_RETRIEVED)
+                        .data(
+                            Event.Data.builder()
+                                .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                .build()
+                        )
                         .build()
                 )
                 .pageInfo(
