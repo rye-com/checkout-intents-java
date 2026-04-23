@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.12.0 (2026-04-23)
+
+Full Changelog: [v0.11.0...v0.12.0](https://github.com/rye-com/checkout-intents-java/compare/v0.11.0...v0.12.0)
+
+### Features
+
+* **api:** add new data field to event type ([51574b1](https://github.com/rye-com/checkout-intents-java/commit/51574b1bf629d848a1e7377f42a93d8ca95e7a62))
+
 ## 0.11.0 (2026-04-22)
 
 Full Changelog: [v0.10.0...v0.11.0](https://github.com/rye-com/checkout-intents-java/compare/v0.10.0...v0.11.0)
