@@ -3,6 +3,7 @@
 package com.rye.models.events
 
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import com.rye.core.JsonValue
 import com.rye.core.jsonMapper
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -23,6 +24,9 @@ internal class EventTest {
                         .build()
                 )
                 .type(Event.Type.CHECKOUT_INTENT_OFFER_RETRIEVED)
+                .data(
+                    Event.Data.builder().putAdditionalProperty("foo", JsonValue.from("bar")).build()
+                )
                 .build()
 
         assertThat(event.id()).isEqualTo("evt_1234567890")
@@ -36,6 +40,10 @@ internal class EventTest {
                     .build()
             )
         assertThat(event.type()).isEqualTo(Event.Type.CHECKOUT_INTENT_OFFER_RETRIEVED)
+        assertThat(event.data())
+            .contains(
+                Event.Data.builder().putAdditionalProperty("foo", JsonValue.from("bar")).build()
+            )
     }
 
     @Test
@@ -53,6 +61,9 @@ internal class EventTest {
                         .build()
                 )
                 .type(Event.Type.CHECKOUT_INTENT_OFFER_RETRIEVED)
+                .data(
+                    Event.Data.builder().putAdditionalProperty("foo", JsonValue.from("bar")).build()
+                )
                 .build()
 
         val roundtrippedEvent =
