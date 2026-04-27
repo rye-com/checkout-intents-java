@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.13.0 (2026-04-27)
+
+Full Changelog: [v0.12.0...v0.13.0](https://github.com/rye-com/checkout-intents-java/compare/v0.12.0...v0.13.0)
+
+### Features
+
+* Expose `retailer` field ([5442465](https://github.com/rye-com/checkout-intents-java/commit/5442465b80abc1ba6d907ca1589a506b6af3742a))
+
 ## 0.12.0 (2026-04-23)
 
 Full Changelog: [v0.11.0...v0.12.0](https://github.com/rye-com/checkout-intents-java/compare/v0.11.0...v0.12.0)
