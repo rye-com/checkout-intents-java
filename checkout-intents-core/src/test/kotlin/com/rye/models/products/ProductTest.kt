@@ -29,6 +29,7 @@ internal class ProductTest {
                 .isPurchasable(true)
                 .name("Widget Pro")
                 .price(Money.builder().amountSubunits(1500).currencyCode("USD").build())
+                .retailer("Amazon")
                 .sku("SKU-12345")
                 .url("https://example.com/products/widget-pro")
                 .addVariantDimension(
@@ -73,6 +74,7 @@ internal class ProductTest {
         assertThat(product.name()).isEqualTo("Widget Pro")
         assertThat(product.price())
             .isEqualTo(Money.builder().amountSubunits(1500).currencyCode("USD").build())
+        assertThat(product.retailer()).contains("Amazon")
         assertThat(product.sku()).contains("SKU-12345")
         assertThat(product.url()).isEqualTo("https://example.com/products/widget-pro")
         assertThat(product.variantDimensions().getOrNull())
@@ -119,6 +121,7 @@ internal class ProductTest {
                 .isPurchasable(true)
                 .name("Widget Pro")
                 .price(Money.builder().amountSubunits(1500).currencyCode("USD").build())
+                .retailer("Amazon")
                 .sku("SKU-12345")
                 .url("https://example.com/products/widget-pro")
                 .addVariantDimension(
