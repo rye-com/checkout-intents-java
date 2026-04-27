@@ -31,6 +31,7 @@ private constructor(
     private val isPurchasable: JsonField<Boolean>,
     private val name: JsonField<String>,
     private val price: JsonField<Money>,
+    private val retailer: JsonField<String>,
     private val sku: JsonField<String>,
     private val url: JsonField<String>,
     private val variantDimensions: JsonField<List<VariantDimension>>,
@@ -56,6 +57,7 @@ private constructor(
         isPurchasable: JsonField<Boolean> = JsonMissing.of(),
         @JsonProperty("name") @ExcludeMissing name: JsonField<String> = JsonMissing.of(),
         @JsonProperty("price") @ExcludeMissing price: JsonField<Money> = JsonMissing.of(),
+        @JsonProperty("retailer") @ExcludeMissing retailer: JsonField<String> = JsonMissing.of(),
         @JsonProperty("sku") @ExcludeMissing sku: JsonField<String> = JsonMissing.of(),
         @JsonProperty("url") @ExcludeMissing url: JsonField<String> = JsonMissing.of(),
         @JsonProperty("variantDimensions")
@@ -73,6 +75,7 @@ private constructor(
         isPurchasable,
         name,
         price,
+        retailer,
         sku,
         url,
         variantDimensions,
@@ -134,6 +137,12 @@ private constructor(
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun price(): Money = price.getRequired("price")
+
+    /**
+     * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
+    fun retailer(): Optional<String> = retailer.getOptional("retailer")
 
     /**
      * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type (e.g. if
@@ -221,6 +230,13 @@ private constructor(
     @JsonProperty("price") @ExcludeMissing fun _price(): JsonField<Money> = price
 
     /**
+     * Returns the raw JSON value of [retailer].
+     *
+     * Unlike [retailer], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("retailer") @ExcludeMissing fun _retailer(): JsonField<String> = retailer
+
+    /**
      * Returns the raw JSON value of [sku].
      *
      * Unlike [sku], this method doesn't throw if the JSON field has an unexpected type.
@@ -280,6 +296,7 @@ private constructor(
          * .isPurchasable()
          * .name()
          * .price()
+         * .retailer()
          * .sku()
          * .url()
          * ```
@@ -298,6 +315,7 @@ private constructor(
         private var isPurchasable: JsonField<Boolean>? = null
         private var name: JsonField<String>? = null
         private var price: JsonField<Money>? = null
+        private var retailer: JsonField<String>? = null
         private var sku: JsonField<String>? = null
         private var url: JsonField<String>? = null
         private var variantDimensions: JsonField<MutableList<VariantDimension>>? = null
@@ -314,6 +332,7 @@ private constructor(
             isPurchasable = product.isPurchasable
             name = product.name
             price = product.price
+            retailer = product.retailer
             sku = product.sku
             url = product.url
             variantDimensions = product.variantDimensions.map { it.toMutableList() }
@@ -438,6 +457,19 @@ private constructor(
          */
         fun price(price: JsonField<Money>) = apply { this.price = price }
 
+        fun retailer(retailer: String?) = retailer(JsonField.ofNullable(retailer))
+
+        /** Alias for calling [Builder.retailer] with `retailer.orElse(null)`. */
+        fun retailer(retailer: Optional<String>) = retailer(retailer.getOrNull())
+
+        /**
+         * Sets [Builder.retailer] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.retailer] with a well-typed [String] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun retailer(retailer: JsonField<String>) = apply { this.retailer = retailer }
+
         fun sku(sku: String?) = sku(JsonField.ofNullable(sku))
 
         /** Alias for calling [Builder.sku] with `sku.orElse(null)`. */
@@ -553,6 +585,7 @@ private constructor(
          * .isPurchasable()
          * .name()
          * .price()
+         * .retailer()
          * .sku()
          * .url()
          * ```
@@ -569,6 +602,7 @@ private constructor(
                 checkRequired("isPurchasable", isPurchasable),
                 checkRequired("name", name),
                 checkRequired("price", price),
+                checkRequired("retailer", retailer),
                 checkRequired("sku", sku),
                 checkRequired("url", url),
                 (variantDimensions ?: JsonMissing.of()).map { it.toImmutable() },
@@ -592,6 +626,7 @@ private constructor(
         isPurchasable()
         name()
         price().validate()
+        retailer()
         sku()
         url()
         variantDimensions().ifPresent { it.forEach { it.validate() } }
@@ -622,6 +657,7 @@ private constructor(
             (if (isPurchasable.asKnown().isPresent) 1 else 0) +
             (if (name.asKnown().isPresent) 1 else 0) +
             (price.asKnown().getOrNull()?.validity() ?: 0) +
+            (if (retailer.asKnown().isPresent) 1 else 0) +
             (if (sku.asKnown().isPresent) 1 else 0) +
             (if (url.asKnown().isPresent) 1 else 0) +
             (variantDimensions.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
@@ -641,6 +677,7 @@ private constructor(
             isPurchasable == other.isPurchasable &&
             name == other.name &&
             price == other.price &&
+            retailer == other.retailer &&
             sku == other.sku &&
             url == other.url &&
             variantDimensions == other.variantDimensions &&
@@ -658,6 +695,7 @@ private constructor(
             isPurchasable,
             name,
             price,
+            retailer,
             sku,
             url,
             variantDimensions,
@@ -669,5 +707,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "Product{id=$id, availability=$availability, brand=$brand, description=$description, images=$images, isPurchasable=$isPurchasable, name=$name, price=$price, sku=$sku, url=$url, variantDimensions=$variantDimensions, variants=$variants, additionalProperties=$additionalProperties}"
+        "Product{id=$id, availability=$availability, brand=$brand, description=$description, images=$images, isPurchasable=$isPurchasable, name=$name, price=$price, retailer=$retailer, sku=$sku, url=$url, variantDimensions=$variantDimensions, variants=$variants, additionalProperties=$additionalProperties}"
 }
