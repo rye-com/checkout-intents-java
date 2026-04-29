@@ -8,6 +8,7 @@ import com.rye.services.blocking.BillingService
 import com.rye.services.blocking.BrandService
 import com.rye.services.blocking.CheckoutIntentService
 import com.rye.services.blocking.EventService
+import com.rye.services.blocking.MerchantConnectorService
 import com.rye.services.blocking.PaymentGatewayService
 import com.rye.services.blocking.ProductService
 import com.rye.services.blocking.ShipmentService
@@ -65,6 +66,8 @@ interface CheckoutIntentsClient {
 
     fun events(): EventService
 
+    fun merchantConnectors(): MerchantConnectorService
+
     /**
      * Closes this client, relinquishing any underlying resources.
      *
@@ -107,5 +110,7 @@ interface CheckoutIntentsClient {
         fun billing(): BillingService.WithRawResponse
 
         fun events(): EventService.WithRawResponse
+
+        fun merchantConnectors(): MerchantConnectorService.WithRawResponse
     }
 }
