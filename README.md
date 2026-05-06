@@ -2,8 +2,8 @@
 
 <!-- x-release-please-start-version -->
 
-[![Maven Central](https://img.shields.io/maven-central/v/com.rye/checkout-intents)](https://central.sonatype.com/artifact/com.rye/checkout-intents/0.13.0)
-[![javadoc](https://javadoc.io/badge2/com.rye/checkout-intents/0.13.0/javadoc.svg)](https://javadoc.io/doc/com.rye/checkout-intents/0.13.0)
+[![Maven Central](https://img.shields.io/maven-central/v/com.rye/checkout-intents)](https://central.sonatype.com/artifact/com.rye/checkout-intents/0.14.0)
+[![javadoc](https://javadoc.io/badge2/com.rye/checkout-intents/0.14.0/javadoc.svg)](https://javadoc.io/doc/com.rye/checkout-intents/0.14.0)
 
 <!-- x-release-please-end -->
 
@@ -13,7 +13,7 @@ It is generated with [Stainless](https://www.stainless.com/).
 
 <!-- x-release-please-start-version -->
 
-The REST API documentation can be found on [docs.rye.com](https://docs.rye.com). Javadocs are available on [javadoc.io](https://javadoc.io/doc/com.rye/checkout-intents/0.13.0).
+The REST API documentation can be found on [docs.rye.com](https://docs.rye.com). Javadocs are available on [javadoc.io](https://javadoc.io/doc/com.rye/checkout-intents/0.14.0).
 
 <!-- x-release-please-end -->
 
@@ -24,7 +24,7 @@ The REST API documentation can be found on [docs.rye.com](https://docs.rye.com).
 ### Gradle
 
 ```kotlin
-implementation("com.rye:checkout-intents:0.13.0")
+implementation("com.rye:checkout-intents:0.14.0")
 ```
 
 ### Maven
@@ -33,7 +33,7 @@ implementation("com.rye:checkout-intents:0.13.0")
 <dependency>
   <groupId>com.rye</groupId>
   <artifactId>checkout-intents</artifactId>
-  <version>0.13.0</version>
+  <version>0.14.0</version>
 </dependency>
 ```
 
@@ -705,6 +705,21 @@ CheckoutIntentsClient client = CheckoutIntentsOkHttpClient.builder()
     .build();
 ```
 
+If the proxy responds with `407 Proxy Authentication Required`, supply credentials by also configuring `proxyAuthenticator`:
+
+```java
+import com.rye.client.CheckoutIntentsClient;
+import com.rye.client.okhttp.CheckoutIntentsOkHttpClient;
+import com.rye.core.http.ProxyAuthenticator;
+
+CheckoutIntentsClient client = CheckoutIntentsOkHttpClient.builder()
+    .fromEnv()
+    .proxy(...)
+    // Or a custom implementation of `ProxyAuthenticator`.
+    .proxyAuthenticator(ProxyAuthenticator.basic("username", "password"))
+    .build();
+```
+
 ### Connection pooling
 
 To customize the underlying OkHttp connection pool, configure the client using the `maxIdleConnections` and `keepAliveDuration` methods:
@@ -969,7 +984,9 @@ In rare cases, the API may return a response that doesn't match the expected typ
 
 By default, the SDK will not throw an exception in this case. It will throw [`CheckoutIntentsInvalidDataException`](checkout-intents-core/src/main/kotlin/com/rye/errors/CheckoutIntentsInvalidDataException.kt) only if you directly access the property.
 
-If you would prefer to check that the response is completely well-typed upfront, then either call `validate()`:
+Validating the response is _not_ forwards compatible with new types from the API for existing fields.
+
+If you would still prefer to check that the response is completely well-typed upfront, then either call `validate()`:
 
 ```java
 import com.rye.models.betas.CheckoutSession;

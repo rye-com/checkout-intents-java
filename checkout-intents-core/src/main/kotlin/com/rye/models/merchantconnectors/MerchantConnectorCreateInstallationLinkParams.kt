@@ -1,46 +1,47 @@
 // File generated from our OpenAPI spec by Stainless.
 
-package com.rye.models.checkoutintents
+package com.rye.models.merchantconnectors
 
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.rye.core.Enum
 import com.rye.core.JsonField
 import com.rye.core.Params
+import com.rye.core.checkRequired
 import com.rye.core.http.Headers
 import com.rye.core.http.QueryParams
-import com.rye.core.toImmutable
 import com.rye.errors.CheckoutIntentsInvalidDataException
 import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 /**
- * Retrieve a paginated list of checkout intents
+ * Generate an installation link for a merchant connector (e.g. Shopify).
  *
- * Enables developers to query checkout intents associated with their account, with filters and
- * cursor-based pagination.
+ * The returned URL begins the connector's OAuth handshake. Direct the merchant to it; once they
+ * authorize the Rye app, the connector redirects back to Rye to complete the install. The merchant
+ * is attributed to the calling developer and becomes available for checkout via this account.
  */
-class CheckoutIntentListParams
+class MerchantConnectorCreateInstallationLinkParams
 private constructor(
-    private val id: List<String>?,
-    private val after: String?,
-    private val before: String?,
-    private val limit: Int?,
-    private val state: List<State>?,
+    private val connector: Connector?,
+    private val storeUrl: String,
+    private val private_: Boolean?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
 
-    fun id(): Optional<List<String>> = Optional.ofNullable(id)
+    /**
+     * A merchant connector is a Rye integration with a third-party merchant platform (e.g. Shopify)
+     * that lets developers onboard merchants to Rye. Today only Shopify is supported; this union
+     * expands as we add support for additional connectors (Woocommerce, BigCommerce, etc.).
+     */
+    fun connector(): Optional<Connector> = Optional.ofNullable(connector)
 
-    fun after(): Optional<String> = Optional.ofNullable(after)
+    /** Domain or URL of the merchant store to generate the installation link for */
+    fun storeUrl(): String = storeUrl
 
-    fun before(): Optional<String> = Optional.ofNullable(before)
-
-    /** Maximum number of results to return (default 100) */
-    fun limit(): Optional<Int> = Optional.ofNullable(limit)
-
-    fun state(): Optional<List<State>> = Optional.ofNullable(state)
+    /** If true, the merchant onboarded via this link is exclusive to the calling developer */
+    fun private_(): Optional<Boolean> = Optional.ofNullable(private_)
 
     /** Additional headers to send with the request. */
     fun _additionalHeaders(): Headers = additionalHeaders
@@ -52,82 +53,67 @@ private constructor(
 
     companion object {
 
-        @JvmStatic fun none(): CheckoutIntentListParams = builder().build()
-
-        /** Returns a mutable builder for constructing an instance of [CheckoutIntentListParams]. */
+        /**
+         * Returns a mutable builder for constructing an instance of
+         * [MerchantConnectorCreateInstallationLinkParams].
+         *
+         * The following fields are required:
+         * ```java
+         * .storeUrl()
+         * ```
+         */
         @JvmStatic fun builder() = Builder()
     }
 
-    /** A builder for [CheckoutIntentListParams]. */
+    /** A builder for [MerchantConnectorCreateInstallationLinkParams]. */
     class Builder internal constructor() {
 
-        private var id: MutableList<String>? = null
-        private var after: String? = null
-        private var before: String? = null
-        private var limit: Int? = null
-        private var state: MutableList<State>? = null
+        private var connector: Connector? = null
+        private var storeUrl: String? = null
+        private var private_: Boolean? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
         @JvmSynthetic
-        internal fun from(checkoutIntentListParams: CheckoutIntentListParams) = apply {
-            id = checkoutIntentListParams.id?.toMutableList()
-            after = checkoutIntentListParams.after
-            before = checkoutIntentListParams.before
-            limit = checkoutIntentListParams.limit
-            state = checkoutIntentListParams.state?.toMutableList()
-            additionalHeaders = checkoutIntentListParams.additionalHeaders.toBuilder()
-            additionalQueryParams = checkoutIntentListParams.additionalQueryParams.toBuilder()
+        internal fun from(
+            merchantConnectorCreateInstallationLinkParams:
+                MerchantConnectorCreateInstallationLinkParams
+        ) = apply {
+            connector = merchantConnectorCreateInstallationLinkParams.connector
+            storeUrl = merchantConnectorCreateInstallationLinkParams.storeUrl
+            private_ = merchantConnectorCreateInstallationLinkParams.private_
+            additionalHeaders =
+                merchantConnectorCreateInstallationLinkParams.additionalHeaders.toBuilder()
+            additionalQueryParams =
+                merchantConnectorCreateInstallationLinkParams.additionalQueryParams.toBuilder()
         }
 
-        fun id(id: List<String>?) = apply { this.id = id?.toMutableList() }
-
-        /** Alias for calling [Builder.id] with `id.orElse(null)`. */
-        fun id(id: Optional<List<String>>) = id(id.getOrNull())
-
         /**
-         * Adds a single [String] to [Builder.id].
-         *
-         * @throws IllegalStateException if the field was previously set to a non-list.
+         * A merchant connector is a Rye integration with a third-party merchant platform (e.g.
+         * Shopify) that lets developers onboard merchants to Rye. Today only Shopify is supported;
+         * this union expands as we add support for additional connectors (Woocommerce, BigCommerce,
+         * etc.).
          */
-        fun addId(id: String) = apply { this.id = (this.id ?: mutableListOf()).apply { add(id) } }
+        fun connector(connector: Connector?) = apply { this.connector = connector }
 
-        fun after(after: String?) = apply { this.after = after }
+        /** Alias for calling [Builder.connector] with `connector.orElse(null)`. */
+        fun connector(connector: Optional<Connector>) = connector(connector.getOrNull())
 
-        /** Alias for calling [Builder.after] with `after.orElse(null)`. */
-        fun after(after: Optional<String>) = after(after.getOrNull())
+        /** Domain or URL of the merchant store to generate the installation link for */
+        fun storeUrl(storeUrl: String) = apply { this.storeUrl = storeUrl }
 
-        fun before(before: String?) = apply { this.before = before }
-
-        /** Alias for calling [Builder.before] with `before.orElse(null)`. */
-        fun before(before: Optional<String>) = before(before.getOrNull())
-
-        /** Maximum number of results to return (default 100) */
-        fun limit(limit: Int?) = apply { this.limit = limit }
+        /** If true, the merchant onboarded via this link is exclusive to the calling developer */
+        fun private_(private_: Boolean?) = apply { this.private_ = private_ }
 
         /**
-         * Alias for [Builder.limit].
+         * Alias for [Builder.private_].
          *
          * This unboxed primitive overload exists for backwards compatibility.
          */
-        fun limit(limit: Int) = limit(limit as Int?)
+        fun private_(private_: Boolean) = private_(private_ as Boolean?)
 
-        /** Alias for calling [Builder.limit] with `limit.orElse(null)`. */
-        fun limit(limit: Optional<Int>) = limit(limit.getOrNull())
-
-        fun state(state: List<State>?) = apply { this.state = state?.toMutableList() }
-
-        /** Alias for calling [Builder.state] with `state.orElse(null)`. */
-        fun state(state: Optional<List<State>>) = state(state.getOrNull())
-
-        /**
-         * Adds a single [State] to [Builder.state].
-         *
-         * @throws IllegalStateException if the field was previously set to a non-list.
-         */
-        fun addState(state: State) = apply {
-            this.state = (this.state ?: mutableListOf()).apply { add(state) }
-        }
+        /** Alias for calling [Builder.private_] with `private_.orElse(null)`. */
+        fun private_(private_: Optional<Boolean>) = private_(private_.getOrNull())
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()
@@ -228,37 +214,50 @@ private constructor(
         }
 
         /**
-         * Returns an immutable instance of [CheckoutIntentListParams].
+         * Returns an immutable instance of [MerchantConnectorCreateInstallationLinkParams].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
+         *
+         * The following fields are required:
+         * ```java
+         * .storeUrl()
+         * ```
+         *
+         * @throws IllegalStateException if any required field is unset.
          */
-        fun build(): CheckoutIntentListParams =
-            CheckoutIntentListParams(
-                id?.toImmutable(),
-                after,
-                before,
-                limit,
-                state?.toImmutable(),
+        fun build(): MerchantConnectorCreateInstallationLinkParams =
+            MerchantConnectorCreateInstallationLinkParams(
+                connector,
+                checkRequired("storeUrl", storeUrl),
+                private_,
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
             )
     }
+
+    fun _pathParam(index: Int): String =
+        when (index) {
+            0 -> connector?.toString() ?: ""
+            else -> ""
+        }
 
     override fun _headers(): Headers = additionalHeaders
 
     override fun _queryParams(): QueryParams =
         QueryParams.builder()
             .apply {
-                id?.forEach { put("id", it) }
-                after?.let { put("after", it) }
-                before?.let { put("before", it) }
-                limit?.let { put("limit", it.toString()) }
-                state?.forEach { put("state", it.toString()) }
+                put("storeUrl", storeUrl)
+                private_?.let { put("private", it.toString()) }
                 putAll(additionalQueryParams)
             }
             .build()
 
-    class State @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    /**
+     * A merchant connector is a Rye integration with a third-party merchant platform (e.g. Shopify)
+     * that lets developers onboard merchants to Rye. Today only Shopify is supported; this union
+     * expands as we add support for additional connectors (Woocommerce, BigCommerce, etc.).
+     */
+    class Connector @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -272,48 +271,30 @@ private constructor(
 
         companion object {
 
-            @JvmField val COMPLETED = of("completed")
+            @JvmField val SHOPIFY = of("shopify")
 
-            @JvmField val FAILED = of("failed")
-
-            @JvmField val RETRIEVING_OFFER = of("retrieving_offer")
-
-            @JvmField val AWAITING_CONFIRMATION = of("awaiting_confirmation")
-
-            @JvmField val REQUIRES_ACTION = of("requires_action")
-
-            @JvmField val PLACING_ORDER = of("placing_order")
-
-            @JvmStatic fun of(value: String) = State(JsonField.of(value))
+            @JvmStatic fun of(value: String) = Connector(JsonField.of(value))
         }
 
-        /** An enum containing [State]'s known values. */
+        /** An enum containing [Connector]'s known values. */
         enum class Known {
-            COMPLETED,
-            FAILED,
-            RETRIEVING_OFFER,
-            AWAITING_CONFIRMATION,
-            REQUIRES_ACTION,
-            PLACING_ORDER,
+            SHOPIFY
         }
 
         /**
-         * An enum containing [State]'s known values, as well as an [_UNKNOWN] member.
+         * An enum containing [Connector]'s known values, as well as an [_UNKNOWN] member.
          *
-         * An instance of [State] can contain an unknown value in a couple of cases:
+         * An instance of [Connector] can contain an unknown value in a couple of cases:
          * - It was deserialized from data that doesn't match any known member. For example, if the
          *   SDK is on an older version than the API, then the API may respond with new members that
          *   the SDK is unaware of.
          * - It was constructed with an arbitrary value using the [of] method.
          */
         enum class Value {
-            COMPLETED,
-            FAILED,
-            RETRIEVING_OFFER,
-            AWAITING_CONFIRMATION,
-            REQUIRES_ACTION,
-            PLACING_ORDER,
-            /** An enum member indicating that [State] was instantiated with an unknown value. */
+            SHOPIFY,
+            /**
+             * An enum member indicating that [Connector] was instantiated with an unknown value.
+             */
             _UNKNOWN,
         }
 
@@ -326,12 +307,7 @@ private constructor(
          */
         fun value(): Value =
             when (this) {
-                COMPLETED -> Value.COMPLETED
-                FAILED -> Value.FAILED
-                RETRIEVING_OFFER -> Value.RETRIEVING_OFFER
-                AWAITING_CONFIRMATION -> Value.AWAITING_CONFIRMATION
-                REQUIRES_ACTION -> Value.REQUIRES_ACTION
-                PLACING_ORDER -> Value.PLACING_ORDER
+                SHOPIFY -> Value.SHOPIFY
                 else -> Value._UNKNOWN
             }
 
@@ -346,13 +322,8 @@ private constructor(
          */
         fun known(): Known =
             when (this) {
-                COMPLETED -> Known.COMPLETED
-                FAILED -> Known.FAILED
-                RETRIEVING_OFFER -> Known.RETRIEVING_OFFER
-                AWAITING_CONFIRMATION -> Known.AWAITING_CONFIRMATION
-                REQUIRES_ACTION -> Known.REQUIRES_ACTION
-                PLACING_ORDER -> Known.PLACING_ORDER
-                else -> throw CheckoutIntentsInvalidDataException("Unknown State: $value")
+                SHOPIFY -> Known.SHOPIFY
+                else -> throw CheckoutIntentsInvalidDataException("Unknown Connector: $value")
             }
 
         /**
@@ -380,7 +351,7 @@ private constructor(
          * @throws CheckoutIntentsInvalidDataException if any value type in this object doesn't
          *   match its expected type.
          */
-        fun validate(): State = apply {
+        fun validate(): Connector = apply {
             if (validated) {
                 return@apply
             }
@@ -410,7 +381,7 @@ private constructor(
                 return true
             }
 
-            return other is State && value == other.value
+            return other is Connector && value == other.value
         }
 
         override fun hashCode() = value.hashCode()
@@ -423,19 +394,17 @@ private constructor(
             return true
         }
 
-        return other is CheckoutIntentListParams &&
-            id == other.id &&
-            after == other.after &&
-            before == other.before &&
-            limit == other.limit &&
-            state == other.state &&
+        return other is MerchantConnectorCreateInstallationLinkParams &&
+            connector == other.connector &&
+            storeUrl == other.storeUrl &&
+            private_ == other.private_ &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
     }
 
     override fun hashCode(): Int =
-        Objects.hash(id, after, before, limit, state, additionalHeaders, additionalQueryParams)
+        Objects.hash(connector, storeUrl, private_, additionalHeaders, additionalQueryParams)
 
     override fun toString() =
-        "CheckoutIntentListParams{id=$id, after=$after, before=$before, limit=$limit, state=$state, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "MerchantConnectorCreateInstallationLinkParams{connector=$connector, storeUrl=$storeUrl, private_=$private_, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

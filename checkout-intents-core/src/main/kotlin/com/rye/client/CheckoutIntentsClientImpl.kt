@@ -14,6 +14,8 @@ import com.rye.services.blocking.CheckoutIntentService
 import com.rye.services.blocking.CheckoutIntentServiceImpl
 import com.rye.services.blocking.EventService
 import com.rye.services.blocking.EventServiceImpl
+import com.rye.services.blocking.MerchantConnectorService
+import com.rye.services.blocking.MerchantConnectorServiceImpl
 import com.rye.services.blocking.PaymentGatewayService
 import com.rye.services.blocking.PaymentGatewayServiceImpl
 import com.rye.services.blocking.ProductService
@@ -63,6 +65,10 @@ class CheckoutIntentsClientImpl(private val clientOptions: ClientOptions) : Chec
 
     private val events: EventService by lazy { EventServiceImpl(clientOptionsWithUserAgent) }
 
+    private val merchantConnectors: MerchantConnectorService by lazy {
+        MerchantConnectorServiceImpl(clientOptionsWithUserAgent)
+    }
+
     override fun async(): CheckoutIntentsClientAsync = async
 
     override fun withRawResponse(): CheckoutIntentsClient.WithRawResponse = withRawResponse
@@ -85,6 +91,8 @@ class CheckoutIntentsClientImpl(private val clientOptions: ClientOptions) : Chec
     override fun billing(): BillingService = billing
 
     override fun events(): EventService = events
+
+    override fun merchantConnectors(): MerchantConnectorService = merchantConnectors
 
     override fun close() = clientOptions.close()
 
@@ -123,6 +131,10 @@ class CheckoutIntentsClientImpl(private val clientOptions: ClientOptions) : Chec
             EventServiceImpl.WithRawResponseImpl(clientOptions)
         }
 
+        private val merchantConnectors: MerchantConnectorService.WithRawResponse by lazy {
+            MerchantConnectorServiceImpl.WithRawResponseImpl(clientOptions)
+        }
+
         override fun withOptions(
             modifier: Consumer<ClientOptions.Builder>
         ): CheckoutIntentsClient.WithRawResponse =
@@ -145,5 +157,8 @@ class CheckoutIntentsClientImpl(private val clientOptions: ClientOptions) : Chec
         override fun billing(): BillingService.WithRawResponse = billing
 
         override fun events(): EventService.WithRawResponse = events
+
+        override fun merchantConnectors(): MerchantConnectorService.WithRawResponse =
+            merchantConnectors
     }
 }

@@ -1,5 +1,31 @@
 # Changelog
 
+## 0.14.0 (2026-05-06)
+
+Full Changelog: [v0.13.0...v0.14.0](https://github.com/rye-com/checkout-intents-java/compare/v0.13.0...v0.14.0)
+
+### Features
+
+* **api:** add merchant connector installation link endpoint ([9354874](https://github.com/rye-com/checkout-intents-java/commit/93548741aa1338d4716189525527b66a9f010985))
+* **client:** more robust error parsing ([afe3fdb](https://github.com/rye-com/checkout-intents-java/commit/afe3fdb62b40dad7e0932885bfebe4881b325cd0))
+* **client:** support proxy authentication ([d030185](https://github.com/rye-com/checkout-intents-java/commit/d0301857655fbf39f07d39b6e5738d3359ed2568))
+* support setting headers via env ([74327b3](https://github.com/rye-com/checkout-intents-java/commit/74327b34d7ff5be0e5c3ea507d6e3028872c4cb8))
+
+
+### Performance Improvements
+
+* **client:** create one json mapper ([617c724](https://github.com/rye-com/checkout-intents-java/commit/617c7249ce33e3e542b4557e075928aab3bd494c))
+
+
+### Chores
+
+* remove duplicated dokka setup ([6856d36](https://github.com/rye-com/checkout-intents-java/commit/6856d363d2d726ac8a1f5a58719b6eae560e31a7))
+
+
+### Documentation
+
+* clarify forwards compat behavior ([716301b](https://github.com/rye-com/checkout-intents-java/commit/716301b6cd032ca0bfd1300ad5a5425eead6af6d))
+
 ## 0.13.0 (2026-04-27)
 
 Full Changelog: [v0.12.0...v0.13.0](https://github.com/rye-com/checkout-intents-java/compare/v0.12.0...v0.13.0)

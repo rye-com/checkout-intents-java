@@ -1,6 +1,6 @@
 // File generated from our OpenAPI spec by Stainless.
 
-package com.rye.models.paymentgateways
+package com.rye.models.merchantconnectors
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
@@ -17,60 +17,52 @@ import java.util.Collections
 import java.util.Objects
 import kotlin.jvm.optionals.getOrNull
 
-class PaymentGatewaySession
+/** A merchant connector installation link. */
+class InstallationLink
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
-    private val container: JsonField<String>,
-    private val gateway: JsonField<Gateway>,
-    private val sessionKey: JsonField<String>,
+    private val connector: JsonField<Connector>,
+    private val url: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
     @JsonCreator
     private constructor(
-        @JsonProperty("container") @ExcludeMissing container: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("gateway") @ExcludeMissing gateway: JsonField<Gateway> = JsonMissing.of(),
-        @JsonProperty("sessionKey") @ExcludeMissing sessionKey: JsonField<String> = JsonMissing.of(),
-    ) : this(container, gateway, sessionKey, mutableMapOf())
+        @JsonProperty("connector")
+        @ExcludeMissing
+        connector: JsonField<Connector> = JsonMissing.of(),
+        @JsonProperty("url") @ExcludeMissing url: JsonField<String> = JsonMissing.of(),
+    ) : this(connector, url, mutableMapOf())
 
     /**
+     * The merchant connector this installation link was generated for.
+     *
      * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
-    fun container(): String = container.getRequired("container")
+    fun connector(): Connector = connector.getRequired("connector")
 
     /**
+     * URL to redirect the merchant to in order to install the Rye app on their merchant platform.
+     *
      * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
-    fun gateway(): Gateway = gateway.getRequired("gateway")
+    fun url(): String = url.getRequired("url")
 
     /**
-     * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-     */
-    fun sessionKey(): String = sessionKey.getRequired("sessionKey")
-
-    /**
-     * Returns the raw JSON value of [container].
+     * Returns the raw JSON value of [connector].
      *
-     * Unlike [container], this method doesn't throw if the JSON field has an unexpected type.
+     * Unlike [connector], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("container") @ExcludeMissing fun _container(): JsonField<String> = container
+    @JsonProperty("connector") @ExcludeMissing fun _connector(): JsonField<Connector> = connector
 
     /**
-     * Returns the raw JSON value of [gateway].
+     * Returns the raw JSON value of [url].
      *
-     * Unlike [gateway], this method doesn't throw if the JSON field has an unexpected type.
+     * Unlike [url], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("gateway") @ExcludeMissing fun _gateway(): JsonField<Gateway> = gateway
-
-    /**
-     * Returns the raw JSON value of [sessionKey].
-     *
-     * Unlike [sessionKey], this method doesn't throw if the JSON field has an unexpected type.
-     */
-    @JsonProperty("sessionKey") @ExcludeMissing fun _sessionKey(): JsonField<String> = sessionKey
+    @JsonProperty("url") @ExcludeMissing fun _url(): JsonField<String> = url
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -87,65 +79,56 @@ private constructor(
     companion object {
 
         /**
-         * Returns a mutable builder for constructing an instance of [PaymentGatewaySession].
+         * Returns a mutable builder for constructing an instance of [InstallationLink].
          *
          * The following fields are required:
          * ```java
-         * .container()
-         * .gateway()
-         * .sessionKey()
+         * .connector()
+         * .url()
          * ```
          */
         @JvmStatic fun builder() = Builder()
     }
 
-    /** A builder for [PaymentGatewaySession]. */
+    /** A builder for [InstallationLink]. */
     class Builder internal constructor() {
 
-        private var container: JsonField<String>? = null
-        private var gateway: JsonField<Gateway>? = null
-        private var sessionKey: JsonField<String>? = null
+        private var connector: JsonField<Connector>? = null
+        private var url: JsonField<String>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(paymentGatewaySession: PaymentGatewaySession) = apply {
-            container = paymentGatewaySession.container
-            gateway = paymentGatewaySession.gateway
-            sessionKey = paymentGatewaySession.sessionKey
-            additionalProperties = paymentGatewaySession.additionalProperties.toMutableMap()
+        internal fun from(installationLink: InstallationLink) = apply {
+            connector = installationLink.connector
+            url = installationLink.url
+            additionalProperties = installationLink.additionalProperties.toMutableMap()
         }
 
-        fun container(container: String) = container(JsonField.of(container))
+        /** The merchant connector this installation link was generated for. */
+        fun connector(connector: Connector) = connector(JsonField.of(connector))
 
         /**
-         * Sets [Builder.container] to an arbitrary JSON value.
+         * Sets [Builder.connector] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.container] with a well-typed [String] value instead.
+         * You should usually call [Builder.connector] with a well-typed [Connector] value instead.
          * This method is primarily for setting the field to an undocumented or not yet supported
          * value.
          */
-        fun container(container: JsonField<String>) = apply { this.container = container }
-
-        fun gateway(gateway: Gateway) = gateway(JsonField.of(gateway))
+        fun connector(connector: JsonField<Connector>) = apply { this.connector = connector }
 
         /**
-         * Sets [Builder.gateway] to an arbitrary JSON value.
+         * URL to redirect the merchant to in order to install the Rye app on their merchant
+         * platform.
+         */
+        fun url(url: String) = url(JsonField.of(url))
+
+        /**
+         * Sets [Builder.url] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.gateway] with a well-typed [Gateway] value instead. This
+         * You should usually call [Builder.url] with a well-typed [String] value instead. This
          * method is primarily for setting the field to an undocumented or not yet supported value.
          */
-        fun gateway(gateway: JsonField<Gateway>) = apply { this.gateway = gateway }
-
-        fun sessionKey(sessionKey: String) = sessionKey(JsonField.of(sessionKey))
-
-        /**
-         * Sets [Builder.sessionKey] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.sessionKey] with a well-typed [String] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
-         */
-        fun sessionKey(sessionKey: JsonField<String>) = apply { this.sessionKey = sessionKey }
+        fun url(url: JsonField<String>) = apply { this.url = url }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
@@ -167,24 +150,22 @@ private constructor(
         }
 
         /**
-         * Returns an immutable instance of [PaymentGatewaySession].
+         * Returns an immutable instance of [InstallationLink].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
          *
          * The following fields are required:
          * ```java
-         * .container()
-         * .gateway()
-         * .sessionKey()
+         * .connector()
+         * .url()
          * ```
          *
          * @throws IllegalStateException if any required field is unset.
          */
-        fun build(): PaymentGatewaySession =
-            PaymentGatewaySession(
-                checkRequired("container", container),
-                checkRequired("gateway", gateway),
-                checkRequired("sessionKey", sessionKey),
+        fun build(): InstallationLink =
+            InstallationLink(
+                checkRequired("connector", connector),
+                checkRequired("url", url),
                 additionalProperties.toMutableMap(),
             )
     }
@@ -199,14 +180,13 @@ private constructor(
      * @throws CheckoutIntentsInvalidDataException if any value type in this object doesn't match
      *   its expected type.
      */
-    fun validate(): PaymentGatewaySession = apply {
+    fun validate(): InstallationLink = apply {
         if (validated) {
             return@apply
         }
 
-        container()
-        gateway().validate()
-        sessionKey()
+        connector().validate()
+        url()
         validated = true
     }
 
@@ -225,11 +205,10 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        (if (container.asKnown().isPresent) 1 else 0) +
-            (gateway.asKnown().getOrNull()?.validity() ?: 0) +
-            (if (sessionKey.asKnown().isPresent) 1 else 0)
+        (connector.asKnown().getOrNull()?.validity() ?: 0) + (if (url.asKnown().isPresent) 1 else 0)
 
-    class Gateway @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    /** The merchant connector this installation link was generated for. */
+    class Connector @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -243,28 +222,30 @@ private constructor(
 
         companion object {
 
-            @JvmField val BASIS_THEORY = of("basis_theory")
+            @JvmField val SHOPIFY = of("shopify")
 
-            @JvmStatic fun of(value: String) = Gateway(JsonField.of(value))
+            @JvmStatic fun of(value: String) = Connector(JsonField.of(value))
         }
 
-        /** An enum containing [Gateway]'s known values. */
+        /** An enum containing [Connector]'s known values. */
         enum class Known {
-            BASIS_THEORY
+            SHOPIFY
         }
 
         /**
-         * An enum containing [Gateway]'s known values, as well as an [_UNKNOWN] member.
+         * An enum containing [Connector]'s known values, as well as an [_UNKNOWN] member.
          *
-         * An instance of [Gateway] can contain an unknown value in a couple of cases:
+         * An instance of [Connector] can contain an unknown value in a couple of cases:
          * - It was deserialized from data that doesn't match any known member. For example, if the
          *   SDK is on an older version than the API, then the API may respond with new members that
          *   the SDK is unaware of.
          * - It was constructed with an arbitrary value using the [of] method.
          */
         enum class Value {
-            BASIS_THEORY,
-            /** An enum member indicating that [Gateway] was instantiated with an unknown value. */
+            SHOPIFY,
+            /**
+             * An enum member indicating that [Connector] was instantiated with an unknown value.
+             */
             _UNKNOWN,
         }
 
@@ -277,7 +258,7 @@ private constructor(
          */
         fun value(): Value =
             when (this) {
-                BASIS_THEORY -> Value.BASIS_THEORY
+                SHOPIFY -> Value.SHOPIFY
                 else -> Value._UNKNOWN
             }
 
@@ -292,8 +273,8 @@ private constructor(
          */
         fun known(): Known =
             when (this) {
-                BASIS_THEORY -> Known.BASIS_THEORY
-                else -> throw CheckoutIntentsInvalidDataException("Unknown Gateway: $value")
+                SHOPIFY -> Known.SHOPIFY
+                else -> throw CheckoutIntentsInvalidDataException("Unknown Connector: $value")
             }
 
         /**
@@ -321,7 +302,7 @@ private constructor(
          * @throws CheckoutIntentsInvalidDataException if any value type in this object doesn't
          *   match its expected type.
          */
-        fun validate(): Gateway = apply {
+        fun validate(): Connector = apply {
             if (validated) {
                 return@apply
             }
@@ -351,7 +332,7 @@ private constructor(
                 return true
             }
 
-            return other is Gateway && value == other.value
+            return other is Connector && value == other.value
         }
 
         override fun hashCode() = value.hashCode()
@@ -364,19 +345,16 @@ private constructor(
             return true
         }
 
-        return other is PaymentGatewaySession &&
-            container == other.container &&
-            gateway == other.gateway &&
-            sessionKey == other.sessionKey &&
+        return other is InstallationLink &&
+            connector == other.connector &&
+            url == other.url &&
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy {
-        Objects.hash(container, gateway, sessionKey, additionalProperties)
-    }
+    private val hashCode: Int by lazy { Objects.hash(connector, url, additionalProperties) }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "PaymentGatewaySession{container=$container, gateway=$gateway, sessionKey=$sessionKey, additionalProperties=$additionalProperties}"
+        "InstallationLink{connector=$connector, url=$url, additionalProperties=$additionalProperties}"
 }
