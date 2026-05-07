@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.json.JsonMapper
 import com.rye.client.CheckoutIntentsClientAsync
 import com.rye.client.CheckoutIntentsClientAsyncImpl
 import com.rye.core.ClientOptions
+import com.rye.core.LogLevel
 import com.rye.core.Sleeper
 import com.rye.core.Timeout
 import com.rye.core.http.AsyncStreamResponse
@@ -297,6 +298,15 @@ class CheckoutIntentsOkHttpClientAsync private constructor() {
          * Defaults to 2.
          */
         fun maxRetries(maxRetries: Int) = apply { clientOptions.maxRetries(maxRetries) }
+
+        /**
+         * The level at which to log request and response information.
+         *
+         * [fromEnv] will set the level from environment variables. See [LogLevel.fromEnv].
+         *
+         * Defaults to [LogLevel.fromEnv].
+         */
+        fun logLevel(logLevel: LogLevel) = apply { clientOptions.logLevel(logLevel) }
 
         /** Rye API key. Format: `RYE/{environment}-abcdef` */
         fun apiKey(apiKey: String) = apply { clientOptions.apiKey(apiKey) }
