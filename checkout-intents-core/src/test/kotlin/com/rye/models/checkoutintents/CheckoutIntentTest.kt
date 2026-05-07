@@ -1048,6 +1048,35 @@ internal class CheckoutIntentTest {
                         .build()
                 )
                 .state(CheckoutIntent.CompletedCheckoutIntent.State.COMPLETED)
+                .commissions(
+                    CheckoutIntent.CompletedCheckoutIntent.Commissions.builder()
+                        .count(0.0)
+                        .addItem(
+                            CheckoutIntent.CompletedCheckoutIntent.Commissions.Item.builder()
+                                .id("id")
+                                .developerShareAmount(
+                                    Money.builder().amountSubunits(1500).currencyCode("USD").build()
+                                )
+                                .grossAmount(
+                                    Money.builder().amountSubunits(1500).currencyCode("USD").build()
+                                )
+                                .settlementDirection(
+                                    CheckoutIntent.CompletedCheckoutIntent.Commissions.Item
+                                        .SettlementDirection
+                                        .RYE_OWES_DEVELOPER
+                                )
+                                .status(
+                                    CheckoutIntent.CompletedCheckoutIntent.Commissions.Item.Status
+                                        .PENDING
+                                )
+                                .type(
+                                    CheckoutIntent.CompletedCheckoutIntent.Commissions.Item.Type
+                                        .SURCHARGE
+                                )
+                                .build()
+                        )
+                        .build()
+                )
                 .estimatedDeliveryDate(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .build()
 
@@ -1188,6 +1217,42 @@ internal class CheckoutIntentTest {
                             .build()
                     )
                     .state(CheckoutIntent.CompletedCheckoutIntent.State.COMPLETED)
+                    .commissions(
+                        CheckoutIntent.CompletedCheckoutIntent.Commissions.builder()
+                            .count(0.0)
+                            .addItem(
+                                CheckoutIntent.CompletedCheckoutIntent.Commissions.Item.builder()
+                                    .id("id")
+                                    .developerShareAmount(
+                                        Money.builder()
+                                            .amountSubunits(1500)
+                                            .currencyCode("USD")
+                                            .build()
+                                    )
+                                    .grossAmount(
+                                        Money.builder()
+                                            .amountSubunits(1500)
+                                            .currencyCode("USD")
+                                            .build()
+                                    )
+                                    .settlementDirection(
+                                        CheckoutIntent.CompletedCheckoutIntent.Commissions.Item
+                                            .SettlementDirection
+                                            .RYE_OWES_DEVELOPER
+                                    )
+                                    .status(
+                                        CheckoutIntent.CompletedCheckoutIntent.Commissions.Item
+                                            .Status
+                                            .PENDING
+                                    )
+                                    .type(
+                                        CheckoutIntent.CompletedCheckoutIntent.Commissions.Item.Type
+                                            .SURCHARGE
+                                    )
+                                    .build()
+                            )
+                            .build()
+                    )
                     .estimatedDeliveryDate(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .build()
             )

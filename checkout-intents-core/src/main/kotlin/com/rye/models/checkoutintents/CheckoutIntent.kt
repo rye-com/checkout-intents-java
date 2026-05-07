@@ -4627,6 +4627,7 @@ private constructor(
         private val orderId: JsonField<String>,
         private val paymentMethod: JsonField<PaymentMethod>,
         private val state: JsonField<State>,
+        private val commissions: JsonField<Commissions>,
         private val estimatedDeliveryDate: JsonField<OffsetDateTime>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
@@ -4660,6 +4661,9 @@ private constructor(
             @ExcludeMissing
             paymentMethod: JsonField<PaymentMethod> = JsonMissing.of(),
             @JsonProperty("state") @ExcludeMissing state: JsonField<State> = JsonMissing.of(),
+            @JsonProperty("commissions")
+            @ExcludeMissing
+            commissions: JsonField<Commissions> = JsonMissing.of(),
             @JsonProperty("estimatedDeliveryDate")
             @ExcludeMissing
             estimatedDeliveryDate: JsonField<OffsetDateTime> = JsonMissing.of(),
@@ -4677,6 +4681,7 @@ private constructor(
             orderId,
             paymentMethod,
             state,
+            commissions,
             estimatedDeliveryDate,
             mutableMapOf(),
         )
@@ -4782,6 +4787,12 @@ private constructor(
          *   value).
          */
         fun state(): State = state.getRequired("state")
+
+        /**
+         * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type
+         *   (e.g. if the server responded with an unexpected value).
+         */
+        fun commissions(): Optional<Commissions> = commissions.getOptional("commissions")
 
         /**
          * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type
@@ -4900,6 +4911,15 @@ private constructor(
         @JsonProperty("state") @ExcludeMissing fun _state(): JsonField<State> = state
 
         /**
+         * Returns the raw JSON value of [commissions].
+         *
+         * Unlike [commissions], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("commissions")
+        @ExcludeMissing
+        fun _commissions(): JsonField<Commissions> = commissions
+
+        /**
          * Returns the raw JSON value of [estimatedDeliveryDate].
          *
          * Unlike [estimatedDeliveryDate], this method doesn't throw if the JSON field has an
@@ -4959,6 +4979,7 @@ private constructor(
             private var orderId: JsonField<String>? = null
             private var paymentMethod: JsonField<PaymentMethod>? = null
             private var state: JsonField<State>? = null
+            private var commissions: JsonField<Commissions> = JsonMissing.of()
             private var estimatedDeliveryDate: JsonField<OffsetDateTime> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
@@ -4978,6 +4999,7 @@ private constructor(
                 orderId = completedCheckoutIntent.orderId
                 paymentMethod = completedCheckoutIntent.paymentMethod
                 state = completedCheckoutIntent.state
+                commissions = completedCheckoutIntent.commissions
                 estimatedDeliveryDate = completedCheckoutIntent.estimatedDeliveryDate
                 additionalProperties = completedCheckoutIntent.additionalProperties.toMutableMap()
             }
@@ -5196,6 +5218,19 @@ private constructor(
              */
             fun state(state: JsonField<State>) = apply { this.state = state }
 
+            fun commissions(commissions: Commissions) = commissions(JsonField.of(commissions))
+
+            /**
+             * Sets [Builder.commissions] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.commissions] with a well-typed [Commissions] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun commissions(commissions: JsonField<Commissions>) = apply {
+                this.commissions = commissions
+            }
+
             @Deprecated("deprecated")
             fun estimatedDeliveryDate(estimatedDeliveryDate: OffsetDateTime?) =
                 estimatedDeliveryDate(JsonField.ofNullable(estimatedDeliveryDate))
@@ -5274,6 +5309,7 @@ private constructor(
                     checkRequired("orderId", orderId),
                     checkRequired("paymentMethod", paymentMethod),
                     checkRequired("state", state),
+                    commissions,
                     estimatedDeliveryDate,
                     additionalProperties.toMutableMap(),
                 )
@@ -5308,6 +5344,7 @@ private constructor(
             orderId()
             paymentMethod().validate()
             state().validate()
+            commissions().ifPresent { it.validate() }
             estimatedDeliveryDate()
             validated = true
         }
@@ -5341,6 +5378,7 @@ private constructor(
                 (if (orderId.asKnown().isPresent) 1 else 0) +
                 (paymentMethod.asKnown().getOrNull()?.validity() ?: 0) +
                 (state.asKnown().getOrNull()?.validity() ?: 0) +
+                (commissions.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (estimatedDeliveryDate.asKnown().isPresent) 1 else 0)
 
         class State @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
@@ -5476,6 +5514,1123 @@ private constructor(
             override fun toString() = value.toString()
         }
 
+        class Commissions
+        @JsonCreator(mode = JsonCreator.Mode.DISABLED)
+        private constructor(
+            private val count: JsonField<Double>,
+            private val items: JsonField<List<Item>>,
+            private val additionalProperties: MutableMap<String, JsonValue>,
+        ) {
+
+            @JsonCreator
+            private constructor(
+                @JsonProperty("count") @ExcludeMissing count: JsonField<Double> = JsonMissing.of(),
+                @JsonProperty("items")
+                @ExcludeMissing
+                items: JsonField<List<Item>> = JsonMissing.of(),
+            ) : this(count, items, mutableMapOf())
+
+            /**
+             * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type
+             *   or is unexpectedly missing or null (e.g. if the server responded with an unexpected
+             *   value).
+             */
+            fun count(): Double = count.getRequired("count")
+
+            /**
+             * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type
+             *   or is unexpectedly missing or null (e.g. if the server responded with an unexpected
+             *   value).
+             */
+            fun items(): List<Item> = items.getRequired("items")
+
+            /**
+             * Returns the raw JSON value of [count].
+             *
+             * Unlike [count], this method doesn't throw if the JSON field has an unexpected type.
+             */
+            @JsonProperty("count") @ExcludeMissing fun _count(): JsonField<Double> = count
+
+            /**
+             * Returns the raw JSON value of [items].
+             *
+             * Unlike [items], this method doesn't throw if the JSON field has an unexpected type.
+             */
+            @JsonProperty("items") @ExcludeMissing fun _items(): JsonField<List<Item>> = items
+
+            @JsonAnySetter
+            private fun putAdditionalProperty(key: String, value: JsonValue) {
+                additionalProperties.put(key, value)
+            }
+
+            @JsonAnyGetter
+            @ExcludeMissing
+            fun _additionalProperties(): Map<String, JsonValue> =
+                Collections.unmodifiableMap(additionalProperties)
+
+            fun toBuilder() = Builder().from(this)
+
+            companion object {
+
+                /**
+                 * Returns a mutable builder for constructing an instance of [Commissions].
+                 *
+                 * The following fields are required:
+                 * ```java
+                 * .count()
+                 * .items()
+                 * ```
+                 */
+                @JvmStatic fun builder() = Builder()
+            }
+
+            /** A builder for [Commissions]. */
+            class Builder internal constructor() {
+
+                private var count: JsonField<Double>? = null
+                private var items: JsonField<MutableList<Item>>? = null
+                private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
+
+                @JvmSynthetic
+                internal fun from(commissions: Commissions) = apply {
+                    count = commissions.count
+                    items = commissions.items.map { it.toMutableList() }
+                    additionalProperties = commissions.additionalProperties.toMutableMap()
+                }
+
+                fun count(count: Double) = count(JsonField.of(count))
+
+                /**
+                 * Sets [Builder.count] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.count] with a well-typed [Double] value instead.
+                 * This method is primarily for setting the field to an undocumented or not yet
+                 * supported value.
+                 */
+                fun count(count: JsonField<Double>) = apply { this.count = count }
+
+                fun items(items: List<Item>) = items(JsonField.of(items))
+
+                /**
+                 * Sets [Builder.items] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.items] with a well-typed `List<Item>` value
+                 * instead. This method is primarily for setting the field to an undocumented or not
+                 * yet supported value.
+                 */
+                fun items(items: JsonField<List<Item>>) = apply {
+                    this.items = items.map { it.toMutableList() }
+                }
+
+                /**
+                 * Adds a single [Item] to [items].
+                 *
+                 * @throws IllegalStateException if the field was previously set to a non-list.
+                 */
+                fun addItem(item: Item) = apply {
+                    items =
+                        (items ?: JsonField.of(mutableListOf())).also {
+                            checkKnown("items", it).add(item)
+                        }
+                }
+
+                fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                    this.additionalProperties.clear()
+                    putAllAdditionalProperties(additionalProperties)
+                }
+
+                fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+                    additionalProperties.put(key, value)
+                }
+
+                fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+                    apply {
+                        this.additionalProperties.putAll(additionalProperties)
+                    }
+
+                fun removeAdditionalProperty(key: String) = apply {
+                    additionalProperties.remove(key)
+                }
+
+                fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                    keys.forEach(::removeAdditionalProperty)
+                }
+
+                /**
+                 * Returns an immutable instance of [Commissions].
+                 *
+                 * Further updates to this [Builder] will not mutate the returned instance.
+                 *
+                 * The following fields are required:
+                 * ```java
+                 * .count()
+                 * .items()
+                 * ```
+                 *
+                 * @throws IllegalStateException if any required field is unset.
+                 */
+                fun build(): Commissions =
+                    Commissions(
+                        checkRequired("count", count),
+                        checkRequired("items", items).map { it.toImmutable() },
+                        additionalProperties.toMutableMap(),
+                    )
+            }
+
+            private var validated: Boolean = false
+
+            /**
+             * Validates that the types of all values in this object match their expected types
+             * recursively.
+             *
+             * This method is _not_ forwards compatible with new types from the API for existing
+             * fields.
+             *
+             * @throws CheckoutIntentsInvalidDataException if any value type in this object doesn't
+             *   match its expected type.
+             */
+            fun validate(): Commissions = apply {
+                if (validated) {
+                    return@apply
+                }
+
+                count()
+                items().forEach { it.validate() }
+                validated = true
+            }
+
+            fun isValid(): Boolean =
+                try {
+                    validate()
+                    true
+                } catch (e: CheckoutIntentsInvalidDataException) {
+                    false
+                }
+
+            /**
+             * Returns a score indicating how many valid values are contained in this object
+             * recursively.
+             *
+             * Used for best match union deserialization.
+             */
+            @JvmSynthetic
+            internal fun validity(): Int =
+                (if (count.asKnown().isPresent) 1 else 0) +
+                    (items.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0)
+
+            class Item
+            @JsonCreator(mode = JsonCreator.Mode.DISABLED)
+            private constructor(
+                private val id: JsonField<String>,
+                private val developerShareAmount: JsonField<Money>,
+                private val grossAmount: JsonField<Money>,
+                private val settlementDirection: JsonField<SettlementDirection>,
+                private val status: JsonField<Status>,
+                private val type: JsonField<Type>,
+                private val additionalProperties: MutableMap<String, JsonValue>,
+            ) {
+
+                @JsonCreator
+                private constructor(
+                    @JsonProperty("id") @ExcludeMissing id: JsonField<String> = JsonMissing.of(),
+                    @JsonProperty("developerShareAmount")
+                    @ExcludeMissing
+                    developerShareAmount: JsonField<Money> = JsonMissing.of(),
+                    @JsonProperty("grossAmount")
+                    @ExcludeMissing
+                    grossAmount: JsonField<Money> = JsonMissing.of(),
+                    @JsonProperty("settlementDirection")
+                    @ExcludeMissing
+                    settlementDirection: JsonField<SettlementDirection> = JsonMissing.of(),
+                    @JsonProperty("status")
+                    @ExcludeMissing
+                    status: JsonField<Status> = JsonMissing.of(),
+                    @JsonProperty("type") @ExcludeMissing type: JsonField<Type> = JsonMissing.of(),
+                ) : this(
+                    id,
+                    developerShareAmount,
+                    grossAmount,
+                    settlementDirection,
+                    status,
+                    type,
+                    mutableMapOf(),
+                )
+
+                /**
+                 * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected
+                 *   type or is unexpectedly missing or null (e.g. if the server responded with an
+                 *   unexpected value).
+                 */
+                fun id(): String = id.getRequired("id")
+
+                /**
+                 * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected
+                 *   type or is unexpectedly missing or null (e.g. if the server responded with an
+                 *   unexpected value).
+                 */
+                fun developerShareAmount(): Money =
+                    developerShareAmount.getRequired("developerShareAmount")
+
+                /**
+                 * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected
+                 *   type or is unexpectedly missing or null (e.g. if the server responded with an
+                 *   unexpected value).
+                 */
+                fun grossAmount(): Money = grossAmount.getRequired("grossAmount")
+
+                /**
+                 * Direction of settlement: who owes whom once the commission is finalized.
+                 *
+                 * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected
+                 *   type or is unexpectedly missing or null (e.g. if the server responded with an
+                 *   unexpected value).
+                 */
+                fun settlementDirection(): SettlementDirection =
+                    settlementDirection.getRequired("settlementDirection")
+
+                /**
+                 * Lifecycle status of a commission record.
+                 *
+                 * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected
+                 *   type or is unexpectedly missing or null (e.g. if the server responded with an
+                 *   unexpected value).
+                 */
+                fun status(): Status = status.getRequired("status")
+
+                /**
+                 * Type of commission earned on an order. Canonical definition used by both the API
+                 * contract and the internal `@rye-com/ci-commissions` package.
+                 *
+                 * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected
+                 *   type or is unexpectedly missing or null (e.g. if the server responded with an
+                 *   unexpected value).
+                 */
+                fun type(): Type = type.getRequired("type")
+
+                /**
+                 * Returns the raw JSON value of [id].
+                 *
+                 * Unlike [id], this method doesn't throw if the JSON field has an unexpected type.
+                 */
+                @JsonProperty("id") @ExcludeMissing fun _id(): JsonField<String> = id
+
+                /**
+                 * Returns the raw JSON value of [developerShareAmount].
+                 *
+                 * Unlike [developerShareAmount], this method doesn't throw if the JSON field has an
+                 * unexpected type.
+                 */
+                @JsonProperty("developerShareAmount")
+                @ExcludeMissing
+                fun _developerShareAmount(): JsonField<Money> = developerShareAmount
+
+                /**
+                 * Returns the raw JSON value of [grossAmount].
+                 *
+                 * Unlike [grossAmount], this method doesn't throw if the JSON field has an
+                 * unexpected type.
+                 */
+                @JsonProperty("grossAmount")
+                @ExcludeMissing
+                fun _grossAmount(): JsonField<Money> = grossAmount
+
+                /**
+                 * Returns the raw JSON value of [settlementDirection].
+                 *
+                 * Unlike [settlementDirection], this method doesn't throw if the JSON field has an
+                 * unexpected type.
+                 */
+                @JsonProperty("settlementDirection")
+                @ExcludeMissing
+                fun _settlementDirection(): JsonField<SettlementDirection> = settlementDirection
+
+                /**
+                 * Returns the raw JSON value of [status].
+                 *
+                 * Unlike [status], this method doesn't throw if the JSON field has an unexpected
+                 * type.
+                 */
+                @JsonProperty("status") @ExcludeMissing fun _status(): JsonField<Status> = status
+
+                /**
+                 * Returns the raw JSON value of [type].
+                 *
+                 * Unlike [type], this method doesn't throw if the JSON field has an unexpected
+                 * type.
+                 */
+                @JsonProperty("type") @ExcludeMissing fun _type(): JsonField<Type> = type
+
+                @JsonAnySetter
+                private fun putAdditionalProperty(key: String, value: JsonValue) {
+                    additionalProperties.put(key, value)
+                }
+
+                @JsonAnyGetter
+                @ExcludeMissing
+                fun _additionalProperties(): Map<String, JsonValue> =
+                    Collections.unmodifiableMap(additionalProperties)
+
+                fun toBuilder() = Builder().from(this)
+
+                companion object {
+
+                    /**
+                     * Returns a mutable builder for constructing an instance of [Item].
+                     *
+                     * The following fields are required:
+                     * ```java
+                     * .id()
+                     * .developerShareAmount()
+                     * .grossAmount()
+                     * .settlementDirection()
+                     * .status()
+                     * .type()
+                     * ```
+                     */
+                    @JvmStatic fun builder() = Builder()
+                }
+
+                /** A builder for [Item]. */
+                class Builder internal constructor() {
+
+                    private var id: JsonField<String>? = null
+                    private var developerShareAmount: JsonField<Money>? = null
+                    private var grossAmount: JsonField<Money>? = null
+                    private var settlementDirection: JsonField<SettlementDirection>? = null
+                    private var status: JsonField<Status>? = null
+                    private var type: JsonField<Type>? = null
+                    private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
+
+                    @JvmSynthetic
+                    internal fun from(item: Item) = apply {
+                        id = item.id
+                        developerShareAmount = item.developerShareAmount
+                        grossAmount = item.grossAmount
+                        settlementDirection = item.settlementDirection
+                        status = item.status
+                        type = item.type
+                        additionalProperties = item.additionalProperties.toMutableMap()
+                    }
+
+                    fun id(id: String) = id(JsonField.of(id))
+
+                    /**
+                     * Sets [Builder.id] to an arbitrary JSON value.
+                     *
+                     * You should usually call [Builder.id] with a well-typed [String] value
+                     * instead. This method is primarily for setting the field to an undocumented or
+                     * not yet supported value.
+                     */
+                    fun id(id: JsonField<String>) = apply { this.id = id }
+
+                    fun developerShareAmount(developerShareAmount: Money) =
+                        developerShareAmount(JsonField.of(developerShareAmount))
+
+                    /**
+                     * Sets [Builder.developerShareAmount] to an arbitrary JSON value.
+                     *
+                     * You should usually call [Builder.developerShareAmount] with a well-typed
+                     * [Money] value instead. This method is primarily for setting the field to an
+                     * undocumented or not yet supported value.
+                     */
+                    fun developerShareAmount(developerShareAmount: JsonField<Money>) = apply {
+                        this.developerShareAmount = developerShareAmount
+                    }
+
+                    fun grossAmount(grossAmount: Money) = grossAmount(JsonField.of(grossAmount))
+
+                    /**
+                     * Sets [Builder.grossAmount] to an arbitrary JSON value.
+                     *
+                     * You should usually call [Builder.grossAmount] with a well-typed [Money] value
+                     * instead. This method is primarily for setting the field to an undocumented or
+                     * not yet supported value.
+                     */
+                    fun grossAmount(grossAmount: JsonField<Money>) = apply {
+                        this.grossAmount = grossAmount
+                    }
+
+                    /** Direction of settlement: who owes whom once the commission is finalized. */
+                    fun settlementDirection(settlementDirection: SettlementDirection) =
+                        settlementDirection(JsonField.of(settlementDirection))
+
+                    /**
+                     * Sets [Builder.settlementDirection] to an arbitrary JSON value.
+                     *
+                     * You should usually call [Builder.settlementDirection] with a well-typed
+                     * [SettlementDirection] value instead. This method is primarily for setting the
+                     * field to an undocumented or not yet supported value.
+                     */
+                    fun settlementDirection(settlementDirection: JsonField<SettlementDirection>) =
+                        apply {
+                            this.settlementDirection = settlementDirection
+                        }
+
+                    /** Lifecycle status of a commission record. */
+                    fun status(status: Status) = status(JsonField.of(status))
+
+                    /**
+                     * Sets [Builder.status] to an arbitrary JSON value.
+                     *
+                     * You should usually call [Builder.status] with a well-typed [Status] value
+                     * instead. This method is primarily for setting the field to an undocumented or
+                     * not yet supported value.
+                     */
+                    fun status(status: JsonField<Status>) = apply { this.status = status }
+
+                    /**
+                     * Type of commission earned on an order. Canonical definition used by both the
+                     * API contract and the internal `@rye-com/ci-commissions` package.
+                     */
+                    fun type(type: Type) = type(JsonField.of(type))
+
+                    /**
+                     * Sets [Builder.type] to an arbitrary JSON value.
+                     *
+                     * You should usually call [Builder.type] with a well-typed [Type] value
+                     * instead. This method is primarily for setting the field to an undocumented or
+                     * not yet supported value.
+                     */
+                    fun type(type: JsonField<Type>) = apply { this.type = type }
+
+                    fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                        this.additionalProperties.clear()
+                        putAllAdditionalProperties(additionalProperties)
+                    }
+
+                    fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+                        additionalProperties.put(key, value)
+                    }
+
+                    fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+                        apply {
+                            this.additionalProperties.putAll(additionalProperties)
+                        }
+
+                    fun removeAdditionalProperty(key: String) = apply {
+                        additionalProperties.remove(key)
+                    }
+
+                    fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                        keys.forEach(::removeAdditionalProperty)
+                    }
+
+                    /**
+                     * Returns an immutable instance of [Item].
+                     *
+                     * Further updates to this [Builder] will not mutate the returned instance.
+                     *
+                     * The following fields are required:
+                     * ```java
+                     * .id()
+                     * .developerShareAmount()
+                     * .grossAmount()
+                     * .settlementDirection()
+                     * .status()
+                     * .type()
+                     * ```
+                     *
+                     * @throws IllegalStateException if any required field is unset.
+                     */
+                    fun build(): Item =
+                        Item(
+                            checkRequired("id", id),
+                            checkRequired("developerShareAmount", developerShareAmount),
+                            checkRequired("grossAmount", grossAmount),
+                            checkRequired("settlementDirection", settlementDirection),
+                            checkRequired("status", status),
+                            checkRequired("type", type),
+                            additionalProperties.toMutableMap(),
+                        )
+                }
+
+                private var validated: Boolean = false
+
+                /**
+                 * Validates that the types of all values in this object match their expected types
+                 * recursively.
+                 *
+                 * This method is _not_ forwards compatible with new types from the API for existing
+                 * fields.
+                 *
+                 * @throws CheckoutIntentsInvalidDataException if any value type in this object
+                 *   doesn't match its expected type.
+                 */
+                fun validate(): Item = apply {
+                    if (validated) {
+                        return@apply
+                    }
+
+                    id()
+                    developerShareAmount().validate()
+                    grossAmount().validate()
+                    settlementDirection().validate()
+                    status().validate()
+                    type().validate()
+                    validated = true
+                }
+
+                fun isValid(): Boolean =
+                    try {
+                        validate()
+                        true
+                    } catch (e: CheckoutIntentsInvalidDataException) {
+                        false
+                    }
+
+                /**
+                 * Returns a score indicating how many valid values are contained in this object
+                 * recursively.
+                 *
+                 * Used for best match union deserialization.
+                 */
+                @JvmSynthetic
+                internal fun validity(): Int =
+                    (if (id.asKnown().isPresent) 1 else 0) +
+                        (developerShareAmount.asKnown().getOrNull()?.validity() ?: 0) +
+                        (grossAmount.asKnown().getOrNull()?.validity() ?: 0) +
+                        (settlementDirection.asKnown().getOrNull()?.validity() ?: 0) +
+                        (status.asKnown().getOrNull()?.validity() ?: 0) +
+                        (type.asKnown().getOrNull()?.validity() ?: 0)
+
+                /** Direction of settlement: who owes whom once the commission is finalized. */
+                class SettlementDirection
+                @JsonCreator
+                private constructor(private val value: JsonField<String>) : Enum {
+
+                    /**
+                     * Returns this class instance's raw value.
+                     *
+                     * This is usually only useful if this instance was deserialized from data that
+                     * doesn't match any known member, and you want to know that value. For example,
+                     * if the SDK is on an older version than the API, then the API may respond with
+                     * new members that the SDK is unaware of.
+                     */
+                    @com.fasterxml.jackson.annotation.JsonValue
+                    fun _value(): JsonField<String> = value
+
+                    companion object {
+
+                        @JvmField val RYE_OWES_DEVELOPER = of("rye_owes_developer")
+
+                        @JvmField val DEVELOPER_OWES_RYE = of("developer_owes_rye")
+
+                        @JvmStatic fun of(value: String) = SettlementDirection(JsonField.of(value))
+                    }
+
+                    /** An enum containing [SettlementDirection]'s known values. */
+                    enum class Known {
+                        RYE_OWES_DEVELOPER,
+                        DEVELOPER_OWES_RYE,
+                    }
+
+                    /**
+                     * An enum containing [SettlementDirection]'s known values, as well as an
+                     * [_UNKNOWN] member.
+                     *
+                     * An instance of [SettlementDirection] can contain an unknown value in a couple
+                     * of cases:
+                     * - It was deserialized from data that doesn't match any known member. For
+                     *   example, if the SDK is on an older version than the API, then the API may
+                     *   respond with new members that the SDK is unaware of.
+                     * - It was constructed with an arbitrary value using the [of] method.
+                     */
+                    enum class Value {
+                        RYE_OWES_DEVELOPER,
+                        DEVELOPER_OWES_RYE,
+                        /**
+                         * An enum member indicating that [SettlementDirection] was instantiated
+                         * with an unknown value.
+                         */
+                        _UNKNOWN,
+                    }
+
+                    /**
+                     * Returns an enum member corresponding to this class instance's value, or
+                     * [Value._UNKNOWN] if the class was instantiated with an unknown value.
+                     *
+                     * Use the [known] method instead if you're certain the value is always known or
+                     * if you want to throw for the unknown case.
+                     */
+                    fun value(): Value =
+                        when (this) {
+                            RYE_OWES_DEVELOPER -> Value.RYE_OWES_DEVELOPER
+                            DEVELOPER_OWES_RYE -> Value.DEVELOPER_OWES_RYE
+                            else -> Value._UNKNOWN
+                        }
+
+                    /**
+                     * Returns an enum member corresponding to this class instance's value.
+                     *
+                     * Use the [value] method instead if you're uncertain the value is always known
+                     * and don't want to throw for the unknown case.
+                     *
+                     * @throws CheckoutIntentsInvalidDataException if this class instance's value is
+                     *   a not a known member.
+                     */
+                    fun known(): Known =
+                        when (this) {
+                            RYE_OWES_DEVELOPER -> Known.RYE_OWES_DEVELOPER
+                            DEVELOPER_OWES_RYE -> Known.DEVELOPER_OWES_RYE
+                            else ->
+                                throw CheckoutIntentsInvalidDataException(
+                                    "Unknown SettlementDirection: $value"
+                                )
+                        }
+
+                    /**
+                     * Returns this class instance's primitive wire representation.
+                     *
+                     * This differs from the [toString] method because that method is primarily for
+                     * debugging and generally doesn't throw.
+                     *
+                     * @throws CheckoutIntentsInvalidDataException if this class instance's value
+                     *   does not have the expected primitive type.
+                     */
+                    fun asString(): String =
+                        _value().asString().orElseThrow {
+                            CheckoutIntentsInvalidDataException("Value is not a String")
+                        }
+
+                    private var validated: Boolean = false
+
+                    /**
+                     * Validates that the types of all values in this object match their expected
+                     * types recursively.
+                     *
+                     * This method is _not_ forwards compatible with new types from the API for
+                     * existing fields.
+                     *
+                     * @throws CheckoutIntentsInvalidDataException if any value type in this object
+                     *   doesn't match its expected type.
+                     */
+                    fun validate(): SettlementDirection = apply {
+                        if (validated) {
+                            return@apply
+                        }
+
+                        known()
+                        validated = true
+                    }
+
+                    fun isValid(): Boolean =
+                        try {
+                            validate()
+                            true
+                        } catch (e: CheckoutIntentsInvalidDataException) {
+                            false
+                        }
+
+                    /**
+                     * Returns a score indicating how many valid values are contained in this object
+                     * recursively.
+                     *
+                     * Used for best match union deserialization.
+                     */
+                    @JvmSynthetic
+                    internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+
+                    override fun equals(other: Any?): Boolean {
+                        if (this === other) {
+                            return true
+                        }
+
+                        return other is SettlementDirection && value == other.value
+                    }
+
+                    override fun hashCode() = value.hashCode()
+
+                    override fun toString() = value.toString()
+                }
+
+                /** Lifecycle status of a commission record. */
+                class Status
+                @JsonCreator
+                private constructor(private val value: JsonField<String>) : Enum {
+
+                    /**
+                     * Returns this class instance's raw value.
+                     *
+                     * This is usually only useful if this instance was deserialized from data that
+                     * doesn't match any known member, and you want to know that value. For example,
+                     * if the SDK is on an older version than the API, then the API may respond with
+                     * new members that the SDK is unaware of.
+                     */
+                    @com.fasterxml.jackson.annotation.JsonValue
+                    fun _value(): JsonField<String> = value
+
+                    companion object {
+
+                        @JvmField val PENDING = of("pending")
+
+                        @JvmField val CONFIRMED = of("confirmed")
+
+                        @JvmField val UPDATED = of("updated")
+
+                        @JvmField val FINALIZED = of("finalized")
+
+                        @JvmField val REFUNDED = of("refunded")
+
+                        @JvmField val EXPIRED = of("expired")
+
+                        @JvmStatic fun of(value: String) = Status(JsonField.of(value))
+                    }
+
+                    /** An enum containing [Status]'s known values. */
+                    enum class Known {
+                        PENDING,
+                        CONFIRMED,
+                        UPDATED,
+                        FINALIZED,
+                        REFUNDED,
+                        EXPIRED,
+                    }
+
+                    /**
+                     * An enum containing [Status]'s known values, as well as an [_UNKNOWN] member.
+                     *
+                     * An instance of [Status] can contain an unknown value in a couple of cases:
+                     * - It was deserialized from data that doesn't match any known member. For
+                     *   example, if the SDK is on an older version than the API, then the API may
+                     *   respond with new members that the SDK is unaware of.
+                     * - It was constructed with an arbitrary value using the [of] method.
+                     */
+                    enum class Value {
+                        PENDING,
+                        CONFIRMED,
+                        UPDATED,
+                        FINALIZED,
+                        REFUNDED,
+                        EXPIRED,
+                        /**
+                         * An enum member indicating that [Status] was instantiated with an unknown
+                         * value.
+                         */
+                        _UNKNOWN,
+                    }
+
+                    /**
+                     * Returns an enum member corresponding to this class instance's value, or
+                     * [Value._UNKNOWN] if the class was instantiated with an unknown value.
+                     *
+                     * Use the [known] method instead if you're certain the value is always known or
+                     * if you want to throw for the unknown case.
+                     */
+                    fun value(): Value =
+                        when (this) {
+                            PENDING -> Value.PENDING
+                            CONFIRMED -> Value.CONFIRMED
+                            UPDATED -> Value.UPDATED
+                            FINALIZED -> Value.FINALIZED
+                            REFUNDED -> Value.REFUNDED
+                            EXPIRED -> Value.EXPIRED
+                            else -> Value._UNKNOWN
+                        }
+
+                    /**
+                     * Returns an enum member corresponding to this class instance's value.
+                     *
+                     * Use the [value] method instead if you're uncertain the value is always known
+                     * and don't want to throw for the unknown case.
+                     *
+                     * @throws CheckoutIntentsInvalidDataException if this class instance's value is
+                     *   a not a known member.
+                     */
+                    fun known(): Known =
+                        when (this) {
+                            PENDING -> Known.PENDING
+                            CONFIRMED -> Known.CONFIRMED
+                            UPDATED -> Known.UPDATED
+                            FINALIZED -> Known.FINALIZED
+                            REFUNDED -> Known.REFUNDED
+                            EXPIRED -> Known.EXPIRED
+                            else ->
+                                throw CheckoutIntentsInvalidDataException("Unknown Status: $value")
+                        }
+
+                    /**
+                     * Returns this class instance's primitive wire representation.
+                     *
+                     * This differs from the [toString] method because that method is primarily for
+                     * debugging and generally doesn't throw.
+                     *
+                     * @throws CheckoutIntentsInvalidDataException if this class instance's value
+                     *   does not have the expected primitive type.
+                     */
+                    fun asString(): String =
+                        _value().asString().orElseThrow {
+                            CheckoutIntentsInvalidDataException("Value is not a String")
+                        }
+
+                    private var validated: Boolean = false
+
+                    /**
+                     * Validates that the types of all values in this object match their expected
+                     * types recursively.
+                     *
+                     * This method is _not_ forwards compatible with new types from the API for
+                     * existing fields.
+                     *
+                     * @throws CheckoutIntentsInvalidDataException if any value type in this object
+                     *   doesn't match its expected type.
+                     */
+                    fun validate(): Status = apply {
+                        if (validated) {
+                            return@apply
+                        }
+
+                        known()
+                        validated = true
+                    }
+
+                    fun isValid(): Boolean =
+                        try {
+                            validate()
+                            true
+                        } catch (e: CheckoutIntentsInvalidDataException) {
+                            false
+                        }
+
+                    /**
+                     * Returns a score indicating how many valid values are contained in this object
+                     * recursively.
+                     *
+                     * Used for best match union deserialization.
+                     */
+                    @JvmSynthetic
+                    internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+
+                    override fun equals(other: Any?): Boolean {
+                        if (this === other) {
+                            return true
+                        }
+
+                        return other is Status && value == other.value
+                    }
+
+                    override fun hashCode() = value.hashCode()
+
+                    override fun toString() = value.toString()
+                }
+
+                /**
+                 * Type of commission earned on an order. Canonical definition used by both the API
+                 * contract and the internal `@rye-com/ci-commissions` package.
+                 */
+                class Type @JsonCreator private constructor(private val value: JsonField<String>) :
+                    Enum {
+
+                    /**
+                     * Returns this class instance's raw value.
+                     *
+                     * This is usually only useful if this instance was deserialized from data that
+                     * doesn't match any known member, and you want to know that value. For example,
+                     * if the SDK is on an older version than the API, then the API may respond with
+                     * new members that the SDK is unaware of.
+                     */
+                    @com.fasterxml.jackson.annotation.JsonValue
+                    fun _value(): JsonField<String> = value
+
+                    companion object {
+
+                        @JvmField val SURCHARGE = of("surcharge")
+
+                        @JvmField val PROMO_ARBITRAGE = of("promo_arbitrage")
+
+                        @JvmField val DISCOUNT_CODE = of("discount_code")
+
+                        @JvmField val AFFILIATE = of("affiliate")
+
+                        @JvmField val OUT_OF_BAND = of("out_of_band")
+
+                        @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+                    }
+
+                    /** An enum containing [Type]'s known values. */
+                    enum class Known {
+                        SURCHARGE,
+                        PROMO_ARBITRAGE,
+                        DISCOUNT_CODE,
+                        AFFILIATE,
+                        OUT_OF_BAND,
+                    }
+
+                    /**
+                     * An enum containing [Type]'s known values, as well as an [_UNKNOWN] member.
+                     *
+                     * An instance of [Type] can contain an unknown value in a couple of cases:
+                     * - It was deserialized from data that doesn't match any known member. For
+                     *   example, if the SDK is on an older version than the API, then the API may
+                     *   respond with new members that the SDK is unaware of.
+                     * - It was constructed with an arbitrary value using the [of] method.
+                     */
+                    enum class Value {
+                        SURCHARGE,
+                        PROMO_ARBITRAGE,
+                        DISCOUNT_CODE,
+                        AFFILIATE,
+                        OUT_OF_BAND,
+                        /**
+                         * An enum member indicating that [Type] was instantiated with an unknown
+                         * value.
+                         */
+                        _UNKNOWN,
+                    }
+
+                    /**
+                     * Returns an enum member corresponding to this class instance's value, or
+                     * [Value._UNKNOWN] if the class was instantiated with an unknown value.
+                     *
+                     * Use the [known] method instead if you're certain the value is always known or
+                     * if you want to throw for the unknown case.
+                     */
+                    fun value(): Value =
+                        when (this) {
+                            SURCHARGE -> Value.SURCHARGE
+                            PROMO_ARBITRAGE -> Value.PROMO_ARBITRAGE
+                            DISCOUNT_CODE -> Value.DISCOUNT_CODE
+                            AFFILIATE -> Value.AFFILIATE
+                            OUT_OF_BAND -> Value.OUT_OF_BAND
+                            else -> Value._UNKNOWN
+                        }
+
+                    /**
+                     * Returns an enum member corresponding to this class instance's value.
+                     *
+                     * Use the [value] method instead if you're uncertain the value is always known
+                     * and don't want to throw for the unknown case.
+                     *
+                     * @throws CheckoutIntentsInvalidDataException if this class instance's value is
+                     *   a not a known member.
+                     */
+                    fun known(): Known =
+                        when (this) {
+                            SURCHARGE -> Known.SURCHARGE
+                            PROMO_ARBITRAGE -> Known.PROMO_ARBITRAGE
+                            DISCOUNT_CODE -> Known.DISCOUNT_CODE
+                            AFFILIATE -> Known.AFFILIATE
+                            OUT_OF_BAND -> Known.OUT_OF_BAND
+                            else ->
+                                throw CheckoutIntentsInvalidDataException("Unknown Type: $value")
+                        }
+
+                    /**
+                     * Returns this class instance's primitive wire representation.
+                     *
+                     * This differs from the [toString] method because that method is primarily for
+                     * debugging and generally doesn't throw.
+                     *
+                     * @throws CheckoutIntentsInvalidDataException if this class instance's value
+                     *   does not have the expected primitive type.
+                     */
+                    fun asString(): String =
+                        _value().asString().orElseThrow {
+                            CheckoutIntentsInvalidDataException("Value is not a String")
+                        }
+
+                    private var validated: Boolean = false
+
+                    /**
+                     * Validates that the types of all values in this object match their expected
+                     * types recursively.
+                     *
+                     * This method is _not_ forwards compatible with new types from the API for
+                     * existing fields.
+                     *
+                     * @throws CheckoutIntentsInvalidDataException if any value type in this object
+                     *   doesn't match its expected type.
+                     */
+                    fun validate(): Type = apply {
+                        if (validated) {
+                            return@apply
+                        }
+
+                        known()
+                        validated = true
+                    }
+
+                    fun isValid(): Boolean =
+                        try {
+                            validate()
+                            true
+                        } catch (e: CheckoutIntentsInvalidDataException) {
+                            false
+                        }
+
+                    /**
+                     * Returns a score indicating how many valid values are contained in this object
+                     * recursively.
+                     *
+                     * Used for best match union deserialization.
+                     */
+                    @JvmSynthetic
+                    internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+
+                    override fun equals(other: Any?): Boolean {
+                        if (this === other) {
+                            return true
+                        }
+
+                        return other is Type && value == other.value
+                    }
+
+                    override fun hashCode() = value.hashCode()
+
+                    override fun toString() = value.toString()
+                }
+
+                override fun equals(other: Any?): Boolean {
+                    if (this === other) {
+                        return true
+                    }
+
+                    return other is Item &&
+                        id == other.id &&
+                        developerShareAmount == other.developerShareAmount &&
+                        grossAmount == other.grossAmount &&
+                        settlementDirection == other.settlementDirection &&
+                        status == other.status &&
+                        type == other.type &&
+                        additionalProperties == other.additionalProperties
+                }
+
+                private val hashCode: Int by lazy {
+                    Objects.hash(
+                        id,
+                        developerShareAmount,
+                        grossAmount,
+                        settlementDirection,
+                        status,
+                        type,
+                        additionalProperties,
+                    )
+                }
+
+                override fun hashCode(): Int = hashCode
+
+                override fun toString() =
+                    "Item{id=$id, developerShareAmount=$developerShareAmount, grossAmount=$grossAmount, settlementDirection=$settlementDirection, status=$status, type=$type, additionalProperties=$additionalProperties}"
+            }
+
+            override fun equals(other: Any?): Boolean {
+                if (this === other) {
+                    return true
+                }
+
+                return other is Commissions &&
+                    count == other.count &&
+                    items == other.items &&
+                    additionalProperties == other.additionalProperties
+            }
+
+            private val hashCode: Int by lazy { Objects.hash(count, items, additionalProperties) }
+
+            override fun hashCode(): Int = hashCode
+
+            override fun toString() =
+                "Commissions{count=$count, items=$items, additionalProperties=$additionalProperties}"
+        }
+
         override fun equals(other: Any?): Boolean {
             if (this === other) {
                 return true
@@ -5495,6 +6650,7 @@ private constructor(
                 orderId == other.orderId &&
                 paymentMethod == other.paymentMethod &&
                 state == other.state &&
+                commissions == other.commissions &&
                 estimatedDeliveryDate == other.estimatedDeliveryDate &&
                 additionalProperties == other.additionalProperties
         }
@@ -5514,6 +6670,7 @@ private constructor(
                 orderId,
                 paymentMethod,
                 state,
+                commissions,
                 estimatedDeliveryDate,
                 additionalProperties,
             )
@@ -5522,7 +6679,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "CompletedCheckoutIntent{id=$id, buyer=$buyer, createdAt=$createdAt, productUrl=$productUrl, quantity=$quantity, constraints=$constraints, discoverPromoCodes=$discoverPromoCodes, promoCodes=$promoCodes, variantSelections=$variantSelections, offer=$offer, orderId=$orderId, paymentMethod=$paymentMethod, state=$state, estimatedDeliveryDate=$estimatedDeliveryDate, additionalProperties=$additionalProperties}"
+            "CompletedCheckoutIntent{id=$id, buyer=$buyer, createdAt=$createdAt, productUrl=$productUrl, quantity=$quantity, constraints=$constraints, discoverPromoCodes=$discoverPromoCodes, promoCodes=$promoCodes, variantSelections=$variantSelections, offer=$offer, orderId=$orderId, paymentMethod=$paymentMethod, state=$state, commissions=$commissions, estimatedDeliveryDate=$estimatedDeliveryDate, additionalProperties=$additionalProperties}"
     }
 
     class FailedCheckoutIntent
