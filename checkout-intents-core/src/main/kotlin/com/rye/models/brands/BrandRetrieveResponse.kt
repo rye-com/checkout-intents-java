@@ -269,6 +269,8 @@ private constructor(
 
             @JvmField val BESTBUY = of("BESTBUY")
 
+            @JvmField val SEPHORA = of("SEPHORA")
+
             @JvmField val UNKNOWN = of("UNKNOWN")
 
             @JvmStatic fun of(value: String) = Marketplace(JsonField.of(value))
@@ -279,6 +281,7 @@ private constructor(
             AMAZON,
             SHOPIFY,
             BESTBUY,
+            SEPHORA,
             UNKNOWN,
         }
 
@@ -295,6 +298,7 @@ private constructor(
             AMAZON,
             SHOPIFY,
             BESTBUY,
+            SEPHORA,
             UNKNOWN,
             /**
              * An enum member indicating that [Marketplace] was instantiated with an unknown value.
@@ -314,6 +318,7 @@ private constructor(
                 AMAZON -> Value.AMAZON
                 SHOPIFY -> Value.SHOPIFY
                 BESTBUY -> Value.BESTBUY
+                SEPHORA -> Value.SEPHORA
                 UNKNOWN -> Value.UNKNOWN
                 else -> Value._UNKNOWN
             }
@@ -332,6 +337,7 @@ private constructor(
                 AMAZON -> Known.AMAZON
                 SHOPIFY -> Known.SHOPIFY
                 BESTBUY -> Known.BESTBUY
+                SEPHORA -> Known.SEPHORA
                 UNKNOWN -> Known.UNKNOWN
                 else -> throw CheckoutIntentsInvalidDataException("Unknown Marketplace: $value")
             }
