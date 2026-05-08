@@ -7576,6 +7576,8 @@ private constructor(
 
                     @JvmField val PAYMENT_FAILED = of("payment_failed")
 
+                    @JvmField val PAYMENT_CVC_EXPIRED = of("payment_cvc_expired")
+
                     @JvmField val INSUFFICIENT_STOCK = of("insufficient_stock")
 
                     @JvmField val PRODUCT_OUT_OF_STOCK = of("product_out_of_stock")
@@ -7629,6 +7631,7 @@ private constructor(
                     UNKNOWN,
                     CHECKOUT_INTENT_EXPIRED,
                     PAYMENT_FAILED,
+                    PAYMENT_CVC_EXPIRED,
                     INSUFFICIENT_STOCK,
                     PRODUCT_OUT_OF_STOCK,
                     OFFER_RETRIEVAL_FAILED,
@@ -7664,6 +7667,7 @@ private constructor(
                     UNKNOWN,
                     CHECKOUT_INTENT_EXPIRED,
                     PAYMENT_FAILED,
+                    PAYMENT_CVC_EXPIRED,
                     INSUFFICIENT_STOCK,
                     PRODUCT_OUT_OF_STOCK,
                     OFFER_RETRIEVAL_FAILED,
@@ -7702,6 +7706,7 @@ private constructor(
                         UNKNOWN -> Value.UNKNOWN
                         CHECKOUT_INTENT_EXPIRED -> Value.CHECKOUT_INTENT_EXPIRED
                         PAYMENT_FAILED -> Value.PAYMENT_FAILED
+                        PAYMENT_CVC_EXPIRED -> Value.PAYMENT_CVC_EXPIRED
                         INSUFFICIENT_STOCK -> Value.INSUFFICIENT_STOCK
                         PRODUCT_OUT_OF_STOCK -> Value.PRODUCT_OUT_OF_STOCK
                         OFFER_RETRIEVAL_FAILED -> Value.OFFER_RETRIEVAL_FAILED
@@ -7740,6 +7745,7 @@ private constructor(
                         UNKNOWN -> Known.UNKNOWN
                         CHECKOUT_INTENT_EXPIRED -> Known.CHECKOUT_INTENT_EXPIRED
                         PAYMENT_FAILED -> Known.PAYMENT_FAILED
+                        PAYMENT_CVC_EXPIRED -> Known.PAYMENT_CVC_EXPIRED
                         INSUFFICIENT_STOCK -> Known.INSUFFICIENT_STOCK
                         PRODUCT_OUT_OF_STOCK -> Known.PRODUCT_OUT_OF_STOCK
                         OFFER_RETRIEVAL_FAILED -> Known.OFFER_RETRIEVAL_FAILED
