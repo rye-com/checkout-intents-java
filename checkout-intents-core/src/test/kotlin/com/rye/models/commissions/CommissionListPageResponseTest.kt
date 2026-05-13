@@ -20,16 +20,10 @@ internal class CommissionListPageResponseTest {
                         .id("id")
                         .checkoutIntentId("checkoutIntentId")
                         .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                        .developerShareAmount(
+                        .developerCommission(
                             Money.builder().amountSubunits(1500).currencyCode("USD").build()
                         )
-                        .developerSharePercent(0.0)
-                        .grossAmount(
-                            Money.builder().amountSubunits(1500).currencyCode("USD").build()
-                        )
-                        .ryeShareAmount(
-                            Money.builder().amountSubunits(1500).currencyCode("USD").build()
-                        )
+                        .ryeFee(Money.builder().amountSubunits(1500).currencyCode("USD").build())
                         .settlementDirection(SettlementDirection.RYE_OWES_DEVELOPER)
                         .status(CommissionStatus.PENDING)
                         .type(CommissionType.SURCHARGE)
@@ -53,14 +47,10 @@ internal class CommissionListPageResponseTest {
                     .id("id")
                     .checkoutIntentId("checkoutIntentId")
                     .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                    .developerShareAmount(
+                    .developerCommission(
                         Money.builder().amountSubunits(1500).currencyCode("USD").build()
                     )
-                    .developerSharePercent(0.0)
-                    .grossAmount(Money.builder().amountSubunits(1500).currencyCode("USD").build())
-                    .ryeShareAmount(
-                        Money.builder().amountSubunits(1500).currencyCode("USD").build()
-                    )
+                    .ryeFee(Money.builder().amountSubunits(1500).currencyCode("USD").build())
                     .settlementDirection(SettlementDirection.RYE_OWES_DEVELOPER)
                     .status(CommissionStatus.PENDING)
                     .type(CommissionType.SURCHARGE)
@@ -89,16 +79,10 @@ internal class CommissionListPageResponseTest {
                         .id("id")
                         .checkoutIntentId("checkoutIntentId")
                         .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                        .developerShareAmount(
+                        .developerCommission(
                             Money.builder().amountSubunits(1500).currencyCode("USD").build()
                         )
-                        .developerSharePercent(0.0)
-                        .grossAmount(
-                            Money.builder().amountSubunits(1500).currencyCode("USD").build()
-                        )
-                        .ryeShareAmount(
-                            Money.builder().amountSubunits(1500).currencyCode("USD").build()
-                        )
+                        .ryeFee(Money.builder().amountSubunits(1500).currencyCode("USD").build())
                         .settlementDirection(SettlementDirection.RYE_OWES_DEVELOPER)
                         .status(CommissionStatus.PENDING)
                         .type(CommissionType.SURCHARGE)

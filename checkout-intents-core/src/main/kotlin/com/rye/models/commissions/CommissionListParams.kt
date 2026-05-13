@@ -20,6 +20,7 @@ class CommissionListParams
 private constructor(
     private val after: String?,
     private val before: String?,
+    private val checkoutIntentId: String?,
     private val limit: Int?,
     private val status: CommissionStatus?,
     private val type: CommissionType?,
@@ -32,6 +33,8 @@ private constructor(
 
     /** Cursor from a previous response's `pageInfo.startCursor` */
     fun before(): Optional<String> = Optional.ofNullable(before)
+
+    fun checkoutIntentId(): Optional<String> = Optional.ofNullable(checkoutIntentId)
 
     /** Maximum number of results to return (default 100) */
     fun limit(): Optional<Int> = Optional.ofNullable(limit)
@@ -66,6 +69,7 @@ private constructor(
 
         private var after: String? = null
         private var before: String? = null
+        private var checkoutIntentId: String? = null
         private var limit: Int? = null
         private var status: CommissionStatus? = null
         private var type: CommissionType? = null
@@ -76,6 +80,7 @@ private constructor(
         internal fun from(commissionListParams: CommissionListParams) = apply {
             after = commissionListParams.after
             before = commissionListParams.before
+            checkoutIntentId = commissionListParams.checkoutIntentId
             limit = commissionListParams.limit
             status = commissionListParams.status
             type = commissionListParams.type
@@ -94,6 +99,14 @@ private constructor(
 
         /** Alias for calling [Builder.before] with `before.orElse(null)`. */
         fun before(before: Optional<String>) = before(before.getOrNull())
+
+        fun checkoutIntentId(checkoutIntentId: String?) = apply {
+            this.checkoutIntentId = checkoutIntentId
+        }
+
+        /** Alias for calling [Builder.checkoutIntentId] with `checkoutIntentId.orElse(null)`. */
+        fun checkoutIntentId(checkoutIntentId: Optional<String>) =
+            checkoutIntentId(checkoutIntentId.getOrNull())
 
         /** Maximum number of results to return (default 100) */
         fun limit(limit: Int?) = apply { this.limit = limit }
@@ -230,6 +243,7 @@ private constructor(
             CommissionListParams(
                 after,
                 before,
+                checkoutIntentId,
                 limit,
                 status,
                 type,
@@ -245,6 +259,7 @@ private constructor(
             .apply {
                 after?.let { put("after", it) }
                 before?.let { put("before", it) }
+                checkoutIntentId?.let { put("checkoutIntentId", it) }
                 limit?.let { put("limit", it.toString()) }
                 status?.let { put("status", it.toString()) }
                 type?.let { put("type", it.toString()) }
@@ -260,6 +275,7 @@ private constructor(
         return other is CommissionListParams &&
             after == other.after &&
             before == other.before &&
+            checkoutIntentId == other.checkoutIntentId &&
             limit == other.limit &&
             status == other.status &&
             type == other.type &&
@@ -268,8 +284,17 @@ private constructor(
     }
 
     override fun hashCode(): Int =
-        Objects.hash(after, before, limit, status, type, additionalHeaders, additionalQueryParams)
+        Objects.hash(
+            after,
+            before,
+            checkoutIntentId,
+            limit,
+            status,
+            type,
+            additionalHeaders,
+            additionalQueryParams,
+        )
 
     override fun toString() =
-        "CommissionListParams{after=$after, before=$before, limit=$limit, status=$status, type=$type, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "CommissionListParams{after=$after, before=$before, checkoutIntentId=$checkoutIntentId, limit=$limit, status=$status, type=$type, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

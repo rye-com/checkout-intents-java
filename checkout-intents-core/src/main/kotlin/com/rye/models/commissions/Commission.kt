@@ -26,10 +26,8 @@ private constructor(
     private val id: JsonField<String>,
     private val checkoutIntentId: JsonField<String>,
     private val createdAt: JsonField<OffsetDateTime>,
-    private val developerShareAmount: JsonField<Money>,
-    private val developerSharePercent: JsonField<Double>,
-    private val grossAmount: JsonField<Money>,
-    private val ryeShareAmount: JsonField<Money>,
+    private val developerCommission: JsonField<Money>,
+    private val ryeFee: JsonField<Money>,
     private val settlementDirection: JsonField<SettlementDirection>,
     private val status: JsonField<CommissionStatus>,
     private val type: JsonField<CommissionType>,
@@ -47,18 +45,10 @@ private constructor(
         @JsonProperty("createdAt")
         @ExcludeMissing
         createdAt: JsonField<OffsetDateTime> = JsonMissing.of(),
-        @JsonProperty("developerShareAmount")
+        @JsonProperty("developerCommission")
         @ExcludeMissing
-        developerShareAmount: JsonField<Money> = JsonMissing.of(),
-        @JsonProperty("developerSharePercent")
-        @ExcludeMissing
-        developerSharePercent: JsonField<Double> = JsonMissing.of(),
-        @JsonProperty("grossAmount")
-        @ExcludeMissing
-        grossAmount: JsonField<Money> = JsonMissing.of(),
-        @JsonProperty("ryeShareAmount")
-        @ExcludeMissing
-        ryeShareAmount: JsonField<Money> = JsonMissing.of(),
+        developerCommission: JsonField<Money> = JsonMissing.of(),
+        @JsonProperty("ryeFee") @ExcludeMissing ryeFee: JsonField<Money> = JsonMissing.of(),
         @JsonProperty("settlementDirection")
         @ExcludeMissing
         settlementDirection: JsonField<SettlementDirection> = JsonMissing.of(),
@@ -76,10 +66,8 @@ private constructor(
         id,
         checkoutIntentId,
         createdAt,
-        developerShareAmount,
-        developerSharePercent,
-        grossAmount,
-        ryeShareAmount,
+        developerCommission,
+        ryeFee,
         settlementDirection,
         status,
         type,
@@ -113,36 +101,20 @@ private constructor(
     fun createdAt(): OffsetDateTime = createdAt.getRequired("createdAt")
 
     /**
-     * Portion of `grossAmount` allocated to the developer.
+     * Commission amount paid to the developer.
      *
      * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
-    fun developerShareAmount(): Money = developerShareAmount.getRequired("developerShareAmount")
+    fun developerCommission(): Money = developerCommission.getRequired("developerCommission")
 
     /**
-     * Developer's share of `grossAmount` expressed as a percentage (0–100).
+     * Fee retained by Rye.
      *
      * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
-    fun developerSharePercent(): Double = developerSharePercent.getRequired("developerSharePercent")
-
-    /**
-     * Gross commission amount before splitting between developer and Rye.
-     *
-     * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-     */
-    fun grossAmount(): Money = grossAmount.getRequired("grossAmount")
-
-    /**
-     * Portion of `grossAmount` allocated to Rye.
-     *
-     * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-     */
-    fun ryeShareAmount(): Money = ryeShareAmount.getRequired("ryeShareAmount")
+    fun ryeFee(): Money = ryeFee.getRequired("ryeFee")
 
     /**
      * Whether Rye owes the developer or vice versa once settled.
@@ -212,40 +184,21 @@ private constructor(
     fun _createdAt(): JsonField<OffsetDateTime> = createdAt
 
     /**
-     * Returns the raw JSON value of [developerShareAmount].
+     * Returns the raw JSON value of [developerCommission].
      *
-     * Unlike [developerShareAmount], this method doesn't throw if the JSON field has an unexpected
+     * Unlike [developerCommission], this method doesn't throw if the JSON field has an unexpected
      * type.
      */
-    @JsonProperty("developerShareAmount")
+    @JsonProperty("developerCommission")
     @ExcludeMissing
-    fun _developerShareAmount(): JsonField<Money> = developerShareAmount
+    fun _developerCommission(): JsonField<Money> = developerCommission
 
     /**
-     * Returns the raw JSON value of [developerSharePercent].
+     * Returns the raw JSON value of [ryeFee].
      *
-     * Unlike [developerSharePercent], this method doesn't throw if the JSON field has an unexpected
-     * type.
+     * Unlike [ryeFee], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("developerSharePercent")
-    @ExcludeMissing
-    fun _developerSharePercent(): JsonField<Double> = developerSharePercent
-
-    /**
-     * Returns the raw JSON value of [grossAmount].
-     *
-     * Unlike [grossAmount], this method doesn't throw if the JSON field has an unexpected type.
-     */
-    @JsonProperty("grossAmount") @ExcludeMissing fun _grossAmount(): JsonField<Money> = grossAmount
-
-    /**
-     * Returns the raw JSON value of [ryeShareAmount].
-     *
-     * Unlike [ryeShareAmount], this method doesn't throw if the JSON field has an unexpected type.
-     */
-    @JsonProperty("ryeShareAmount")
-    @ExcludeMissing
-    fun _ryeShareAmount(): JsonField<Money> = ryeShareAmount
+    @JsonProperty("ryeFee") @ExcludeMissing fun _ryeFee(): JsonField<Money> = ryeFee
 
     /**
      * Returns the raw JSON value of [settlementDirection].
@@ -311,10 +264,8 @@ private constructor(
          * .id()
          * .checkoutIntentId()
          * .createdAt()
-         * .developerShareAmount()
-         * .developerSharePercent()
-         * .grossAmount()
-         * .ryeShareAmount()
+         * .developerCommission()
+         * .ryeFee()
          * .settlementDirection()
          * .status()
          * .type()
@@ -330,10 +281,8 @@ private constructor(
         private var id: JsonField<String>? = null
         private var checkoutIntentId: JsonField<String>? = null
         private var createdAt: JsonField<OffsetDateTime>? = null
-        private var developerShareAmount: JsonField<Money>? = null
-        private var developerSharePercent: JsonField<Double>? = null
-        private var grossAmount: JsonField<Money>? = null
-        private var ryeShareAmount: JsonField<Money>? = null
+        private var developerCommission: JsonField<Money>? = null
+        private var ryeFee: JsonField<Money>? = null
         private var settlementDirection: JsonField<SettlementDirection>? = null
         private var status: JsonField<CommissionStatus>? = null
         private var type: JsonField<CommissionType>? = null
@@ -346,10 +295,8 @@ private constructor(
             id = commission.id
             checkoutIntentId = commission.checkoutIntentId
             createdAt = commission.createdAt
-            developerShareAmount = commission.developerShareAmount
-            developerSharePercent = commission.developerSharePercent
-            grossAmount = commission.grossAmount
-            ryeShareAmount = commission.ryeShareAmount
+            developerCommission = commission.developerCommission
+            ryeFee = commission.ryeFee
             settlementDirection = commission.settlementDirection
             status = commission.status
             type = commission.type
@@ -396,61 +343,31 @@ private constructor(
          */
         fun createdAt(createdAt: JsonField<OffsetDateTime>) = apply { this.createdAt = createdAt }
 
-        /** Portion of `grossAmount` allocated to the developer. */
-        fun developerShareAmount(developerShareAmount: Money) =
-            developerShareAmount(JsonField.of(developerShareAmount))
+        /** Commission amount paid to the developer. */
+        fun developerCommission(developerCommission: Money) =
+            developerCommission(JsonField.of(developerCommission))
 
         /**
-         * Sets [Builder.developerShareAmount] to an arbitrary JSON value.
+         * Sets [Builder.developerCommission] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.developerShareAmount] with a well-typed [Money] value
+         * You should usually call [Builder.developerCommission] with a well-typed [Money] value
          * instead. This method is primarily for setting the field to an undocumented or not yet
          * supported value.
          */
-        fun developerShareAmount(developerShareAmount: JsonField<Money>) = apply {
-            this.developerShareAmount = developerShareAmount
+        fun developerCommission(developerCommission: JsonField<Money>) = apply {
+            this.developerCommission = developerCommission
         }
 
-        /** Developer's share of `grossAmount` expressed as a percentage (0–100). */
-        fun developerSharePercent(developerSharePercent: Double) =
-            developerSharePercent(JsonField.of(developerSharePercent))
+        /** Fee retained by Rye. */
+        fun ryeFee(ryeFee: Money) = ryeFee(JsonField.of(ryeFee))
 
         /**
-         * Sets [Builder.developerSharePercent] to an arbitrary JSON value.
+         * Sets [Builder.ryeFee] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.developerSharePercent] with a well-typed [Double] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
-         * supported value.
+         * You should usually call [Builder.ryeFee] with a well-typed [Money] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
          */
-        fun developerSharePercent(developerSharePercent: JsonField<Double>) = apply {
-            this.developerSharePercent = developerSharePercent
-        }
-
-        /** Gross commission amount before splitting between developer and Rye. */
-        fun grossAmount(grossAmount: Money) = grossAmount(JsonField.of(grossAmount))
-
-        /**
-         * Sets [Builder.grossAmount] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.grossAmount] with a well-typed [Money] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
-         */
-        fun grossAmount(grossAmount: JsonField<Money>) = apply { this.grossAmount = grossAmount }
-
-        /** Portion of `grossAmount` allocated to Rye. */
-        fun ryeShareAmount(ryeShareAmount: Money) = ryeShareAmount(JsonField.of(ryeShareAmount))
-
-        /**
-         * Sets [Builder.ryeShareAmount] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.ryeShareAmount] with a well-typed [Money] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
-         */
-        fun ryeShareAmount(ryeShareAmount: JsonField<Money>) = apply {
-            this.ryeShareAmount = ryeShareAmount
-        }
+        fun ryeFee(ryeFee: JsonField<Money>) = apply { this.ryeFee = ryeFee }
 
         /** Whether Rye owes the developer or vice versa once settled. */
         fun settlementDirection(settlementDirection: SettlementDirection) =
@@ -546,10 +463,8 @@ private constructor(
          * .id()
          * .checkoutIntentId()
          * .createdAt()
-         * .developerShareAmount()
-         * .developerSharePercent()
-         * .grossAmount()
-         * .ryeShareAmount()
+         * .developerCommission()
+         * .ryeFee()
          * .settlementDirection()
          * .status()
          * .type()
@@ -563,10 +478,8 @@ private constructor(
                 checkRequired("id", id),
                 checkRequired("checkoutIntentId", checkoutIntentId),
                 checkRequired("createdAt", createdAt),
-                checkRequired("developerShareAmount", developerShareAmount),
-                checkRequired("developerSharePercent", developerSharePercent),
-                checkRequired("grossAmount", grossAmount),
-                checkRequired("ryeShareAmount", ryeShareAmount),
+                checkRequired("developerCommission", developerCommission),
+                checkRequired("ryeFee", ryeFee),
                 checkRequired("settlementDirection", settlementDirection),
                 checkRequired("status", status),
                 checkRequired("type", type),
@@ -594,10 +507,8 @@ private constructor(
         id()
         checkoutIntentId()
         createdAt()
-        developerShareAmount().validate()
-        developerSharePercent()
-        grossAmount().validate()
-        ryeShareAmount().validate()
+        developerCommission().validate()
+        ryeFee().validate()
         settlementDirection().validate()
         status().validate()
         type().validate()
@@ -624,10 +535,8 @@ private constructor(
         (if (id.asKnown().isPresent) 1 else 0) +
             (if (checkoutIntentId.asKnown().isPresent) 1 else 0) +
             (if (createdAt.asKnown().isPresent) 1 else 0) +
-            (developerShareAmount.asKnown().getOrNull()?.validity() ?: 0) +
-            (if (developerSharePercent.asKnown().isPresent) 1 else 0) +
-            (grossAmount.asKnown().getOrNull()?.validity() ?: 0) +
-            (ryeShareAmount.asKnown().getOrNull()?.validity() ?: 0) +
+            (developerCommission.asKnown().getOrNull()?.validity() ?: 0) +
+            (ryeFee.asKnown().getOrNull()?.validity() ?: 0) +
             (settlementDirection.asKnown().getOrNull()?.validity() ?: 0) +
             (status.asKnown().getOrNull()?.validity() ?: 0) +
             (type.asKnown().getOrNull()?.validity() ?: 0) +
@@ -643,10 +552,8 @@ private constructor(
             id == other.id &&
             checkoutIntentId == other.checkoutIntentId &&
             createdAt == other.createdAt &&
-            developerShareAmount == other.developerShareAmount &&
-            developerSharePercent == other.developerSharePercent &&
-            grossAmount == other.grossAmount &&
-            ryeShareAmount == other.ryeShareAmount &&
+            developerCommission == other.developerCommission &&
+            ryeFee == other.ryeFee &&
             settlementDirection == other.settlementDirection &&
             status == other.status &&
             type == other.type &&
@@ -660,10 +567,8 @@ private constructor(
             id,
             checkoutIntentId,
             createdAt,
-            developerShareAmount,
-            developerSharePercent,
-            grossAmount,
-            ryeShareAmount,
+            developerCommission,
+            ryeFee,
             settlementDirection,
             status,
             type,
@@ -676,5 +581,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "Commission{id=$id, checkoutIntentId=$checkoutIntentId, createdAt=$createdAt, developerShareAmount=$developerShareAmount, developerSharePercent=$developerSharePercent, grossAmount=$grossAmount, ryeShareAmount=$ryeShareAmount, settlementDirection=$settlementDirection, status=$status, type=$type, updatedAt=$updatedAt, finalizedAt=$finalizedAt, additionalProperties=$additionalProperties}"
+        "Commission{id=$id, checkoutIntentId=$checkoutIntentId, createdAt=$createdAt, developerCommission=$developerCommission, ryeFee=$ryeFee, settlementDirection=$settlementDirection, status=$status, type=$type, updatedAt=$updatedAt, finalizedAt=$finalizedAt, additionalProperties=$additionalProperties}"
 }
