@@ -12,6 +12,8 @@ import com.rye.services.blocking.BrandService
 import com.rye.services.blocking.BrandServiceImpl
 import com.rye.services.blocking.CheckoutIntentService
 import com.rye.services.blocking.CheckoutIntentServiceImpl
+import com.rye.services.blocking.CommissionService
+import com.rye.services.blocking.CommissionServiceImpl
 import com.rye.services.blocking.EventService
 import com.rye.services.blocking.EventServiceImpl
 import com.rye.services.blocking.MerchantConnectorService
@@ -57,6 +59,10 @@ class CheckoutIntentsClientImpl(private val clientOptions: ClientOptions) : Chec
         ShipmentServiceImpl(clientOptionsWithUserAgent)
     }
 
+    private val commissions: CommissionService by lazy {
+        CommissionServiceImpl(clientOptionsWithUserAgent)
+    }
+
     private val paymentGateways: PaymentGatewayService by lazy {
         PaymentGatewayServiceImpl(clientOptionsWithUserAgent)
     }
@@ -85,6 +91,8 @@ class CheckoutIntentsClientImpl(private val clientOptions: ClientOptions) : Chec
     override fun products(): ProductService = products
 
     override fun shipments(): ShipmentService = shipments
+
+    override fun commissions(): CommissionService = commissions
 
     override fun paymentGateways(): PaymentGatewayService = paymentGateways
 
@@ -119,6 +127,10 @@ class CheckoutIntentsClientImpl(private val clientOptions: ClientOptions) : Chec
             ShipmentServiceImpl.WithRawResponseImpl(clientOptions)
         }
 
+        private val commissions: CommissionService.WithRawResponse by lazy {
+            CommissionServiceImpl.WithRawResponseImpl(clientOptions)
+        }
+
         private val paymentGateways: PaymentGatewayService.WithRawResponse by lazy {
             PaymentGatewayServiceImpl.WithRawResponseImpl(clientOptions)
         }
@@ -151,6 +163,8 @@ class CheckoutIntentsClientImpl(private val clientOptions: ClientOptions) : Chec
         override fun products(): ProductService.WithRawResponse = products
 
         override fun shipments(): ShipmentService.WithRawResponse = shipments
+
+        override fun commissions(): CommissionService.WithRawResponse = commissions
 
         override fun paymentGateways(): PaymentGatewayService.WithRawResponse = paymentGateways
 
