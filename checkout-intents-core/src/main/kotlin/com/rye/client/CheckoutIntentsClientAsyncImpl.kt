@@ -12,6 +12,8 @@ import com.rye.services.async.BrandServiceAsync
 import com.rye.services.async.BrandServiceAsyncImpl
 import com.rye.services.async.CheckoutIntentServiceAsync
 import com.rye.services.async.CheckoutIntentServiceAsyncImpl
+import com.rye.services.async.CommissionServiceAsync
+import com.rye.services.async.CommissionServiceAsyncImpl
 import com.rye.services.async.EventServiceAsync
 import com.rye.services.async.EventServiceAsyncImpl
 import com.rye.services.async.MerchantConnectorServiceAsync
@@ -60,6 +62,10 @@ class CheckoutIntentsClientAsyncImpl(private val clientOptions: ClientOptions) :
         ShipmentServiceAsyncImpl(clientOptionsWithUserAgent)
     }
 
+    private val commissions: CommissionServiceAsync by lazy {
+        CommissionServiceAsyncImpl(clientOptionsWithUserAgent)
+    }
+
     private val paymentGateways: PaymentGatewayServiceAsync by lazy {
         PaymentGatewayServiceAsyncImpl(clientOptionsWithUserAgent)
     }
@@ -95,6 +101,8 @@ class CheckoutIntentsClientAsyncImpl(private val clientOptions: ClientOptions) :
 
     override fun shipments(): ShipmentServiceAsync = shipments
 
+    override fun commissions(): CommissionServiceAsync = commissions
+
     override fun paymentGateways(): PaymentGatewayServiceAsync = paymentGateways
 
     override fun billing(): BillingServiceAsync = billing
@@ -126,6 +134,10 @@ class CheckoutIntentsClientAsyncImpl(private val clientOptions: ClientOptions) :
 
         private val shipments: ShipmentServiceAsync.WithRawResponse by lazy {
             ShipmentServiceAsyncImpl.WithRawResponseImpl(clientOptions)
+        }
+
+        private val commissions: CommissionServiceAsync.WithRawResponse by lazy {
+            CommissionServiceAsyncImpl.WithRawResponseImpl(clientOptions)
         }
 
         private val paymentGateways: PaymentGatewayServiceAsync.WithRawResponse by lazy {
@@ -160,6 +172,8 @@ class CheckoutIntentsClientAsyncImpl(private val clientOptions: ClientOptions) :
         override fun products(): ProductServiceAsync.WithRawResponse = products
 
         override fun shipments(): ShipmentServiceAsync.WithRawResponse = shipments
+
+        override fun commissions(): CommissionServiceAsync.WithRawResponse = commissions
 
         override fun paymentGateways(): PaymentGatewayServiceAsync.WithRawResponse = paymentGateways
 

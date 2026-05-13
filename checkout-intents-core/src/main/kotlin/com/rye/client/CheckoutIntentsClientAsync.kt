@@ -7,6 +7,7 @@ import com.rye.services.async.BetaServiceAsync
 import com.rye.services.async.BillingServiceAsync
 import com.rye.services.async.BrandServiceAsync
 import com.rye.services.async.CheckoutIntentServiceAsync
+import com.rye.services.async.CommissionServiceAsync
 import com.rye.services.async.EventServiceAsync
 import com.rye.services.async.MerchantConnectorServiceAsync
 import com.rye.services.async.PaymentGatewayServiceAsync
@@ -60,6 +61,8 @@ interface CheckoutIntentsClientAsync {
 
     fun shipments(): ShipmentServiceAsync
 
+    fun commissions(): CommissionServiceAsync
+
     fun paymentGateways(): PaymentGatewayServiceAsync
 
     fun billing(): BillingServiceAsync
@@ -105,6 +108,8 @@ interface CheckoutIntentsClientAsync {
         fun products(): ProductServiceAsync.WithRawResponse
 
         fun shipments(): ShipmentServiceAsync.WithRawResponse
+
+        fun commissions(): CommissionServiceAsync.WithRawResponse
 
         fun paymentGateways(): PaymentGatewayServiceAsync.WithRawResponse
 
