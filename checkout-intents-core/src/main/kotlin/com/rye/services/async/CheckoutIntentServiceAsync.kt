@@ -6,7 +6,6 @@ import com.rye.core.ClientOptions
 import com.rye.core.RequestOptions
 import com.rye.core.http.HttpResponseFor
 import com.rye.models.checkoutintents.CheckoutIntent
-import com.rye.models.checkoutintents.CheckoutIntentAddPaymentParams
 import com.rye.models.checkoutintents.CheckoutIntentConfirmParams
 import com.rye.models.checkoutintents.CheckoutIntentCreateParams
 import com.rye.models.checkoutintents.CheckoutIntentListPageAsync
@@ -102,30 +101,6 @@ interface CheckoutIntentServiceAsync {
     /** @see list */
     fun list(requestOptions: RequestOptions): CompletableFuture<CheckoutIntentListPageAsync> =
         list(CheckoutIntentListParams.none(), requestOptions)
-
-    /** Add payment details to a checkout intent */
-    fun addPayment(
-        id: String,
-        params: CheckoutIntentAddPaymentParams,
-    ): CompletableFuture<CheckoutIntent> = addPayment(id, params, RequestOptions.none())
-
-    /** @see addPayment */
-    fun addPayment(
-        id: String,
-        params: CheckoutIntentAddPaymentParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<CheckoutIntent> =
-        addPayment(params.toBuilder().id(id).build(), requestOptions)
-
-    /** @see addPayment */
-    fun addPayment(params: CheckoutIntentAddPaymentParams): CompletableFuture<CheckoutIntent> =
-        addPayment(params, RequestOptions.none())
-
-    /** @see addPayment */
-    fun addPayment(
-        params: CheckoutIntentAddPaymentParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<CheckoutIntent>
 
     /**
      * Confirm a checkout intent with provided payment information
@@ -269,36 +244,6 @@ interface CheckoutIntentServiceAsync {
             requestOptions: RequestOptions
         ): CompletableFuture<HttpResponseFor<CheckoutIntentListPageAsync>> =
             list(CheckoutIntentListParams.none(), requestOptions)
-
-        /**
-         * Returns a raw HTTP response for `post /api/v1/checkout-intents/{id}/payment`, but is
-         * otherwise the same as [CheckoutIntentServiceAsync.addPayment].
-         */
-        fun addPayment(
-            id: String,
-            params: CheckoutIntentAddPaymentParams,
-        ): CompletableFuture<HttpResponseFor<CheckoutIntent>> =
-            addPayment(id, params, RequestOptions.none())
-
-        /** @see addPayment */
-        fun addPayment(
-            id: String,
-            params: CheckoutIntentAddPaymentParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<CheckoutIntent>> =
-            addPayment(params.toBuilder().id(id).build(), requestOptions)
-
-        /** @see addPayment */
-        fun addPayment(
-            params: CheckoutIntentAddPaymentParams
-        ): CompletableFuture<HttpResponseFor<CheckoutIntent>> =
-            addPayment(params, RequestOptions.none())
-
-        /** @see addPayment */
-        fun addPayment(
-            params: CheckoutIntentAddPaymentParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<CheckoutIntent>>
 
         /**
          * Returns a raw HTTP response for `post /api/v1/checkout-intents/{id}/confirm`, but is
