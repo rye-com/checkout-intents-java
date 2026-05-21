@@ -19,7 +19,6 @@ import com.rye.core.http.parseable
 import com.rye.core.prepareAsync
 import com.rye.errors.PollTimeoutException
 import com.rye.models.checkoutintents.CheckoutIntent
-import com.rye.models.checkoutintents.CheckoutIntentAddPaymentParams
 import com.rye.models.checkoutintents.CheckoutIntentConfirmParams
 import com.rye.models.checkoutintents.CheckoutIntentCreateParams
 import com.rye.models.checkoutintents.CheckoutIntentListPageAsync
@@ -74,13 +73,6 @@ internal constructor(private val clientOptions: ClientOptions) : CheckoutIntentS
     ): CompletableFuture<CheckoutIntentListPageAsync> =
         // get /api/v1/checkout-intents
         withRawResponse().list(params, requestOptions).thenApply { it.parse() }
-
-    override fun addPayment(
-        params: CheckoutIntentAddPaymentParams,
-        requestOptions: RequestOptions,
-    ): CompletableFuture<CheckoutIntent> =
-        // post /api/v1/checkout-intents/{id}/payment
-        withRawResponse().addPayment(params, requestOptions).thenApply { it.parse() }
 
     override fun confirm(
         params: CheckoutIntentConfirmParams,
@@ -392,46 +384,6 @@ internal constructor(private val clientOptions: ClientOptions) : CheckoutIntentS
                                     .params(params)
                                     .response(it)
                                     .build()
-                            }
-                    }
-                }
-        }
-
-        private val addPaymentHandler: Handler<CheckoutIntent> =
-            jsonHandler<CheckoutIntent>(clientOptions.jsonMapper)
-
-        override fun addPayment(
-            params: CheckoutIntentAddPaymentParams,
-            requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<CheckoutIntent>> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
-            checkRequired("id", params.id().getOrNull())
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.POST)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments(
-                        "api",
-                        "v1",
-                        "checkout-intents",
-                        params._pathParam(0),
-                        "payment",
-                    )
-                    .body(json(clientOptions.jsonMapper, params._body()))
-                    .build()
-                    .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
-                        response
-                            .use { addPaymentHandler.handle(it) }
-                            .also {
-                                if (requestOptions.responseValidation!!) {
-                                    it.validate()
-                                }
                             }
                     }
                 }

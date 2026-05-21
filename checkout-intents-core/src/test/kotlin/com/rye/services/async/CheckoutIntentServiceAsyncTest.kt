@@ -4,7 +4,6 @@ package com.rye.services.async
 
 import com.rye.client.okhttp.CheckoutIntentsOkHttpClientAsync
 import com.rye.models.checkoutintents.Buyer
-import com.rye.models.checkoutintents.CheckoutIntentAddPaymentParams
 import com.rye.models.checkoutintents.CheckoutIntentConfirmParams
 import com.rye.models.checkoutintents.CheckoutIntentCreateParams
 import com.rye.models.checkoutintents.CheckoutIntentPurchaseParams
@@ -86,29 +85,6 @@ internal class CheckoutIntentServiceAsyncTest {
 
         val page = pageFuture.get()
         page.response().validate()
-    }
-
-    @Disabled("Mock server tests are disabled")
-    @Test
-    fun addPayment() {
-        val client = CheckoutIntentsOkHttpClientAsync.builder().apiKey("My API Key").build()
-        val checkoutIntentServiceAsync = client.checkoutIntents()
-
-        val checkoutIntentFuture =
-            checkoutIntentServiceAsync.addPayment(
-                CheckoutIntentAddPaymentParams.builder()
-                    .id("id")
-                    .paymentMethod(
-                        PaymentMethod.StripeTokenPaymentMethod.builder()
-                            .stripeToken("tok_1RkrWWHGDlstla3f1Fc7ZrhH")
-                            .type(PaymentMethod.StripeTokenPaymentMethod.Type.STRIPE_TOKEN)
-                            .build()
-                    )
-                    .build()
-            )
-
-        val checkoutIntent = checkoutIntentFuture.get()
-        checkoutIntent.validate()
     }
 
     @Disabled("Mock server tests are disabled")
