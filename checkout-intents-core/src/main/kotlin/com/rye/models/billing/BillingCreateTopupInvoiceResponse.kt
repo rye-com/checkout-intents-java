@@ -63,8 +63,6 @@ private constructor(
         bankTransferDetails.getRequired("bankTransferDetails")
 
     /**
-     * Vendor-agnostic provider types
-     *
      * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
@@ -201,7 +199,6 @@ private constructor(
             this.bankTransferDetails = bankTransferDetails
         }
 
-        /** Vendor-agnostic provider types */
         fun status(status: Status) = status(JsonField.of(status))
 
         /**
@@ -621,7 +618,6 @@ private constructor(
             "BankTransferDetails{accountHolderName=$accountHolderName, accountNumber=$accountNumber, bankName=$bankName, routingNumber=$routingNumber, additionalProperties=$additionalProperties}"
     }
 
-    /** Vendor-agnostic provider types */
     class Status @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
         /**
