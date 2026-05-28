@@ -26,6 +26,7 @@ private constructor(
     private val cost: JsonField<Cost>,
     private val shipping: JsonField<Shipping>,
     private val appliedPromoCodes: JsonField<List<String>>,
+    private val developerCommission: JsonField<DeveloperCommission>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -36,7 +37,10 @@ private constructor(
         @JsonProperty("appliedPromoCodes")
         @ExcludeMissing
         appliedPromoCodes: JsonField<List<String>> = JsonMissing.of(),
-    ) : this(cost, shipping, appliedPromoCodes, mutableMapOf())
+        @JsonProperty("developerCommission")
+        @ExcludeMissing
+        developerCommission: JsonField<DeveloperCommission> = JsonMissing.of(),
+    ) : this(cost, shipping, appliedPromoCodes, developerCommission, mutableMapOf())
 
     /**
      * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type or is
@@ -56,6 +60,15 @@ private constructor(
      */
     fun appliedPromoCodes(): Optional<List<String>> =
         appliedPromoCodes.getOptional("appliedPromoCodes")
+
+    /**
+     * The developer's commission on an offer.
+     *
+     * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
+    fun developerCommission(): Optional<DeveloperCommission> =
+        developerCommission.getOptional("developerCommission")
 
     /**
      * Returns the raw JSON value of [cost].
@@ -80,6 +93,16 @@ private constructor(
     @JsonProperty("appliedPromoCodes")
     @ExcludeMissing
     fun _appliedPromoCodes(): JsonField<List<String>> = appliedPromoCodes
+
+    /**
+     * Returns the raw JSON value of [developerCommission].
+     *
+     * Unlike [developerCommission], this method doesn't throw if the JSON field has an unexpected
+     * type.
+     */
+    @JsonProperty("developerCommission")
+    @ExcludeMissing
+    fun _developerCommission(): JsonField<DeveloperCommission> = developerCommission
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -113,6 +136,7 @@ private constructor(
         private var cost: JsonField<Cost>? = null
         private var shipping: JsonField<Shipping>? = null
         private var appliedPromoCodes: JsonField<MutableList<String>>? = null
+        private var developerCommission: JsonField<DeveloperCommission> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -120,6 +144,7 @@ private constructor(
             cost = offer.cost
             shipping = offer.shipping
             appliedPromoCodes = offer.appliedPromoCodes.map { it.toMutableList() }
+            developerCommission = offer.developerCommission
             additionalProperties = offer.additionalProperties.toMutableMap()
         }
 
@@ -170,6 +195,21 @@ private constructor(
                 }
         }
 
+        /** The developer's commission on an offer. */
+        fun developerCommission(developerCommission: DeveloperCommission) =
+            developerCommission(JsonField.of(developerCommission))
+
+        /**
+         * Sets [Builder.developerCommission] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.developerCommission] with a well-typed
+         * [DeveloperCommission] value instead. This method is primarily for setting the field to an
+         * undocumented or not yet supported value.
+         */
+        fun developerCommission(developerCommission: JsonField<DeveloperCommission>) = apply {
+            this.developerCommission = developerCommission
+        }
+
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
             putAllAdditionalProperties(additionalProperties)
@@ -207,6 +247,7 @@ private constructor(
                 checkRequired("cost", cost),
                 checkRequired("shipping", shipping),
                 (appliedPromoCodes ?: JsonMissing.of()).map { it.toImmutable() },
+                developerCommission,
                 additionalProperties.toMutableMap(),
             )
     }
@@ -229,6 +270,7 @@ private constructor(
         cost().validate()
         shipping().validate()
         appliedPromoCodes()
+        developerCommission().ifPresent { it.validate() }
         validated = true
     }
 
@@ -249,7 +291,8 @@ private constructor(
     internal fun validity(): Int =
         (cost.asKnown().getOrNull()?.validity() ?: 0) +
             (shipping.asKnown().getOrNull()?.validity() ?: 0) +
-            (appliedPromoCodes.asKnown().getOrNull()?.size ?: 0)
+            (appliedPromoCodes.asKnown().getOrNull()?.size ?: 0) +
+            (developerCommission.asKnown().getOrNull()?.validity() ?: 0)
 
     class Cost
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
@@ -1347,6 +1390,212 @@ private constructor(
             "Shipping{availableOptions=$availableOptions, selectedOptionId=$selectedOptionId, additionalProperties=$additionalProperties}"
     }
 
+    /** The developer's commission on an offer. */
+    class DeveloperCommission
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
+    private constructor(
+        private val amount: JsonField<Money>,
+        private val estimate: JsonField<Boolean>,
+        private val additionalProperties: MutableMap<String, JsonValue>,
+    ) {
+
+        @JsonCreator
+        private constructor(
+            @JsonProperty("amount") @ExcludeMissing amount: JsonField<Money> = JsonMissing.of(),
+            @JsonProperty("estimate")
+            @ExcludeMissing
+            estimate: JsonField<Boolean> = JsonMissing.of(),
+        ) : this(amount, estimate, mutableMapOf())
+
+        /**
+         * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type or
+         *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
+         *   value).
+         */
+        fun amount(): Money = amount.getRequired("amount")
+
+        /**
+         * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type or
+         *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
+         *   value).
+         */
+        fun estimate(): Boolean = estimate.getRequired("estimate")
+
+        /**
+         * Returns the raw JSON value of [amount].
+         *
+         * Unlike [amount], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("amount") @ExcludeMissing fun _amount(): JsonField<Money> = amount
+
+        /**
+         * Returns the raw JSON value of [estimate].
+         *
+         * Unlike [estimate], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("estimate") @ExcludeMissing fun _estimate(): JsonField<Boolean> = estimate
+
+        @JsonAnySetter
+        private fun putAdditionalProperty(key: String, value: JsonValue) {
+            additionalProperties.put(key, value)
+        }
+
+        @JsonAnyGetter
+        @ExcludeMissing
+        fun _additionalProperties(): Map<String, JsonValue> =
+            Collections.unmodifiableMap(additionalProperties)
+
+        fun toBuilder() = Builder().from(this)
+
+        companion object {
+
+            /**
+             * Returns a mutable builder for constructing an instance of [DeveloperCommission].
+             *
+             * The following fields are required:
+             * ```java
+             * .amount()
+             * .estimate()
+             * ```
+             */
+            @JvmStatic fun builder() = Builder()
+        }
+
+        /** A builder for [DeveloperCommission]. */
+        class Builder internal constructor() {
+
+            private var amount: JsonField<Money>? = null
+            private var estimate: JsonField<Boolean>? = null
+            private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
+
+            @JvmSynthetic
+            internal fun from(developerCommission: DeveloperCommission) = apply {
+                amount = developerCommission.amount
+                estimate = developerCommission.estimate
+                additionalProperties = developerCommission.additionalProperties.toMutableMap()
+            }
+
+            fun amount(amount: Money) = amount(JsonField.of(amount))
+
+            /**
+             * Sets [Builder.amount] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.amount] with a well-typed [Money] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun amount(amount: JsonField<Money>) = apply { this.amount = amount }
+
+            fun estimate(estimate: Boolean) = estimate(JsonField.of(estimate))
+
+            /**
+             * Sets [Builder.estimate] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.estimate] with a well-typed [Boolean] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun estimate(estimate: JsonField<Boolean>) = apply { this.estimate = estimate }
+
+            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                this.additionalProperties.clear()
+                putAllAdditionalProperties(additionalProperties)
+            }
+
+            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+                additionalProperties.put(key, value)
+            }
+
+            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                this.additionalProperties.putAll(additionalProperties)
+            }
+
+            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+
+            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                keys.forEach(::removeAdditionalProperty)
+            }
+
+            /**
+             * Returns an immutable instance of [DeveloperCommission].
+             *
+             * Further updates to this [Builder] will not mutate the returned instance.
+             *
+             * The following fields are required:
+             * ```java
+             * .amount()
+             * .estimate()
+             * ```
+             *
+             * @throws IllegalStateException if any required field is unset.
+             */
+            fun build(): DeveloperCommission =
+                DeveloperCommission(
+                    checkRequired("amount", amount),
+                    checkRequired("estimate", estimate),
+                    additionalProperties.toMutableMap(),
+                )
+        }
+
+        private var validated: Boolean = false
+
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws CheckoutIntentsInvalidDataException if any value type in this object doesn't
+         *   match its expected type.
+         */
+        fun validate(): DeveloperCommission = apply {
+            if (validated) {
+                return@apply
+            }
+
+            amount().validate()
+            estimate()
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: CheckoutIntentsInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic
+        internal fun validity(): Int =
+            (amount.asKnown().getOrNull()?.validity() ?: 0) +
+                (if (estimate.asKnown().isPresent) 1 else 0)
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is DeveloperCommission &&
+                amount == other.amount &&
+                estimate == other.estimate &&
+                additionalProperties == other.additionalProperties
+        }
+
+        private val hashCode: Int by lazy { Objects.hash(amount, estimate, additionalProperties) }
+
+        override fun hashCode(): Int = hashCode
+
+        override fun toString() =
+            "DeveloperCommission{amount=$amount, estimate=$estimate, additionalProperties=$additionalProperties}"
+    }
+
     override fun equals(other: Any?): Boolean {
         if (this === other) {
             return true
@@ -1356,15 +1605,16 @@ private constructor(
             cost == other.cost &&
             shipping == other.shipping &&
             appliedPromoCodes == other.appliedPromoCodes &&
+            developerCommission == other.developerCommission &&
             additionalProperties == other.additionalProperties
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(cost, shipping, appliedPromoCodes, additionalProperties)
+        Objects.hash(cost, shipping, appliedPromoCodes, developerCommission, additionalProperties)
     }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "Offer{cost=$cost, shipping=$shipping, appliedPromoCodes=$appliedPromoCodes, additionalProperties=$additionalProperties}"
+        "Offer{cost=$cost, shipping=$shipping, appliedPromoCodes=$appliedPromoCodes, developerCommission=$developerCommission, additionalProperties=$additionalProperties}"
 }
