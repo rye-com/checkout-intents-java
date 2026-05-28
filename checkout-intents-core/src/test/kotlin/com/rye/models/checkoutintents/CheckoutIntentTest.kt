@@ -218,6 +218,14 @@ internal class CheckoutIntentTest {
                                 .build()
                         )
                         .addAppliedPromoCode("string")
+                        .developerCommission(
+                            Offer.DeveloperCommission.builder()
+                                .amount(
+                                    Money.builder().amountSubunits(1500).currencyCode("USD").build()
+                                )
+                                .estimate(true)
+                                .build()
+                        )
                         .build()
                 )
                 .state(
@@ -358,6 +366,17 @@ internal class CheckoutIntentTest {
                                     .build()
                             )
                             .addAppliedPromoCode("string")
+                            .developerCommission(
+                                Offer.DeveloperCommission.builder()
+                                    .amount(
+                                        Money.builder()
+                                            .amountSubunits(1500)
+                                            .currencyCode("USD")
+                                            .build()
+                                    )
+                                    .estimate(true)
+                                    .build()
+                            )
                             .build()
                     )
                     .state(
@@ -502,6 +521,14 @@ internal class CheckoutIntentTest {
                                 .build()
                         )
                         .addAppliedPromoCode("string")
+                        .developerCommission(
+                            Offer.DeveloperCommission.builder()
+                                .amount(
+                                    Money.builder().amountSubunits(1500).currencyCode("USD").build()
+                                )
+                                .estimate(true)
+                                .build()
+                        )
                         .build()
                 )
                 .paymentMethod(
@@ -664,6 +691,17 @@ internal class CheckoutIntentTest {
                                     .build()
                             )
                             .addAppliedPromoCode("string")
+                            .developerCommission(
+                                Offer.DeveloperCommission.builder()
+                                    .amount(
+                                        Money.builder()
+                                            .amountSubunits(1500)
+                                            .currencyCode("USD")
+                                            .build()
+                                    )
+                                    .estimate(true)
+                                    .build()
+                            )
                             .build()
                     )
                     .paymentMethod(
@@ -782,6 +820,14 @@ internal class CheckoutIntentTest {
                                 .build()
                         )
                         .addAppliedPromoCode("string")
+                        .developerCommission(
+                            Offer.DeveloperCommission.builder()
+                                .amount(
+                                    Money.builder().amountSubunits(1500).currencyCode("USD").build()
+                                )
+                                .estimate(true)
+                                .build()
+                        )
                         .build()
                 )
                 .paymentMethod(
@@ -920,6 +966,17 @@ internal class CheckoutIntentTest {
                                     .build()
                             )
                             .addAppliedPromoCode("string")
+                            .developerCommission(
+                                Offer.DeveloperCommission.builder()
+                                    .amount(
+                                        Money.builder()
+                                            .amountSubunits(1500)
+                                            .currencyCode("USD")
+                                            .build()
+                                    )
+                                    .estimate(true)
+                                    .build()
+                            )
                             .build()
                     )
                     .paymentMethod(
@@ -1038,6 +1095,14 @@ internal class CheckoutIntentTest {
                                 .build()
                         )
                         .addAppliedPromoCode("string")
+                        .developerCommission(
+                            Offer.DeveloperCommission.builder()
+                                .amount(
+                                    Money.builder().amountSubunits(1500).currencyCode("USD").build()
+                                )
+                                .estimate(true)
+                                .build()
+                        )
                         .build()
                 )
                 .orderId("orderId")
@@ -1178,6 +1243,17 @@ internal class CheckoutIntentTest {
                                     .build()
                             )
                             .addAppliedPromoCode("string")
+                            .developerCommission(
+                                Offer.DeveloperCommission.builder()
+                                    .amount(
+                                        Money.builder()
+                                            .amountSubunits(1500)
+                                            .currencyCode("USD")
+                                            .build()
+                                    )
+                                    .estimate(true)
+                                    .build()
+                            )
                             .build()
                     )
                     .orderId("orderId")
@@ -1305,6 +1381,14 @@ internal class CheckoutIntentTest {
                                 .build()
                         )
                         .addAppliedPromoCode("string")
+                        .developerCommission(
+                            Offer.DeveloperCommission.builder()
+                                .amount(
+                                    Money.builder().amountSubunits(1500).currencyCode("USD").build()
+                                )
+                                .estimate(true)
+                                .build()
+                        )
                         .build()
                 )
                 .paymentMethod(
@@ -1449,6 +1533,17 @@ internal class CheckoutIntentTest {
                                     .build()
                             )
                             .addAppliedPromoCode("string")
+                            .developerCommission(
+                                Offer.DeveloperCommission.builder()
+                                    .amount(
+                                        Money.builder()
+                                            .amountSubunits(1500)
+                                            .currencyCode("USD")
+                                            .build()
+                                    )
+                                    .estimate(true)
+                                    .build()
+                            )
                             .build()
                     )
                     .paymentMethod(

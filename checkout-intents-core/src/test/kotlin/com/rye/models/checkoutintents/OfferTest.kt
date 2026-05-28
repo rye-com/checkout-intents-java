@@ -48,6 +48,12 @@ internal class OfferTest {
                         .build()
                 )
                 .addAppliedPromoCode("string")
+                .developerCommission(
+                    Offer.DeveloperCommission.builder()
+                        .amount(Money.builder().amountSubunits(1500).currencyCode("USD").build())
+                        .estimate(true)
+                        .build()
+                )
                 .build()
 
         assertThat(offer.cost())
@@ -83,6 +89,13 @@ internal class OfferTest {
                     .build()
             )
         assertThat(offer.appliedPromoCodes().getOrNull()).containsExactly("string")
+        assertThat(offer.developerCommission())
+            .contains(
+                Offer.DeveloperCommission.builder()
+                    .amount(Money.builder().amountSubunits(1500).currencyCode("USD").build())
+                    .estimate(true)
+                    .build()
+            )
     }
 
     @Test
@@ -123,6 +136,12 @@ internal class OfferTest {
                         .build()
                 )
                 .addAppliedPromoCode("string")
+                .developerCommission(
+                    Offer.DeveloperCommission.builder()
+                        .amount(Money.builder().amountSubunits(1500).currencyCode("USD").build())
+                        .estimate(true)
+                        .build()
+                )
                 .build()
 
         val roundtrippedOffer =
