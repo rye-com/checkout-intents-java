@@ -26,7 +26,7 @@ private constructor(
     private val cost: JsonField<Cost>,
     private val shipping: JsonField<Shipping>,
     private val appliedPromoCodes: JsonField<List<String>>,
-    private val developerCommission: JsonField<DeveloperCommission>,
+    private val commission: JsonField<Commission>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -37,10 +37,10 @@ private constructor(
         @JsonProperty("appliedPromoCodes")
         @ExcludeMissing
         appliedPromoCodes: JsonField<List<String>> = JsonMissing.of(),
-        @JsonProperty("developerCommission")
+        @JsonProperty("commission")
         @ExcludeMissing
-        developerCommission: JsonField<DeveloperCommission> = JsonMissing.of(),
-    ) : this(cost, shipping, appliedPromoCodes, developerCommission, mutableMapOf())
+        commission: JsonField<Commission> = JsonMissing.of(),
+    ) : this(cost, shipping, appliedPromoCodes, commission, mutableMapOf())
 
     /**
      * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type or is
@@ -62,13 +62,12 @@ private constructor(
         appliedPromoCodes.getOptional("appliedPromoCodes")
 
     /**
-     * The developer's commission on an offer.
+     * The commission a developer would earn if this offer is placed.
      *
      * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type (e.g. if
      *   the server responded with an unexpected value).
      */
-    fun developerCommission(): Optional<DeveloperCommission> =
-        developerCommission.getOptional("developerCommission")
+    fun commission(): Optional<Commission> = commission.getOptional("commission")
 
     /**
      * Returns the raw JSON value of [cost].
@@ -95,14 +94,13 @@ private constructor(
     fun _appliedPromoCodes(): JsonField<List<String>> = appliedPromoCodes
 
     /**
-     * Returns the raw JSON value of [developerCommission].
+     * Returns the raw JSON value of [commission].
      *
-     * Unlike [developerCommission], this method doesn't throw if the JSON field has an unexpected
-     * type.
+     * Unlike [commission], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("developerCommission")
+    @JsonProperty("commission")
     @ExcludeMissing
-    fun _developerCommission(): JsonField<DeveloperCommission> = developerCommission
+    fun _commission(): JsonField<Commission> = commission
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -136,7 +134,7 @@ private constructor(
         private var cost: JsonField<Cost>? = null
         private var shipping: JsonField<Shipping>? = null
         private var appliedPromoCodes: JsonField<MutableList<String>>? = null
-        private var developerCommission: JsonField<DeveloperCommission> = JsonMissing.of()
+        private var commission: JsonField<Commission> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -144,7 +142,7 @@ private constructor(
             cost = offer.cost
             shipping = offer.shipping
             appliedPromoCodes = offer.appliedPromoCodes.map { it.toMutableList() }
-            developerCommission = offer.developerCommission
+            commission = offer.commission
             additionalProperties = offer.additionalProperties.toMutableMap()
         }
 
@@ -195,20 +193,17 @@ private constructor(
                 }
         }
 
-        /** The developer's commission on an offer. */
-        fun developerCommission(developerCommission: DeveloperCommission) =
-            developerCommission(JsonField.of(developerCommission))
+        /** The commission a developer would earn if this offer is placed. */
+        fun commission(commission: Commission) = commission(JsonField.of(commission))
 
         /**
-         * Sets [Builder.developerCommission] to an arbitrary JSON value.
+         * Sets [Builder.commission] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.developerCommission] with a well-typed
-         * [DeveloperCommission] value instead. This method is primarily for setting the field to an
-         * undocumented or not yet supported value.
+         * You should usually call [Builder.commission] with a well-typed [Commission] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun developerCommission(developerCommission: JsonField<DeveloperCommission>) = apply {
-            this.developerCommission = developerCommission
-        }
+        fun commission(commission: JsonField<Commission>) = apply { this.commission = commission }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
@@ -247,7 +242,7 @@ private constructor(
                 checkRequired("cost", cost),
                 checkRequired("shipping", shipping),
                 (appliedPromoCodes ?: JsonMissing.of()).map { it.toImmutable() },
-                developerCommission,
+                commission,
                 additionalProperties.toMutableMap(),
             )
     }
@@ -270,7 +265,7 @@ private constructor(
         cost().validate()
         shipping().validate()
         appliedPromoCodes()
-        developerCommission().ifPresent { it.validate() }
+        commission().ifPresent { it.validate() }
         validated = true
     }
 
@@ -292,7 +287,7 @@ private constructor(
         (cost.asKnown().getOrNull()?.validity() ?: 0) +
             (shipping.asKnown().getOrNull()?.validity() ?: 0) +
             (appliedPromoCodes.asKnown().getOrNull()?.size ?: 0) +
-            (developerCommission.asKnown().getOrNull()?.validity() ?: 0)
+            (commission.asKnown().getOrNull()?.validity() ?: 0)
 
     class Cost
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
@@ -1390,8 +1385,8 @@ private constructor(
             "Shipping{availableOptions=$availableOptions, selectedOptionId=$selectedOptionId, additionalProperties=$additionalProperties}"
     }
 
-    /** The developer's commission on an offer. */
-    class DeveloperCommission
+    /** The commission a developer would earn if this offer is placed. */
+    class Commission
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val amount: JsonField<Money>,
@@ -1450,7 +1445,7 @@ private constructor(
         companion object {
 
             /**
-             * Returns a mutable builder for constructing an instance of [DeveloperCommission].
+             * Returns a mutable builder for constructing an instance of [Commission].
              *
              * The following fields are required:
              * ```java
@@ -1461,7 +1456,7 @@ private constructor(
             @JvmStatic fun builder() = Builder()
         }
 
-        /** A builder for [DeveloperCommission]. */
+        /** A builder for [Commission]. */
         class Builder internal constructor() {
 
             private var amount: JsonField<Money>? = null
@@ -1469,10 +1464,10 @@ private constructor(
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
-            internal fun from(developerCommission: DeveloperCommission) = apply {
-                amount = developerCommission.amount
-                estimate = developerCommission.estimate
-                additionalProperties = developerCommission.additionalProperties.toMutableMap()
+            internal fun from(commission: Commission) = apply {
+                amount = commission.amount
+                estimate = commission.estimate
+                additionalProperties = commission.additionalProperties.toMutableMap()
             }
 
             fun amount(amount: Money) = amount(JsonField.of(amount))
@@ -1517,7 +1512,7 @@ private constructor(
             }
 
             /**
-             * Returns an immutable instance of [DeveloperCommission].
+             * Returns an immutable instance of [Commission].
              *
              * Further updates to this [Builder] will not mutate the returned instance.
              *
@@ -1529,8 +1524,8 @@ private constructor(
              *
              * @throws IllegalStateException if any required field is unset.
              */
-            fun build(): DeveloperCommission =
-                DeveloperCommission(
+            fun build(): Commission =
+                Commission(
                     checkRequired("amount", amount),
                     checkRequired("estimate", estimate),
                     additionalProperties.toMutableMap(),
@@ -1548,7 +1543,7 @@ private constructor(
          * @throws CheckoutIntentsInvalidDataException if any value type in this object doesn't
          *   match its expected type.
          */
-        fun validate(): DeveloperCommission = apply {
+        fun validate(): Commission = apply {
             if (validated) {
                 return@apply
             }
@@ -1582,7 +1577,7 @@ private constructor(
                 return true
             }
 
-            return other is DeveloperCommission &&
+            return other is Commission &&
                 amount == other.amount &&
                 estimate == other.estimate &&
                 additionalProperties == other.additionalProperties
@@ -1593,7 +1588,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "DeveloperCommission{amount=$amount, estimate=$estimate, additionalProperties=$additionalProperties}"
+            "Commission{amount=$amount, estimate=$estimate, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {
@@ -1605,16 +1600,16 @@ private constructor(
             cost == other.cost &&
             shipping == other.shipping &&
             appliedPromoCodes == other.appliedPromoCodes &&
-            developerCommission == other.developerCommission &&
+            commission == other.commission &&
             additionalProperties == other.additionalProperties
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(cost, shipping, appliedPromoCodes, developerCommission, additionalProperties)
+        Objects.hash(cost, shipping, appliedPromoCodes, commission, additionalProperties)
     }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "Offer{cost=$cost, shipping=$shipping, appliedPromoCodes=$appliedPromoCodes, developerCommission=$developerCommission, additionalProperties=$additionalProperties}"
+        "Offer{cost=$cost, shipping=$shipping, appliedPromoCodes=$appliedPromoCodes, commission=$commission, additionalProperties=$additionalProperties}"
 }

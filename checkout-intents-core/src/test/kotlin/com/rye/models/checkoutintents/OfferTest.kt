@@ -48,8 +48,8 @@ internal class OfferTest {
                         .build()
                 )
                 .addAppliedPromoCode("string")
-                .developerCommission(
-                    Offer.DeveloperCommission.builder()
+                .commission(
+                    Offer.Commission.builder()
                         .amount(Money.builder().amountSubunits(1500).currencyCode("USD").build())
                         .estimate(true)
                         .build()
@@ -89,9 +89,9 @@ internal class OfferTest {
                     .build()
             )
         assertThat(offer.appliedPromoCodes().getOrNull()).containsExactly("string")
-        assertThat(offer.developerCommission())
+        assertThat(offer.commission())
             .contains(
-                Offer.DeveloperCommission.builder()
+                Offer.Commission.builder()
                     .amount(Money.builder().amountSubunits(1500).currencyCode("USD").build())
                     .estimate(true)
                     .build()
@@ -136,8 +136,8 @@ internal class OfferTest {
                         .build()
                 )
                 .addAppliedPromoCode("string")
-                .developerCommission(
-                    Offer.DeveloperCommission.builder()
+                .commission(
+                    Offer.Commission.builder()
                         .amount(Money.builder().amountSubunits(1500).currencyCode("USD").build())
                         .estimate(true)
                         .build()
