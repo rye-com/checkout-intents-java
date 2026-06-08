@@ -22,6 +22,8 @@ import com.rye.services.async.PaymentGatewayServiceAsync
 import com.rye.services.async.PaymentGatewayServiceAsyncImpl
 import com.rye.services.async.ProductServiceAsync
 import com.rye.services.async.ProductServiceAsyncImpl
+import com.rye.services.async.ReturnServiceAsync
+import com.rye.services.async.ReturnServiceAsyncImpl
 import com.rye.services.async.ShipmentServiceAsync
 import com.rye.services.async.ShipmentServiceAsyncImpl
 import java.util.function.Consumer
@@ -82,6 +84,10 @@ class CheckoutIntentsClientAsyncImpl(private val clientOptions: ClientOptions) :
         MerchantConnectorServiceAsyncImpl(clientOptionsWithUserAgent)
     }
 
+    private val returns: ReturnServiceAsync by lazy {
+        ReturnServiceAsyncImpl(clientOptionsWithUserAgent)
+    }
+
     override fun sync(): CheckoutIntentsClient = sync
 
     override fun withRawResponse(): CheckoutIntentsClientAsync.WithRawResponse = withRawResponse
@@ -110,6 +116,8 @@ class CheckoutIntentsClientAsyncImpl(private val clientOptions: ClientOptions) :
     override fun events(): EventServiceAsync = events
 
     override fun merchantConnectors(): MerchantConnectorServiceAsync = merchantConnectors
+
+    override fun returns(): ReturnServiceAsync = returns
 
     override fun close() = clientOptions.close()
 
@@ -156,6 +164,10 @@ class CheckoutIntentsClientAsyncImpl(private val clientOptions: ClientOptions) :
             MerchantConnectorServiceAsyncImpl.WithRawResponseImpl(clientOptions)
         }
 
+        private val returns: ReturnServiceAsync.WithRawResponse by lazy {
+            ReturnServiceAsyncImpl.WithRawResponseImpl(clientOptions)
+        }
+
         override fun withOptions(
             modifier: Consumer<ClientOptions.Builder>
         ): CheckoutIntentsClientAsync.WithRawResponse =
@@ -183,5 +195,7 @@ class CheckoutIntentsClientAsyncImpl(private val clientOptions: ClientOptions) :
 
         override fun merchantConnectors(): MerchantConnectorServiceAsync.WithRawResponse =
             merchantConnectors
+
+        override fun returns(): ReturnServiceAsync.WithRawResponse = returns
     }
 }

@@ -12,6 +12,7 @@ import com.rye.services.async.EventServiceAsync
 import com.rye.services.async.MerchantConnectorServiceAsync
 import com.rye.services.async.PaymentGatewayServiceAsync
 import com.rye.services.async.ProductServiceAsync
+import com.rye.services.async.ReturnServiceAsync
 import com.rye.services.async.ShipmentServiceAsync
 import java.util.function.Consumer
 
@@ -71,6 +72,8 @@ interface CheckoutIntentsClientAsync {
 
     fun merchantConnectors(): MerchantConnectorServiceAsync
 
+    fun returns(): ReturnServiceAsync
+
     /**
      * Closes this client, relinquishing any underlying resources.
      *
@@ -118,5 +121,7 @@ interface CheckoutIntentsClientAsync {
         fun events(): EventServiceAsync.WithRawResponse
 
         fun merchantConnectors(): MerchantConnectorServiceAsync.WithRawResponse
+
+        fun returns(): ReturnServiceAsync.WithRawResponse
     }
 }

@@ -22,6 +22,8 @@ import com.rye.services.blocking.PaymentGatewayService
 import com.rye.services.blocking.PaymentGatewayServiceImpl
 import com.rye.services.blocking.ProductService
 import com.rye.services.blocking.ProductServiceImpl
+import com.rye.services.blocking.ReturnService
+import com.rye.services.blocking.ReturnServiceImpl
 import com.rye.services.blocking.ShipmentService
 import com.rye.services.blocking.ShipmentServiceImpl
 import java.util.function.Consumer
@@ -75,6 +77,8 @@ class CheckoutIntentsClientImpl(private val clientOptions: ClientOptions) : Chec
         MerchantConnectorServiceImpl(clientOptionsWithUserAgent)
     }
 
+    private val returns: ReturnService by lazy { ReturnServiceImpl(clientOptionsWithUserAgent) }
+
     override fun async(): CheckoutIntentsClientAsync = async
 
     override fun withRawResponse(): CheckoutIntentsClient.WithRawResponse = withRawResponse
@@ -101,6 +105,8 @@ class CheckoutIntentsClientImpl(private val clientOptions: ClientOptions) : Chec
     override fun events(): EventService = events
 
     override fun merchantConnectors(): MerchantConnectorService = merchantConnectors
+
+    override fun returns(): ReturnService = returns
 
     override fun close() = clientOptions.close()
 
@@ -147,6 +153,10 @@ class CheckoutIntentsClientImpl(private val clientOptions: ClientOptions) : Chec
             MerchantConnectorServiceImpl.WithRawResponseImpl(clientOptions)
         }
 
+        private val returns: ReturnService.WithRawResponse by lazy {
+            ReturnServiceImpl.WithRawResponseImpl(clientOptions)
+        }
+
         override fun withOptions(
             modifier: Consumer<ClientOptions.Builder>
         ): CheckoutIntentsClient.WithRawResponse =
@@ -174,5 +184,7 @@ class CheckoutIntentsClientImpl(private val clientOptions: ClientOptions) : Chec
 
         override fun merchantConnectors(): MerchantConnectorService.WithRawResponse =
             merchantConnectors
+
+        override fun returns(): ReturnService.WithRawResponse = returns
     }
 }
