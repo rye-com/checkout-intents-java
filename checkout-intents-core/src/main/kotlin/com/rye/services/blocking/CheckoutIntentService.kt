@@ -12,7 +12,9 @@ import com.rye.models.checkoutintents.CheckoutIntentCreateParams
 import com.rye.models.checkoutintents.CheckoutIntentListPage
 import com.rye.models.checkoutintents.CheckoutIntentListParams
 import com.rye.models.checkoutintents.CheckoutIntentPurchaseParams
+import com.rye.models.checkoutintents.CheckoutIntentRetrieveOrderParams
 import com.rye.models.checkoutintents.CheckoutIntentRetrieveParams
+import com.rye.models.orders.Order
 import com.rye.services.blocking.checkoutintents.ShipmentService
 import java.util.function.Consumer
 
@@ -140,6 +142,42 @@ interface CheckoutIntentService {
         params: CheckoutIntentPurchaseParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CheckoutIntent
+
+    /**
+     * Retrieve the order associated with a checkout intent.
+     *
+     * Returns the single order created when the checkout intent reached the `completed` state. 404
+     * if the intent has not produced an order yet.
+     */
+    fun retrieveOrder(id: String): Order =
+        retrieveOrder(id, CheckoutIntentRetrieveOrderParams.none())
+
+    /** @see retrieveOrder */
+    fun retrieveOrder(
+        id: String,
+        params: CheckoutIntentRetrieveOrderParams = CheckoutIntentRetrieveOrderParams.none(),
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): Order = retrieveOrder(params.toBuilder().id(id).build(), requestOptions)
+
+    /** @see retrieveOrder */
+    fun retrieveOrder(
+        id: String,
+        params: CheckoutIntentRetrieveOrderParams = CheckoutIntentRetrieveOrderParams.none(),
+    ): Order = retrieveOrder(id, params, RequestOptions.none())
+
+    /** @see retrieveOrder */
+    fun retrieveOrder(
+        params: CheckoutIntentRetrieveOrderParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): Order
+
+    /** @see retrieveOrder */
+    fun retrieveOrder(params: CheckoutIntentRetrieveOrderParams): Order =
+        retrieveOrder(params, RequestOptions.none())
+
+    /** @see retrieveOrder */
+    fun retrieveOrder(id: String, requestOptions: RequestOptions): Order =
+        retrieveOrder(id, CheckoutIntentRetrieveOrderParams.none(), requestOptions)
 
     /**
      * A view of [CheckoutIntentService] that provides access to raw HTTP responses for each method.
@@ -283,5 +321,45 @@ interface CheckoutIntentService {
             params: CheckoutIntentPurchaseParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<CheckoutIntent>
+
+        /**
+         * Returns a raw HTTP response for `get /api/v1/checkout-intents/{id}/order`, but is
+         * otherwise the same as [CheckoutIntentService.retrieveOrder].
+         */
+        @MustBeClosed
+        fun retrieveOrder(id: String): HttpResponseFor<Order> =
+            retrieveOrder(id, CheckoutIntentRetrieveOrderParams.none())
+
+        /** @see retrieveOrder */
+        @MustBeClosed
+        fun retrieveOrder(
+            id: String,
+            params: CheckoutIntentRetrieveOrderParams = CheckoutIntentRetrieveOrderParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<Order> = retrieveOrder(params.toBuilder().id(id).build(), requestOptions)
+
+        /** @see retrieveOrder */
+        @MustBeClosed
+        fun retrieveOrder(
+            id: String,
+            params: CheckoutIntentRetrieveOrderParams = CheckoutIntentRetrieveOrderParams.none(),
+        ): HttpResponseFor<Order> = retrieveOrder(id, params, RequestOptions.none())
+
+        /** @see retrieveOrder */
+        @MustBeClosed
+        fun retrieveOrder(
+            params: CheckoutIntentRetrieveOrderParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<Order>
+
+        /** @see retrieveOrder */
+        @MustBeClosed
+        fun retrieveOrder(params: CheckoutIntentRetrieveOrderParams): HttpResponseFor<Order> =
+            retrieveOrder(params, RequestOptions.none())
+
+        /** @see retrieveOrder */
+        @MustBeClosed
+        fun retrieveOrder(id: String, requestOptions: RequestOptions): HttpResponseFor<Order> =
+            retrieveOrder(id, CheckoutIntentRetrieveOrderParams.none(), requestOptions)
     }
 }

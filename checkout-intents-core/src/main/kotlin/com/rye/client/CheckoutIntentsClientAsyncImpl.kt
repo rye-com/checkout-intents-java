@@ -18,6 +18,8 @@ import com.rye.services.async.EventServiceAsync
 import com.rye.services.async.EventServiceAsyncImpl
 import com.rye.services.async.MerchantConnectorServiceAsync
 import com.rye.services.async.MerchantConnectorServiceAsyncImpl
+import com.rye.services.async.OrderServiceAsync
+import com.rye.services.async.OrderServiceAsyncImpl
 import com.rye.services.async.PaymentGatewayServiceAsync
 import com.rye.services.async.PaymentGatewayServiceAsyncImpl
 import com.rye.services.async.ProductServiceAsync
@@ -54,6 +56,10 @@ class CheckoutIntentsClientAsyncImpl(private val clientOptions: ClientOptions) :
 
     private val brands: BrandServiceAsync by lazy {
         BrandServiceAsyncImpl(clientOptionsWithUserAgent)
+    }
+
+    private val orders: OrderServiceAsync by lazy {
+        OrderServiceAsyncImpl(clientOptionsWithUserAgent)
     }
 
     private val products: ProductServiceAsync by lazy {
@@ -103,6 +109,8 @@ class CheckoutIntentsClientAsyncImpl(private val clientOptions: ClientOptions) :
 
     override fun brands(): BrandServiceAsync = brands
 
+    override fun orders(): OrderServiceAsync = orders
+
     override fun products(): ProductServiceAsync = products
 
     override fun shipments(): ShipmentServiceAsync = shipments
@@ -134,6 +142,10 @@ class CheckoutIntentsClientAsyncImpl(private val clientOptions: ClientOptions) :
 
         private val brands: BrandServiceAsync.WithRawResponse by lazy {
             BrandServiceAsyncImpl.WithRawResponseImpl(clientOptions)
+        }
+
+        private val orders: OrderServiceAsync.WithRawResponse by lazy {
+            OrderServiceAsyncImpl.WithRawResponseImpl(clientOptions)
         }
 
         private val products: ProductServiceAsync.WithRawResponse by lazy {
@@ -180,6 +192,8 @@ class CheckoutIntentsClientAsyncImpl(private val clientOptions: ClientOptions) :
         override fun betas(): BetaServiceAsync.WithRawResponse = betas
 
         override fun brands(): BrandServiceAsync.WithRawResponse = brands
+
+        override fun orders(): OrderServiceAsync.WithRawResponse = orders
 
         override fun products(): ProductServiceAsync.WithRawResponse = products
 

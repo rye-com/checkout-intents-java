@@ -159,4 +159,15 @@ internal class CheckoutIntentServiceTest {
 
         checkoutIntent.validate()
     }
+
+    @Disabled("Mock server tests are disabled")
+    @Test
+    fun retrieveOrder() {
+        val client = CheckoutIntentsOkHttpClient.builder().apiKey("My API Key").build()
+        val checkoutIntentService = client.checkoutIntents()
+
+        val order = checkoutIntentService.retrieveOrder("id")
+
+        order.validate()
+    }
 }

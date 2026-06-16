@@ -10,6 +10,7 @@ import com.rye.services.blocking.CheckoutIntentService
 import com.rye.services.blocking.CommissionService
 import com.rye.services.blocking.EventService
 import com.rye.services.blocking.MerchantConnectorService
+import com.rye.services.blocking.OrderService
 import com.rye.services.blocking.PaymentGatewayService
 import com.rye.services.blocking.ProductService
 import com.rye.services.blocking.ReturnService
@@ -57,6 +58,8 @@ interface CheckoutIntentsClient {
     fun betas(): BetaService
 
     fun brands(): BrandService
+
+    fun orders(): OrderService
 
     fun products(): ProductService
 
@@ -106,6 +109,8 @@ interface CheckoutIntentsClient {
         fun betas(): BetaService.WithRawResponse
 
         fun brands(): BrandService.WithRawResponse
+
+        fun orders(): OrderService.WithRawResponse
 
         fun products(): ProductService.WithRawResponse
 
