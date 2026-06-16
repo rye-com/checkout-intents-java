@@ -164,4 +164,16 @@ internal class CheckoutIntentServiceAsyncTest {
         val checkoutIntent = checkoutIntentFuture.get()
         checkoutIntent.validate()
     }
+
+    @Disabled("Mock server tests are disabled")
+    @Test
+    fun retrieveOrder() {
+        val client = CheckoutIntentsOkHttpClientAsync.builder().apiKey("My API Key").build()
+        val checkoutIntentServiceAsync = client.checkoutIntents()
+
+        val orderFuture = checkoutIntentServiceAsync.retrieveOrder("id")
+
+        val order = orderFuture.get()
+        order.validate()
+    }
 }

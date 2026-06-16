@@ -18,6 +18,8 @@ import com.rye.services.blocking.EventService
 import com.rye.services.blocking.EventServiceImpl
 import com.rye.services.blocking.MerchantConnectorService
 import com.rye.services.blocking.MerchantConnectorServiceImpl
+import com.rye.services.blocking.OrderService
+import com.rye.services.blocking.OrderServiceImpl
 import com.rye.services.blocking.PaymentGatewayService
 import com.rye.services.blocking.PaymentGatewayServiceImpl
 import com.rye.services.blocking.ProductService
@@ -54,6 +56,8 @@ class CheckoutIntentsClientImpl(private val clientOptions: ClientOptions) : Chec
     private val betas: BetaService by lazy { BetaServiceImpl(clientOptionsWithUserAgent) }
 
     private val brands: BrandService by lazy { BrandServiceImpl(clientOptionsWithUserAgent) }
+
+    private val orders: OrderService by lazy { OrderServiceImpl(clientOptionsWithUserAgent) }
 
     private val products: ProductService by lazy { ProductServiceImpl(clientOptionsWithUserAgent) }
 
@@ -92,6 +96,8 @@ class CheckoutIntentsClientImpl(private val clientOptions: ClientOptions) : Chec
 
     override fun brands(): BrandService = brands
 
+    override fun orders(): OrderService = orders
+
     override fun products(): ProductService = products
 
     override fun shipments(): ShipmentService = shipments
@@ -123,6 +129,10 @@ class CheckoutIntentsClientImpl(private val clientOptions: ClientOptions) : Chec
 
         private val brands: BrandService.WithRawResponse by lazy {
             BrandServiceImpl.WithRawResponseImpl(clientOptions)
+        }
+
+        private val orders: OrderService.WithRawResponse by lazy {
+            OrderServiceImpl.WithRawResponseImpl(clientOptions)
         }
 
         private val products: ProductService.WithRawResponse by lazy {
@@ -169,6 +179,8 @@ class CheckoutIntentsClientImpl(private val clientOptions: ClientOptions) : Chec
         override fun betas(): BetaService.WithRawResponse = betas
 
         override fun brands(): BrandService.WithRawResponse = brands
+
+        override fun orders(): OrderService.WithRawResponse = orders
 
         override fun products(): ProductService.WithRawResponse = products
 

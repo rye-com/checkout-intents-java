@@ -25,8 +25,10 @@ import com.rye.models.checkoutintents.CheckoutIntentListPage
 import com.rye.models.checkoutintents.CheckoutIntentListPageResponse
 import com.rye.models.checkoutintents.CheckoutIntentListParams
 import com.rye.models.checkoutintents.CheckoutIntentPurchaseParams
+import com.rye.models.checkoutintents.CheckoutIntentRetrieveOrderParams
 import com.rye.models.checkoutintents.CheckoutIntentRetrieveParams
 import com.rye.models.checkoutintents.PollOptions
+import com.rye.models.orders.Order
 import com.rye.services.blocking.checkoutintents.ShipmentService
 import com.rye.services.blocking.checkoutintents.ShipmentServiceImpl
 import java.time.Duration
@@ -132,6 +134,13 @@ class CheckoutIntentServiceImpl internal constructor(private val clientOptions: 
         confirm(id, params, requestOptions)
         return pollUntilCompleted(id, options, requestOptions)
     }
+
+    override fun retrieveOrder(
+        params: CheckoutIntentRetrieveOrderParams,
+        requestOptions: RequestOptions,
+    ): Order =
+        // get /api/v1/checkout-intents/{id}/order
+        withRawResponse().retrieveOrder(params, requestOptions).parse()
 
     private fun pollUntil(
         id: String,
@@ -399,6 +408,36 @@ class CheckoutIntentServiceImpl internal constructor(private val clientOptions: 
             return errorHandler.handle(response).parseable {
                 response
                     .use { purchaseHandler.handle(it) }
+                    .also {
+                        if (requestOptions.responseValidation!!) {
+                            it.validate()
+                        }
+                    }
+            }
+        }
+
+        private val retrieveOrderHandler: Handler<Order> =
+            jsonHandler<Order>(clientOptions.jsonMapper)
+
+        override fun retrieveOrder(
+            params: CheckoutIntentRetrieveOrderParams,
+            requestOptions: RequestOptions,
+        ): HttpResponseFor<Order> {
+            // We check here instead of in the params builder because this can be specified
+            // positionally or in the params class.
+            checkRequired("id", params.id().getOrNull())
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments("api", "v1", "checkout-intents", params._pathParam(0), "order")
+                    .build()
+                    .prepare(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val response = clientOptions.httpClient.execute(request, requestOptions)
+            return errorHandler.handle(response).parseable {
+                response
+                    .use { retrieveOrderHandler.handle(it) }
                     .also {
                         if (requestOptions.responseValidation!!) {
                             it.validate()

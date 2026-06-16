@@ -943,7 +943,7 @@ To access undocumented response properties, call the `_additionalProperties()` m
 import com.rye.core.JsonValue;
 import java.util.Map;
 
-Map<String, JsonValue> additionalProperties = client.betas().checkoutSessions().create(params)._additionalProperties();
+Map<String, JsonValue> additionalProperties = client.checkoutIntents().retrieveOrder(params)._additionalProperties();
 JsonValue secretPropertyValue = additionalProperties.get("secretProperty");
 
 String result = secretPropertyValue.accept(new JsonValue.Visitor<>() {
@@ -973,19 +973,19 @@ To access a property's raw JSON value, which may be undocumented, call its `_` p
 import com.rye.core.JsonField;
 import java.util.Optional;
 
-JsonField<String> productUrl = client.betas().checkoutSessions().create(params)._productUrl();
+JsonField<Object> field = client.checkoutIntents().retrieveOrder(params)._field();
 
-if (productUrl.isMissing()) {
+if (field.isMissing()) {
   // The property is absent from the JSON response
-} else if (productUrl.isNull()) {
+} else if (field.isNull()) {
   // The property was set to literal null
 } else {
   // Check if value was provided as a string
   // Other methods include `asNumber()`, `asBoolean()`, etc.
-  Optional<String> jsonString = productUrl.asString();
+  Optional<String> jsonString = field.asString();
 
   // Try to deserialize into a custom type
-  MyClass myObject = productUrl.asUnknown().orElseThrow().convert(MyClass.class);
+  MyClass myObject = field.asUnknown().orElseThrow().convert(MyClass.class);
 }
 ```
 
@@ -1000,9 +1000,9 @@ Validating the response is _not_ forwards compatible with new types from the API
 If you would still prefer to check that the response is completely well-typed upfront, then either call `validate()`:
 
 ```java
-import com.rye.models.betas.CheckoutSession;
+import com.rye.models.orders.Order;
 
-CheckoutSession checkoutSession = client.betas().checkoutSessions().create(params).validate();
+Order order = client.checkoutIntents().retrieveOrder(params).validate();
 ```
 
 Or configure the method call to validate the response using the `responseValidation` method:
