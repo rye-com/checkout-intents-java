@@ -24,6 +24,11 @@ interface ShipmentServiceAsync {
      */
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): ShipmentServiceAsync
 
+    /**
+     * Advance the simulated shipment for a checkout intent. To trigger delayed or canceled shipping
+     * scenarios, create the checkout intent with a matching shipping and delivery test product:
+     * https://rye.com/docs/api-v2/testing/test-products#shipping-&-delivery
+     */
     fun advance(checkoutIntentId: String): CompletableFuture<ShipmentAdvanceResponse> =
         advance(checkoutIntentId, ShipmentAdvanceParams.none())
 
