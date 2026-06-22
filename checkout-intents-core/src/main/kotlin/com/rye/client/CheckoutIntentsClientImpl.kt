@@ -28,6 +28,8 @@ import com.rye.services.blocking.ReturnService
 import com.rye.services.blocking.ReturnServiceImpl
 import com.rye.services.blocking.ShipmentService
 import com.rye.services.blocking.ShipmentServiceImpl
+import com.rye.services.blocking.TestHelperService
+import com.rye.services.blocking.TestHelperServiceImpl
 import java.util.function.Consumer
 
 class CheckoutIntentsClientImpl(private val clientOptions: ClientOptions) : CheckoutIntentsClient {
@@ -83,6 +85,10 @@ class CheckoutIntentsClientImpl(private val clientOptions: ClientOptions) : Chec
 
     private val returns: ReturnService by lazy { ReturnServiceImpl(clientOptionsWithUserAgent) }
 
+    private val testHelpers: TestHelperService by lazy {
+        TestHelperServiceImpl(clientOptionsWithUserAgent)
+    }
+
     override fun async(): CheckoutIntentsClientAsync = async
 
     override fun withRawResponse(): CheckoutIntentsClient.WithRawResponse = withRawResponse
@@ -113,6 +119,8 @@ class CheckoutIntentsClientImpl(private val clientOptions: ClientOptions) : Chec
     override fun merchantConnectors(): MerchantConnectorService = merchantConnectors
 
     override fun returns(): ReturnService = returns
+
+    override fun testHelpers(): TestHelperService = testHelpers
 
     override fun close() = clientOptions.close()
 
@@ -167,6 +175,10 @@ class CheckoutIntentsClientImpl(private val clientOptions: ClientOptions) : Chec
             ReturnServiceImpl.WithRawResponseImpl(clientOptions)
         }
 
+        private val testHelpers: TestHelperService.WithRawResponse by lazy {
+            TestHelperServiceImpl.WithRawResponseImpl(clientOptions)
+        }
+
         override fun withOptions(
             modifier: Consumer<ClientOptions.Builder>
         ): CheckoutIntentsClient.WithRawResponse =
@@ -198,5 +210,7 @@ class CheckoutIntentsClientImpl(private val clientOptions: ClientOptions) : Chec
             merchantConnectors
 
         override fun returns(): ReturnService.WithRawResponse = returns
+
+        override fun testHelpers(): TestHelperService.WithRawResponse = testHelpers
     }
 }

@@ -64,6 +64,7 @@ internal class ProGuardCompatibilityTest {
         assertThat(client.events()).isNotNull()
         assertThat(client.merchantConnectors()).isNotNull()
         assertThat(client.returns()).isNotNull()
+        assertThat(client.testHelpers()).isNotNull()
     }
 
     @Test

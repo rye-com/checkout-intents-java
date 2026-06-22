@@ -28,6 +28,8 @@ import com.rye.services.async.ReturnServiceAsync
 import com.rye.services.async.ReturnServiceAsyncImpl
 import com.rye.services.async.ShipmentServiceAsync
 import com.rye.services.async.ShipmentServiceAsyncImpl
+import com.rye.services.async.TestHelperServiceAsync
+import com.rye.services.async.TestHelperServiceAsyncImpl
 import java.util.function.Consumer
 
 class CheckoutIntentsClientAsyncImpl(private val clientOptions: ClientOptions) :
@@ -94,6 +96,10 @@ class CheckoutIntentsClientAsyncImpl(private val clientOptions: ClientOptions) :
         ReturnServiceAsyncImpl(clientOptionsWithUserAgent)
     }
 
+    private val testHelpers: TestHelperServiceAsync by lazy {
+        TestHelperServiceAsyncImpl(clientOptionsWithUserAgent)
+    }
+
     override fun sync(): CheckoutIntentsClient = sync
 
     override fun withRawResponse(): CheckoutIntentsClientAsync.WithRawResponse = withRawResponse
@@ -126,6 +132,8 @@ class CheckoutIntentsClientAsyncImpl(private val clientOptions: ClientOptions) :
     override fun merchantConnectors(): MerchantConnectorServiceAsync = merchantConnectors
 
     override fun returns(): ReturnServiceAsync = returns
+
+    override fun testHelpers(): TestHelperServiceAsync = testHelpers
 
     override fun close() = clientOptions.close()
 
@@ -180,6 +188,10 @@ class CheckoutIntentsClientAsyncImpl(private val clientOptions: ClientOptions) :
             ReturnServiceAsyncImpl.WithRawResponseImpl(clientOptions)
         }
 
+        private val testHelpers: TestHelperServiceAsync.WithRawResponse by lazy {
+            TestHelperServiceAsyncImpl.WithRawResponseImpl(clientOptions)
+        }
+
         override fun withOptions(
             modifier: Consumer<ClientOptions.Builder>
         ): CheckoutIntentsClientAsync.WithRawResponse =
@@ -211,5 +223,7 @@ class CheckoutIntentsClientAsyncImpl(private val clientOptions: ClientOptions) :
             merchantConnectors
 
         override fun returns(): ReturnServiceAsync.WithRawResponse = returns
+
+        override fun testHelpers(): TestHelperServiceAsync.WithRawResponse = testHelpers
     }
 }
