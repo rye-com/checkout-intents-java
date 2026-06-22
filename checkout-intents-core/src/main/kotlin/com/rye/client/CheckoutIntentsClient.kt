@@ -15,6 +15,7 @@ import com.rye.services.blocking.PaymentGatewayService
 import com.rye.services.blocking.ProductService
 import com.rye.services.blocking.ReturnService
 import com.rye.services.blocking.ShipmentService
+import com.rye.services.blocking.TestHelperService
 import java.util.function.Consumer
 
 /**
@@ -77,6 +78,8 @@ interface CheckoutIntentsClient {
 
     fun returns(): ReturnService
 
+    fun testHelpers(): TestHelperService
+
     /**
      * Closes this client, relinquishing any underlying resources.
      *
@@ -127,5 +130,7 @@ interface CheckoutIntentsClient {
         fun merchantConnectors(): MerchantConnectorService.WithRawResponse
 
         fun returns(): ReturnService.WithRawResponse
+
+        fun testHelpers(): TestHelperService.WithRawResponse
     }
 }
