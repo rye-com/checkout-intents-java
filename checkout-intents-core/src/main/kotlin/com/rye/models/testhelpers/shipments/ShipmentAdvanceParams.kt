@@ -11,6 +11,11 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
+/**
+ * Advance the simulated shipment for a checkout intent. To trigger delayed or canceled shipping
+ * scenarios, create the checkout intent with a matching shipping and delivery test product:
+ * https://rye.com/docs/api-v2/testing/test-products#shipping-&-delivery
+ */
 class ShipmentAdvanceParams
 private constructor(
     private val checkoutIntentId: String?,
