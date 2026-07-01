@@ -45,6 +45,7 @@ internal class CheckoutIntentListPageResponseTest {
                         )
                         .discoverPromoCodes(true)
                         .addPromoCode("SAVE20")
+                        .referenceId("order-1234")
                         .addVariantSelection(
                             VariantSelection.builder()
                                 .label("Size, Color, etc.")
@@ -97,6 +98,7 @@ internal class CheckoutIntentListPageResponseTest {
                         )
                         .discoverPromoCodes(true)
                         .addPromoCode("SAVE20")
+                        .referenceId("order-1234")
                         .addVariantSelection(
                             VariantSelection.builder()
                                 .label("Size, Color, etc.")
@@ -154,6 +156,7 @@ internal class CheckoutIntentListPageResponseTest {
                         )
                         .discoverPromoCodes(true)
                         .addPromoCode("SAVE20")
+                        .referenceId("order-1234")
                         .addVariantSelection(
                             VariantSelection.builder()
                                 .label("Size, Color, etc.")

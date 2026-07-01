@@ -380,6 +380,7 @@ private constructor(
         private val constraints: JsonField<BaseCheckoutIntent.Constraints>,
         private val discoverPromoCodes: JsonField<Boolean>,
         private val promoCodes: JsonField<List<String>>,
+        private val referenceId: JsonField<String>,
         private val variantSelections: JsonField<List<VariantSelection>>,
         private val state: JsonField<State>,
         private val additionalProperties: MutableMap<String, JsonValue>,
@@ -405,6 +406,9 @@ private constructor(
             @JsonProperty("promoCodes")
             @ExcludeMissing
             promoCodes: JsonField<List<String>> = JsonMissing.of(),
+            @JsonProperty("referenceId")
+            @ExcludeMissing
+            referenceId: JsonField<String> = JsonMissing.of(),
             @JsonProperty("variantSelections")
             @ExcludeMissing
             variantSelections: JsonField<List<VariantSelection>> = JsonMissing.of(),
@@ -418,6 +422,7 @@ private constructor(
             constraints,
             discoverPromoCodes,
             promoCodes,
+            referenceId,
             variantSelections,
             state,
             mutableMapOf(),
@@ -433,6 +438,7 @@ private constructor(
                 .constraints(constraints)
                 .discoverPromoCodes(discoverPromoCodes)
                 .promoCodes(promoCodes)
+                .referenceId(referenceId)
                 .variantSelections(variantSelections)
                 .build()
 
@@ -490,6 +496,12 @@ private constructor(
          *   (e.g. if the server responded with an unexpected value).
          */
         fun promoCodes(): Optional<List<String>> = promoCodes.getOptional("promoCodes")
+
+        /**
+         * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type
+         *   (e.g. if the server responded with an unexpected value).
+         */
+        fun referenceId(): Optional<String> = referenceId.getOptional("referenceId")
 
         /**
          * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type
@@ -573,6 +585,15 @@ private constructor(
         fun _promoCodes(): JsonField<List<String>> = promoCodes
 
         /**
+         * Returns the raw JSON value of [referenceId].
+         *
+         * Unlike [referenceId], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("referenceId")
+        @ExcludeMissing
+        fun _referenceId(): JsonField<String> = referenceId
+
+        /**
          * Returns the raw JSON value of [variantSelections].
          *
          * Unlike [variantSelections], this method doesn't throw if the JSON field has an unexpected
@@ -631,6 +652,7 @@ private constructor(
             private var constraints: JsonField<BaseCheckoutIntent.Constraints> = JsonMissing.of()
             private var discoverPromoCodes: JsonField<Boolean> = JsonMissing.of()
             private var promoCodes: JsonField<MutableList<String>>? = null
+            private var referenceId: JsonField<String> = JsonMissing.of()
             private var variantSelections: JsonField<MutableList<VariantSelection>>? = null
             private var state: JsonField<State>? = null
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
@@ -646,6 +668,7 @@ private constructor(
                     constraints = retrievingOfferCheckoutIntent.constraints
                     discoverPromoCodes = retrievingOfferCheckoutIntent.discoverPromoCodes
                     promoCodes = retrievingOfferCheckoutIntent.promoCodes.map { it.toMutableList() }
+                    referenceId = retrievingOfferCheckoutIntent.referenceId
                     variantSelections =
                         retrievingOfferCheckoutIntent.variantSelections.map { it.toMutableList() }
                     state = retrievingOfferCheckoutIntent.state
@@ -763,6 +786,19 @@ private constructor(
                     }
             }
 
+            fun referenceId(referenceId: String) = referenceId(JsonField.of(referenceId))
+
+            /**
+             * Sets [Builder.referenceId] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.referenceId] with a well-typed [String] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun referenceId(referenceId: JsonField<String>) = apply {
+                this.referenceId = referenceId
+            }
+
             fun variantSelections(variantSelections: List<VariantSelection>) =
                 variantSelections(JsonField.of(variantSelections))
 
@@ -846,6 +882,7 @@ private constructor(
                     constraints,
                     discoverPromoCodes,
                     (promoCodes ?: JsonMissing.of()).map { it.toImmutable() },
+                    referenceId,
                     (variantSelections ?: JsonMissing.of()).map { it.toImmutable() },
                     checkRequired("state", state),
                     additionalProperties.toMutableMap(),
@@ -876,6 +913,7 @@ private constructor(
             constraints().ifPresent { it.validate() }
             discoverPromoCodes()
             promoCodes()
+            referenceId()
             variantSelections().ifPresent { it.forEach { it.validate() } }
             state().validate()
             validated = true
@@ -905,6 +943,7 @@ private constructor(
                 (constraints.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (discoverPromoCodes.asKnown().isPresent) 1 else 0) +
                 (promoCodes.asKnown().getOrNull()?.size ?: 0) +
+                (if (referenceId.asKnown().isPresent) 1 else 0) +
                 (variantSelections.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
                 (state.asKnown().getOrNull()?.validity() ?: 0)
 
@@ -1055,6 +1094,7 @@ private constructor(
                 constraints == other.constraints &&
                 discoverPromoCodes == other.discoverPromoCodes &&
                 promoCodes == other.promoCodes &&
+                referenceId == other.referenceId &&
                 variantSelections == other.variantSelections &&
                 state == other.state &&
                 additionalProperties == other.additionalProperties
@@ -1070,6 +1110,7 @@ private constructor(
                 constraints,
                 discoverPromoCodes,
                 promoCodes,
+                referenceId,
                 variantSelections,
                 state,
                 additionalProperties,
@@ -1079,7 +1120,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "RetrievingOfferCheckoutIntent{id=$id, buyer=$buyer, createdAt=$createdAt, productUrl=$productUrl, quantity=$quantity, constraints=$constraints, discoverPromoCodes=$discoverPromoCodes, promoCodes=$promoCodes, variantSelections=$variantSelections, state=$state, additionalProperties=$additionalProperties}"
+            "RetrievingOfferCheckoutIntent{id=$id, buyer=$buyer, createdAt=$createdAt, productUrl=$productUrl, quantity=$quantity, constraints=$constraints, discoverPromoCodes=$discoverPromoCodes, promoCodes=$promoCodes, referenceId=$referenceId, variantSelections=$variantSelections, state=$state, additionalProperties=$additionalProperties}"
     }
 
     class AwaitingConfirmationCheckoutIntent
@@ -1093,6 +1134,7 @@ private constructor(
         private val constraints: JsonField<BaseCheckoutIntent.Constraints>,
         private val discoverPromoCodes: JsonField<Boolean>,
         private val promoCodes: JsonField<List<String>>,
+        private val referenceId: JsonField<String>,
         private val variantSelections: JsonField<List<VariantSelection>>,
         private val offer: JsonField<Offer>,
         private val state: JsonField<State>,
@@ -1120,6 +1162,9 @@ private constructor(
             @JsonProperty("promoCodes")
             @ExcludeMissing
             promoCodes: JsonField<List<String>> = JsonMissing.of(),
+            @JsonProperty("referenceId")
+            @ExcludeMissing
+            referenceId: JsonField<String> = JsonMissing.of(),
             @JsonProperty("variantSelections")
             @ExcludeMissing
             variantSelections: JsonField<List<VariantSelection>> = JsonMissing.of(),
@@ -1137,6 +1182,7 @@ private constructor(
             constraints,
             discoverPromoCodes,
             promoCodes,
+            referenceId,
             variantSelections,
             offer,
             state,
@@ -1154,6 +1200,7 @@ private constructor(
                 .constraints(constraints)
                 .discoverPromoCodes(discoverPromoCodes)
                 .promoCodes(promoCodes)
+                .referenceId(referenceId)
                 .variantSelections(variantSelections)
                 .build()
 
@@ -1211,6 +1258,12 @@ private constructor(
          *   (e.g. if the server responded with an unexpected value).
          */
         fun promoCodes(): Optional<List<String>> = promoCodes.getOptional("promoCodes")
+
+        /**
+         * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type
+         *   (e.g. if the server responded with an unexpected value).
+         */
+        fun referenceId(): Optional<String> = referenceId.getOptional("referenceId")
 
         /**
          * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type
@@ -1307,6 +1360,15 @@ private constructor(
         fun _promoCodes(): JsonField<List<String>> = promoCodes
 
         /**
+         * Returns the raw JSON value of [referenceId].
+         *
+         * Unlike [referenceId], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("referenceId")
+        @ExcludeMissing
+        fun _referenceId(): JsonField<String> = referenceId
+
+        /**
          * Returns the raw JSON value of [variantSelections].
          *
          * Unlike [variantSelections], this method doesn't throw if the JSON field has an unexpected
@@ -1383,6 +1445,7 @@ private constructor(
             private var constraints: JsonField<BaseCheckoutIntent.Constraints> = JsonMissing.of()
             private var discoverPromoCodes: JsonField<Boolean> = JsonMissing.of()
             private var promoCodes: JsonField<MutableList<String>>? = null
+            private var referenceId: JsonField<String> = JsonMissing.of()
             private var variantSelections: JsonField<MutableList<VariantSelection>>? = null
             private var offer: JsonField<Offer>? = null
             private var state: JsonField<State>? = null
@@ -1402,6 +1465,7 @@ private constructor(
                 discoverPromoCodes = awaitingConfirmationCheckoutIntent.discoverPromoCodes
                 promoCodes =
                     awaitingConfirmationCheckoutIntent.promoCodes.map { it.toMutableList() }
+                referenceId = awaitingConfirmationCheckoutIntent.referenceId
                 variantSelections =
                     awaitingConfirmationCheckoutIntent.variantSelections.map { it.toMutableList() }
                 offer = awaitingConfirmationCheckoutIntent.offer
@@ -1519,6 +1583,19 @@ private constructor(
                     (promoCodes ?: JsonField.of(mutableListOf())).also {
                         checkKnown("promoCodes", it).add(promoCode)
                     }
+            }
+
+            fun referenceId(referenceId: String) = referenceId(JsonField.of(referenceId))
+
+            /**
+             * Sets [Builder.referenceId] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.referenceId] with a well-typed [String] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun referenceId(referenceId: JsonField<String>) = apply {
+                this.referenceId = referenceId
             }
 
             fun variantSelections(variantSelections: List<VariantSelection>) =
@@ -1658,6 +1735,7 @@ private constructor(
                     constraints,
                     discoverPromoCodes,
                     (promoCodes ?: JsonMissing.of()).map { it.toImmutable() },
+                    referenceId,
                     (variantSelections ?: JsonMissing.of()).map { it.toImmutable() },
                     checkRequired("offer", offer),
                     checkRequired("state", state),
@@ -1690,6 +1768,7 @@ private constructor(
             constraints().ifPresent { it.validate() }
             discoverPromoCodes()
             promoCodes()
+            referenceId()
             variantSelections().ifPresent { it.forEach { it.validate() } }
             offer().validate()
             state().validate()
@@ -1721,6 +1800,7 @@ private constructor(
                 (constraints.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (discoverPromoCodes.asKnown().isPresent) 1 else 0) +
                 (promoCodes.asKnown().getOrNull()?.size ?: 0) +
+                (if (referenceId.asKnown().isPresent) 1 else 0) +
                 (variantSelections.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
                 (offer.asKnown().getOrNull()?.validity() ?: 0) +
                 (state.asKnown().getOrNull()?.validity() ?: 0) +
@@ -1873,6 +1953,7 @@ private constructor(
                 constraints == other.constraints &&
                 discoverPromoCodes == other.discoverPromoCodes &&
                 promoCodes == other.promoCodes &&
+                referenceId == other.referenceId &&
                 variantSelections == other.variantSelections &&
                 offer == other.offer &&
                 state == other.state &&
@@ -1890,6 +1971,7 @@ private constructor(
                 constraints,
                 discoverPromoCodes,
                 promoCodes,
+                referenceId,
                 variantSelections,
                 offer,
                 state,
@@ -1901,7 +1983,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "AwaitingConfirmationCheckoutIntent{id=$id, buyer=$buyer, createdAt=$createdAt, productUrl=$productUrl, quantity=$quantity, constraints=$constraints, discoverPromoCodes=$discoverPromoCodes, promoCodes=$promoCodes, variantSelections=$variantSelections, offer=$offer, state=$state, paymentMethod=$paymentMethod, additionalProperties=$additionalProperties}"
+            "AwaitingConfirmationCheckoutIntent{id=$id, buyer=$buyer, createdAt=$createdAt, productUrl=$productUrl, quantity=$quantity, constraints=$constraints, discoverPromoCodes=$discoverPromoCodes, promoCodes=$promoCodes, referenceId=$referenceId, variantSelections=$variantSelections, offer=$offer, state=$state, paymentMethod=$paymentMethod, additionalProperties=$additionalProperties}"
     }
 
     class RequiresActionCheckoutIntent
@@ -1915,6 +1997,7 @@ private constructor(
         private val constraints: JsonField<BaseCheckoutIntent.Constraints>,
         private val discoverPromoCodes: JsonField<Boolean>,
         private val promoCodes: JsonField<List<String>>,
+        private val referenceId: JsonField<String>,
         private val variantSelections: JsonField<List<VariantSelection>>,
         private val nextAction: JsonField<NextAction>,
         private val offer: JsonField<Offer>,
@@ -1943,6 +2026,9 @@ private constructor(
             @JsonProperty("promoCodes")
             @ExcludeMissing
             promoCodes: JsonField<List<String>> = JsonMissing.of(),
+            @JsonProperty("referenceId")
+            @ExcludeMissing
+            referenceId: JsonField<String> = JsonMissing.of(),
             @JsonProperty("variantSelections")
             @ExcludeMissing
             variantSelections: JsonField<List<VariantSelection>> = JsonMissing.of(),
@@ -1963,6 +2049,7 @@ private constructor(
             constraints,
             discoverPromoCodes,
             promoCodes,
+            referenceId,
             variantSelections,
             nextAction,
             offer,
@@ -1981,6 +2068,7 @@ private constructor(
                 .constraints(constraints)
                 .discoverPromoCodes(discoverPromoCodes)
                 .promoCodes(promoCodes)
+                .referenceId(referenceId)
                 .variantSelections(variantSelections)
                 .build()
 
@@ -2038,6 +2126,12 @@ private constructor(
          *   (e.g. if the server responded with an unexpected value).
          */
         fun promoCodes(): Optional<List<String>> = promoCodes.getOptional("promoCodes")
+
+        /**
+         * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type
+         *   (e.g. if the server responded with an unexpected value).
+         */
+        fun referenceId(): Optional<String> = referenceId.getOptional("referenceId")
 
         /**
          * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type
@@ -2142,6 +2236,15 @@ private constructor(
         fun _promoCodes(): JsonField<List<String>> = promoCodes
 
         /**
+         * Returns the raw JSON value of [referenceId].
+         *
+         * Unlike [referenceId], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("referenceId")
+        @ExcludeMissing
+        fun _referenceId(): JsonField<String> = referenceId
+
+        /**
          * Returns the raw JSON value of [variantSelections].
          *
          * Unlike [variantSelections], this method doesn't throw if the JSON field has an unexpected
@@ -2229,6 +2332,7 @@ private constructor(
             private var constraints: JsonField<BaseCheckoutIntent.Constraints> = JsonMissing.of()
             private var discoverPromoCodes: JsonField<Boolean> = JsonMissing.of()
             private var promoCodes: JsonField<MutableList<String>>? = null
+            private var referenceId: JsonField<String> = JsonMissing.of()
             private var variantSelections: JsonField<MutableList<VariantSelection>>? = null
             private var nextAction: JsonField<NextAction>? = null
             private var offer: JsonField<Offer>? = null
@@ -2246,6 +2350,7 @@ private constructor(
                 constraints = requiresActionCheckoutIntent.constraints
                 discoverPromoCodes = requiresActionCheckoutIntent.discoverPromoCodes
                 promoCodes = requiresActionCheckoutIntent.promoCodes.map { it.toMutableList() }
+                referenceId = requiresActionCheckoutIntent.referenceId
                 variantSelections =
                     requiresActionCheckoutIntent.variantSelections.map { it.toMutableList() }
                 nextAction = requiresActionCheckoutIntent.nextAction
@@ -2364,6 +2469,19 @@ private constructor(
                     (promoCodes ?: JsonField.of(mutableListOf())).also {
                         checkKnown("promoCodes", it).add(promoCode)
                     }
+            }
+
+            fun referenceId(referenceId: String) = referenceId(JsonField.of(referenceId))
+
+            /**
+             * Sets [Builder.referenceId] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.referenceId] with a well-typed [String] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun referenceId(referenceId: JsonField<String>) = apply {
+                this.referenceId = referenceId
             }
 
             fun variantSelections(variantSelections: List<VariantSelection>) =
@@ -2518,6 +2636,7 @@ private constructor(
                     constraints,
                     discoverPromoCodes,
                     (promoCodes ?: JsonMissing.of()).map { it.toImmutable() },
+                    referenceId,
                     (variantSelections ?: JsonMissing.of()).map { it.toImmutable() },
                     checkRequired("nextAction", nextAction),
                     checkRequired("offer", offer),
@@ -2551,6 +2670,7 @@ private constructor(
             constraints().ifPresent { it.validate() }
             discoverPromoCodes()
             promoCodes()
+            referenceId()
             variantSelections().ifPresent { it.forEach { it.validate() } }
             nextAction().validate()
             offer().validate()
@@ -2583,6 +2703,7 @@ private constructor(
                 (constraints.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (discoverPromoCodes.asKnown().isPresent) 1 else 0) +
                 (promoCodes.asKnown().getOrNull()?.size ?: 0) +
+                (if (referenceId.asKnown().isPresent) 1 else 0) +
                 (variantSelections.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
                 (nextAction.asKnown().getOrNull()?.validity() ?: 0) +
                 (offer.asKnown().getOrNull()?.validity() ?: 0) +
@@ -3756,6 +3877,7 @@ private constructor(
                 constraints == other.constraints &&
                 discoverPromoCodes == other.discoverPromoCodes &&
                 promoCodes == other.promoCodes &&
+                referenceId == other.referenceId &&
                 variantSelections == other.variantSelections &&
                 nextAction == other.nextAction &&
                 offer == other.offer &&
@@ -3774,6 +3896,7 @@ private constructor(
                 constraints,
                 discoverPromoCodes,
                 promoCodes,
+                referenceId,
                 variantSelections,
                 nextAction,
                 offer,
@@ -3786,7 +3909,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "RequiresActionCheckoutIntent{id=$id, buyer=$buyer, createdAt=$createdAt, productUrl=$productUrl, quantity=$quantity, constraints=$constraints, discoverPromoCodes=$discoverPromoCodes, promoCodes=$promoCodes, variantSelections=$variantSelections, nextAction=$nextAction, offer=$offer, paymentMethod=$paymentMethod, state=$state, additionalProperties=$additionalProperties}"
+            "RequiresActionCheckoutIntent{id=$id, buyer=$buyer, createdAt=$createdAt, productUrl=$productUrl, quantity=$quantity, constraints=$constraints, discoverPromoCodes=$discoverPromoCodes, promoCodes=$promoCodes, referenceId=$referenceId, variantSelections=$variantSelections, nextAction=$nextAction, offer=$offer, paymentMethod=$paymentMethod, state=$state, additionalProperties=$additionalProperties}"
     }
 
     class PlacingOrderCheckoutIntent
@@ -3800,6 +3923,7 @@ private constructor(
         private val constraints: JsonField<BaseCheckoutIntent.Constraints>,
         private val discoverPromoCodes: JsonField<Boolean>,
         private val promoCodes: JsonField<List<String>>,
+        private val referenceId: JsonField<String>,
         private val variantSelections: JsonField<List<VariantSelection>>,
         private val offer: JsonField<Offer>,
         private val paymentMethod: JsonField<PaymentMethod>,
@@ -3827,6 +3951,9 @@ private constructor(
             @JsonProperty("promoCodes")
             @ExcludeMissing
             promoCodes: JsonField<List<String>> = JsonMissing.of(),
+            @JsonProperty("referenceId")
+            @ExcludeMissing
+            referenceId: JsonField<String> = JsonMissing.of(),
             @JsonProperty("variantSelections")
             @ExcludeMissing
             variantSelections: JsonField<List<VariantSelection>> = JsonMissing.of(),
@@ -3844,6 +3971,7 @@ private constructor(
             constraints,
             discoverPromoCodes,
             promoCodes,
+            referenceId,
             variantSelections,
             offer,
             paymentMethod,
@@ -3861,6 +3989,7 @@ private constructor(
                 .constraints(constraints)
                 .discoverPromoCodes(discoverPromoCodes)
                 .promoCodes(promoCodes)
+                .referenceId(referenceId)
                 .variantSelections(variantSelections)
                 .build()
 
@@ -3918,6 +4047,12 @@ private constructor(
          *   (e.g. if the server responded with an unexpected value).
          */
         fun promoCodes(): Optional<List<String>> = promoCodes.getOptional("promoCodes")
+
+        /**
+         * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type
+         *   (e.g. if the server responded with an unexpected value).
+         */
+        fun referenceId(): Optional<String> = referenceId.getOptional("referenceId")
 
         /**
          * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type
@@ -4015,6 +4150,15 @@ private constructor(
         fun _promoCodes(): JsonField<List<String>> = promoCodes
 
         /**
+         * Returns the raw JSON value of [referenceId].
+         *
+         * Unlike [referenceId], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("referenceId")
+        @ExcludeMissing
+        fun _referenceId(): JsonField<String> = referenceId
+
+        /**
          * Returns the raw JSON value of [variantSelections].
          *
          * Unlike [variantSelections], this method doesn't throw if the JSON field has an unexpected
@@ -4092,6 +4236,7 @@ private constructor(
             private var constraints: JsonField<BaseCheckoutIntent.Constraints> = JsonMissing.of()
             private var discoverPromoCodes: JsonField<Boolean> = JsonMissing.of()
             private var promoCodes: JsonField<MutableList<String>>? = null
+            private var referenceId: JsonField<String> = JsonMissing.of()
             private var variantSelections: JsonField<MutableList<VariantSelection>>? = null
             private var offer: JsonField<Offer>? = null
             private var paymentMethod: JsonField<PaymentMethod>? = null
@@ -4108,6 +4253,7 @@ private constructor(
                 constraints = placingOrderCheckoutIntent.constraints
                 discoverPromoCodes = placingOrderCheckoutIntent.discoverPromoCodes
                 promoCodes = placingOrderCheckoutIntent.promoCodes.map { it.toMutableList() }
+                referenceId = placingOrderCheckoutIntent.referenceId
                 variantSelections =
                     placingOrderCheckoutIntent.variantSelections.map { it.toMutableList() }
                 offer = placingOrderCheckoutIntent.offer
@@ -4225,6 +4371,19 @@ private constructor(
                     (promoCodes ?: JsonField.of(mutableListOf())).also {
                         checkKnown("promoCodes", it).add(promoCode)
                     }
+            }
+
+            fun referenceId(referenceId: String) = referenceId(JsonField.of(referenceId))
+
+            /**
+             * Sets [Builder.referenceId] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.referenceId] with a well-typed [String] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun referenceId(referenceId: JsonField<String>) = apply {
+                this.referenceId = referenceId
             }
 
             fun variantSelections(variantSelections: List<VariantSelection>) =
@@ -4365,6 +4524,7 @@ private constructor(
                     constraints,
                     discoverPromoCodes,
                     (promoCodes ?: JsonMissing.of()).map { it.toImmutable() },
+                    referenceId,
                     (variantSelections ?: JsonMissing.of()).map { it.toImmutable() },
                     checkRequired("offer", offer),
                     checkRequired("paymentMethod", paymentMethod),
@@ -4397,6 +4557,7 @@ private constructor(
             constraints().ifPresent { it.validate() }
             discoverPromoCodes()
             promoCodes()
+            referenceId()
             variantSelections().ifPresent { it.forEach { it.validate() } }
             offer().validate()
             paymentMethod().validate()
@@ -4428,6 +4589,7 @@ private constructor(
                 (constraints.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (discoverPromoCodes.asKnown().isPresent) 1 else 0) +
                 (promoCodes.asKnown().getOrNull()?.size ?: 0) +
+                (if (referenceId.asKnown().isPresent) 1 else 0) +
                 (variantSelections.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
                 (offer.asKnown().getOrNull()?.validity() ?: 0) +
                 (paymentMethod.asKnown().getOrNull()?.validity() ?: 0) +
@@ -4580,6 +4742,7 @@ private constructor(
                 constraints == other.constraints &&
                 discoverPromoCodes == other.discoverPromoCodes &&
                 promoCodes == other.promoCodes &&
+                referenceId == other.referenceId &&
                 variantSelections == other.variantSelections &&
                 offer == other.offer &&
                 paymentMethod == other.paymentMethod &&
@@ -4597,6 +4760,7 @@ private constructor(
                 constraints,
                 discoverPromoCodes,
                 promoCodes,
+                referenceId,
                 variantSelections,
                 offer,
                 paymentMethod,
@@ -4608,7 +4772,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "PlacingOrderCheckoutIntent{id=$id, buyer=$buyer, createdAt=$createdAt, productUrl=$productUrl, quantity=$quantity, constraints=$constraints, discoverPromoCodes=$discoverPromoCodes, promoCodes=$promoCodes, variantSelections=$variantSelections, offer=$offer, paymentMethod=$paymentMethod, state=$state, additionalProperties=$additionalProperties}"
+            "PlacingOrderCheckoutIntent{id=$id, buyer=$buyer, createdAt=$createdAt, productUrl=$productUrl, quantity=$quantity, constraints=$constraints, discoverPromoCodes=$discoverPromoCodes, promoCodes=$promoCodes, referenceId=$referenceId, variantSelections=$variantSelections, offer=$offer, paymentMethod=$paymentMethod, state=$state, additionalProperties=$additionalProperties}"
     }
 
     class CompletedCheckoutIntent
@@ -4622,6 +4786,7 @@ private constructor(
         private val constraints: JsonField<BaseCheckoutIntent.Constraints>,
         private val discoverPromoCodes: JsonField<Boolean>,
         private val promoCodes: JsonField<List<String>>,
+        private val referenceId: JsonField<String>,
         private val variantSelections: JsonField<List<VariantSelection>>,
         private val offer: JsonField<Offer>,
         private val orderId: JsonField<String>,
@@ -4651,6 +4816,9 @@ private constructor(
             @JsonProperty("promoCodes")
             @ExcludeMissing
             promoCodes: JsonField<List<String>> = JsonMissing.of(),
+            @JsonProperty("referenceId")
+            @ExcludeMissing
+            referenceId: JsonField<String> = JsonMissing.of(),
             @JsonProperty("variantSelections")
             @ExcludeMissing
             variantSelections: JsonField<List<VariantSelection>> = JsonMissing.of(),
@@ -4672,6 +4840,7 @@ private constructor(
             constraints,
             discoverPromoCodes,
             promoCodes,
+            referenceId,
             variantSelections,
             offer,
             orderId,
@@ -4691,6 +4860,7 @@ private constructor(
                 .constraints(constraints)
                 .discoverPromoCodes(discoverPromoCodes)
                 .promoCodes(promoCodes)
+                .referenceId(referenceId)
                 .variantSelections(variantSelections)
                 .build()
 
@@ -4748,6 +4918,12 @@ private constructor(
          *   (e.g. if the server responded with an unexpected value).
          */
         fun promoCodes(): Optional<List<String>> = promoCodes.getOptional("promoCodes")
+
+        /**
+         * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type
+         *   (e.g. if the server responded with an unexpected value).
+         */
+        fun referenceId(): Optional<String> = referenceId.getOptional("referenceId")
 
         /**
          * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type
@@ -4859,6 +5035,15 @@ private constructor(
         fun _promoCodes(): JsonField<List<String>> = promoCodes
 
         /**
+         * Returns the raw JSON value of [referenceId].
+         *
+         * Unlike [referenceId], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("referenceId")
+        @ExcludeMissing
+        fun _referenceId(): JsonField<String> = referenceId
+
+        /**
          * Returns the raw JSON value of [variantSelections].
          *
          * Unlike [variantSelections], this method doesn't throw if the JSON field has an unexpected
@@ -4954,6 +5139,7 @@ private constructor(
             private var constraints: JsonField<BaseCheckoutIntent.Constraints> = JsonMissing.of()
             private var discoverPromoCodes: JsonField<Boolean> = JsonMissing.of()
             private var promoCodes: JsonField<MutableList<String>>? = null
+            private var referenceId: JsonField<String> = JsonMissing.of()
             private var variantSelections: JsonField<MutableList<VariantSelection>>? = null
             private var offer: JsonField<Offer>? = null
             private var orderId: JsonField<String>? = null
@@ -4972,6 +5158,7 @@ private constructor(
                 constraints = completedCheckoutIntent.constraints
                 discoverPromoCodes = completedCheckoutIntent.discoverPromoCodes
                 promoCodes = completedCheckoutIntent.promoCodes.map { it.toMutableList() }
+                referenceId = completedCheckoutIntent.referenceId
                 variantSelections =
                     completedCheckoutIntent.variantSelections.map { it.toMutableList() }
                 offer = completedCheckoutIntent.offer
@@ -5090,6 +5277,19 @@ private constructor(
                     (promoCodes ?: JsonField.of(mutableListOf())).also {
                         checkKnown("promoCodes", it).add(promoCode)
                     }
+            }
+
+            fun referenceId(referenceId: String) = referenceId(JsonField.of(referenceId))
+
+            /**
+             * Sets [Builder.referenceId] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.referenceId] with a well-typed [String] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun referenceId(referenceId: JsonField<String>) = apply {
+                this.referenceId = referenceId
             }
 
             fun variantSelections(variantSelections: List<VariantSelection>) =
@@ -5269,6 +5469,7 @@ private constructor(
                     constraints,
                     discoverPromoCodes,
                     (promoCodes ?: JsonMissing.of()).map { it.toImmutable() },
+                    referenceId,
                     (variantSelections ?: JsonMissing.of()).map { it.toImmutable() },
                     checkRequired("offer", offer),
                     checkRequired("orderId", orderId),
@@ -5303,6 +5504,7 @@ private constructor(
             constraints().ifPresent { it.validate() }
             discoverPromoCodes()
             promoCodes()
+            referenceId()
             variantSelections().ifPresent { it.forEach { it.validate() } }
             offer().validate()
             orderId()
@@ -5336,6 +5538,7 @@ private constructor(
                 (constraints.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (discoverPromoCodes.asKnown().isPresent) 1 else 0) +
                 (promoCodes.asKnown().getOrNull()?.size ?: 0) +
+                (if (referenceId.asKnown().isPresent) 1 else 0) +
                 (variantSelections.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
                 (offer.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (orderId.asKnown().isPresent) 1 else 0) +
@@ -5490,6 +5693,7 @@ private constructor(
                 constraints == other.constraints &&
                 discoverPromoCodes == other.discoverPromoCodes &&
                 promoCodes == other.promoCodes &&
+                referenceId == other.referenceId &&
                 variantSelections == other.variantSelections &&
                 offer == other.offer &&
                 orderId == other.orderId &&
@@ -5509,6 +5713,7 @@ private constructor(
                 constraints,
                 discoverPromoCodes,
                 promoCodes,
+                referenceId,
                 variantSelections,
                 offer,
                 orderId,
@@ -5522,7 +5727,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "CompletedCheckoutIntent{id=$id, buyer=$buyer, createdAt=$createdAt, productUrl=$productUrl, quantity=$quantity, constraints=$constraints, discoverPromoCodes=$discoverPromoCodes, promoCodes=$promoCodes, variantSelections=$variantSelections, offer=$offer, orderId=$orderId, paymentMethod=$paymentMethod, state=$state, estimatedDeliveryDate=$estimatedDeliveryDate, additionalProperties=$additionalProperties}"
+            "CompletedCheckoutIntent{id=$id, buyer=$buyer, createdAt=$createdAt, productUrl=$productUrl, quantity=$quantity, constraints=$constraints, discoverPromoCodes=$discoverPromoCodes, promoCodes=$promoCodes, referenceId=$referenceId, variantSelections=$variantSelections, offer=$offer, orderId=$orderId, paymentMethod=$paymentMethod, state=$state, estimatedDeliveryDate=$estimatedDeliveryDate, additionalProperties=$additionalProperties}"
     }
 
     class FailedCheckoutIntent
@@ -5536,6 +5741,7 @@ private constructor(
         private val constraints: JsonField<BaseCheckoutIntent.Constraints>,
         private val discoverPromoCodes: JsonField<Boolean>,
         private val promoCodes: JsonField<List<String>>,
+        private val referenceId: JsonField<String>,
         private val variantSelections: JsonField<List<VariantSelection>>,
         private val failureReason: JsonField<FailureReason>,
         private val state: JsonField<State>,
@@ -5564,6 +5770,9 @@ private constructor(
             @JsonProperty("promoCodes")
             @ExcludeMissing
             promoCodes: JsonField<List<String>> = JsonMissing.of(),
+            @JsonProperty("referenceId")
+            @ExcludeMissing
+            referenceId: JsonField<String> = JsonMissing.of(),
             @JsonProperty("variantSelections")
             @ExcludeMissing
             variantSelections: JsonField<List<VariantSelection>> = JsonMissing.of(),
@@ -5584,6 +5793,7 @@ private constructor(
             constraints,
             discoverPromoCodes,
             promoCodes,
+            referenceId,
             variantSelections,
             failureReason,
             state,
@@ -5602,6 +5812,7 @@ private constructor(
                 .constraints(constraints)
                 .discoverPromoCodes(discoverPromoCodes)
                 .promoCodes(promoCodes)
+                .referenceId(referenceId)
                 .variantSelections(variantSelections)
                 .build()
 
@@ -5659,6 +5870,12 @@ private constructor(
          *   (e.g. if the server responded with an unexpected value).
          */
         fun promoCodes(): Optional<List<String>> = promoCodes.getOptional("promoCodes")
+
+        /**
+         * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type
+         *   (e.g. if the server responded with an unexpected value).
+         */
+        fun referenceId(): Optional<String> = referenceId.getOptional("referenceId")
 
         /**
          * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type
@@ -5761,6 +5978,15 @@ private constructor(
         fun _promoCodes(): JsonField<List<String>> = promoCodes
 
         /**
+         * Returns the raw JSON value of [referenceId].
+         *
+         * Unlike [referenceId], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("referenceId")
+        @ExcludeMissing
+        fun _referenceId(): JsonField<String> = referenceId
+
+        /**
          * Returns the raw JSON value of [variantSelections].
          *
          * Unlike [variantSelections], this method doesn't throw if the JSON field has an unexpected
@@ -5846,6 +6072,7 @@ private constructor(
             private var constraints: JsonField<BaseCheckoutIntent.Constraints> = JsonMissing.of()
             private var discoverPromoCodes: JsonField<Boolean> = JsonMissing.of()
             private var promoCodes: JsonField<MutableList<String>>? = null
+            private var referenceId: JsonField<String> = JsonMissing.of()
             private var variantSelections: JsonField<MutableList<VariantSelection>>? = null
             private var failureReason: JsonField<FailureReason>? = null
             private var state: JsonField<State>? = null
@@ -5863,6 +6090,7 @@ private constructor(
                 constraints = failedCheckoutIntent.constraints
                 discoverPromoCodes = failedCheckoutIntent.discoverPromoCodes
                 promoCodes = failedCheckoutIntent.promoCodes.map { it.toMutableList() }
+                referenceId = failedCheckoutIntent.referenceId
                 variantSelections =
                     failedCheckoutIntent.variantSelections.map { it.toMutableList() }
                 failureReason = failedCheckoutIntent.failureReason
@@ -5980,6 +6208,19 @@ private constructor(
                     (promoCodes ?: JsonField.of(mutableListOf())).also {
                         checkKnown("promoCodes", it).add(promoCode)
                     }
+            }
+
+            fun referenceId(referenceId: String) = referenceId(JsonField.of(referenceId))
+
+            /**
+             * Sets [Builder.referenceId] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.referenceId] with a well-typed [String] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun referenceId(referenceId: JsonField<String>) = apply {
+                this.referenceId = referenceId
             }
 
             fun variantSelections(variantSelections: List<VariantSelection>) =
@@ -6133,6 +6374,7 @@ private constructor(
                     constraints,
                     discoverPromoCodes,
                     (promoCodes ?: JsonMissing.of()).map { it.toImmutable() },
+                    referenceId,
                     (variantSelections ?: JsonMissing.of()).map { it.toImmutable() },
                     checkRequired("failureReason", failureReason),
                     checkRequired("state", state),
@@ -6166,6 +6408,7 @@ private constructor(
             constraints().ifPresent { it.validate() }
             discoverPromoCodes()
             promoCodes()
+            referenceId()
             variantSelections().ifPresent { it.forEach { it.validate() } }
             failureReason().validate()
             state().validate()
@@ -6198,6 +6441,7 @@ private constructor(
                 (constraints.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (discoverPromoCodes.asKnown().isPresent) 1 else 0) +
                 (promoCodes.asKnown().getOrNull()?.size ?: 0) +
+                (if (referenceId.asKnown().isPresent) 1 else 0) +
                 (variantSelections.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
                 (failureReason.asKnown().getOrNull()?.validity() ?: 0) +
                 (state.asKnown().getOrNull()?.validity() ?: 0) +
@@ -6843,6 +7087,7 @@ private constructor(
                 constraints == other.constraints &&
                 discoverPromoCodes == other.discoverPromoCodes &&
                 promoCodes == other.promoCodes &&
+                referenceId == other.referenceId &&
                 variantSelections == other.variantSelections &&
                 failureReason == other.failureReason &&
                 state == other.state &&
@@ -6861,6 +7106,7 @@ private constructor(
                 constraints,
                 discoverPromoCodes,
                 promoCodes,
+                referenceId,
                 variantSelections,
                 failureReason,
                 state,
@@ -6873,6 +7119,6 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "FailedCheckoutIntent{id=$id, buyer=$buyer, createdAt=$createdAt, productUrl=$productUrl, quantity=$quantity, constraints=$constraints, discoverPromoCodes=$discoverPromoCodes, promoCodes=$promoCodes, variantSelections=$variantSelections, failureReason=$failureReason, state=$state, offer=$offer, paymentMethod=$paymentMethod, additionalProperties=$additionalProperties}"
+            "FailedCheckoutIntent{id=$id, buyer=$buyer, createdAt=$createdAt, productUrl=$productUrl, quantity=$quantity, constraints=$constraints, discoverPromoCodes=$discoverPromoCodes, promoCodes=$promoCodes, referenceId=$referenceId, variantSelections=$variantSelections, failureReason=$failureReason, state=$state, offer=$offer, paymentMethod=$paymentMethod, additionalProperties=$additionalProperties}"
     }
 }
