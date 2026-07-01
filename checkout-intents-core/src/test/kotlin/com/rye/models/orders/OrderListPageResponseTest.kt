@@ -4,6 +4,7 @@ package com.rye.models.orders
 
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.rye.core.jsonMapper
+import java.time.OffsetDateTime
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -16,6 +17,24 @@ internal class OrderListPageResponseTest {
                 .addData(
                     Order.builder()
                         .id("id")
+                        .cancellation(
+                            Order.Cancellation.RequestedCancellation.builder()
+                                .id("id")
+                                .checkoutIntentId("checkoutIntentId")
+                                .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                .marketplaceOrderId("marketplaceOrderId")
+                                .reason(
+                                    Order.Cancellation.RequestedCancellation.Reason.builder()
+                                        .code(
+                                            Order.Cancellation.RequestedCancellation.Reason.Code
+                                                .REQUESTED_BY_CUSTOMER
+                                        )
+                                        .message("message")
+                                        .build()
+                                )
+                                .state(Order.Cancellation.RequestedCancellation.State.REQUESTED)
+                                .build()
+                        )
                         .checkoutIntentId("ci_aaa8af5c5aae4c0e8ef0172c26c65c13")
                         .createdAt("2026-03-25T00:00:00Z")
                         .updatedAt("2026-03-27T00:00:00Z")
@@ -36,6 +55,24 @@ internal class OrderListPageResponseTest {
             .containsExactly(
                 Order.builder()
                     .id("id")
+                    .cancellation(
+                        Order.Cancellation.RequestedCancellation.builder()
+                            .id("id")
+                            .checkoutIntentId("checkoutIntentId")
+                            .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .marketplaceOrderId("marketplaceOrderId")
+                            .reason(
+                                Order.Cancellation.RequestedCancellation.Reason.builder()
+                                    .code(
+                                        Order.Cancellation.RequestedCancellation.Reason.Code
+                                            .REQUESTED_BY_CUSTOMER
+                                    )
+                                    .message("message")
+                                    .build()
+                            )
+                            .state(Order.Cancellation.RequestedCancellation.State.REQUESTED)
+                            .build()
+                    )
                     .checkoutIntentId("ci_aaa8af5c5aae4c0e8ef0172c26c65c13")
                     .createdAt("2026-03-25T00:00:00Z")
                     .updatedAt("2026-03-27T00:00:00Z")
@@ -61,6 +98,24 @@ internal class OrderListPageResponseTest {
                 .addData(
                     Order.builder()
                         .id("id")
+                        .cancellation(
+                            Order.Cancellation.RequestedCancellation.builder()
+                                .id("id")
+                                .checkoutIntentId("checkoutIntentId")
+                                .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                .marketplaceOrderId("marketplaceOrderId")
+                                .reason(
+                                    Order.Cancellation.RequestedCancellation.Reason.builder()
+                                        .code(
+                                            Order.Cancellation.RequestedCancellation.Reason.Code
+                                                .REQUESTED_BY_CUSTOMER
+                                        )
+                                        .message("message")
+                                        .build()
+                                )
+                                .state(Order.Cancellation.RequestedCancellation.State.REQUESTED)
+                                .build()
+                        )
                         .checkoutIntentId("ci_aaa8af5c5aae4c0e8ef0172c26c65c13")
                         .createdAt("2026-03-25T00:00:00Z")
                         .updatedAt("2026-03-27T00:00:00Z")
