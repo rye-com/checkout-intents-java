@@ -40,6 +40,7 @@ internal class CheckoutSessionCreateParamsTest {
             .discoverPromoCodes(true)
             .layout(CheckoutSessionCreateParams.Layout.DEFAULT)
             .addPromoCode("string")
+            .referenceId("order-1234")
             .addVariantSelection(
                 VariantSelection.builder()
                     .label("Size, Color, etc.")
@@ -81,6 +82,7 @@ internal class CheckoutSessionCreateParamsTest {
                 .discoverPromoCodes(true)
                 .layout(CheckoutSessionCreateParams.Layout.DEFAULT)
                 .addPromoCode("string")
+                .referenceId("order-1234")
                 .addVariantSelection(
                     VariantSelection.builder()
                         .label("Size, Color, etc.")
@@ -121,6 +123,7 @@ internal class CheckoutSessionCreateParamsTest {
         assertThat(body.discoverPromoCodes()).contains(true)
         assertThat(body.layout()).contains(CheckoutSessionCreateParams.Layout.DEFAULT)
         assertThat(body.promoCodes().getOrNull()).containsExactly("string")
+        assertThat(body.referenceId()).contains("order-1234")
         assertThat(body.variantSelections().getOrNull())
             .containsExactly(
                 VariantSelection.builder()

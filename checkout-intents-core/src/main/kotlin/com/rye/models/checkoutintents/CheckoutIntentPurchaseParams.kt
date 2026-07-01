@@ -83,6 +83,12 @@ private constructor(
      * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type (e.g. if
      *   the server responded with an unexpected value).
      */
+    fun referenceId(): Optional<String> = body.referenceId()
+
+    /**
+     * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
     fun variantSelections(): Optional<List<VariantSelection>> = body.variantSelections()
 
     /**
@@ -134,6 +140,13 @@ private constructor(
      * Unlike [promoCodes], this method doesn't throw if the JSON field has an unexpected type.
      */
     fun _promoCodes(): JsonField<List<String>> = body._promoCodes()
+
+    /**
+     * Returns the raw JSON value of [referenceId].
+     *
+     * Unlike [referenceId], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _referenceId(): JsonField<String> = body._referenceId()
 
     /**
      * Returns the raw JSON value of [variantSelections].
@@ -319,6 +332,17 @@ private constructor(
          */
         fun addPromoCode(promoCode: String) = apply { body.addPromoCode(promoCode) }
 
+        fun referenceId(referenceId: String) = apply { body.referenceId(referenceId) }
+
+        /**
+         * Sets [Builder.referenceId] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.referenceId] with a well-typed [String] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun referenceId(referenceId: JsonField<String>) = apply { body.referenceId(referenceId) }
+
         fun variantSelections(variantSelections: List<VariantSelection>) = apply {
             body.variantSelections(variantSelections)
         }
@@ -499,6 +523,7 @@ private constructor(
         private val constraints: JsonField<Constraints>,
         private val discoverPromoCodes: JsonField<Boolean>,
         private val promoCodes: JsonField<List<String>>,
+        private val referenceId: JsonField<String>,
         private val variantSelections: JsonField<List<VariantSelection>>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
@@ -522,6 +547,9 @@ private constructor(
             @JsonProperty("promoCodes")
             @ExcludeMissing
             promoCodes: JsonField<List<String>> = JsonMissing.of(),
+            @JsonProperty("referenceId")
+            @ExcludeMissing
+            referenceId: JsonField<String> = JsonMissing.of(),
             @JsonProperty("variantSelections")
             @ExcludeMissing
             variantSelections: JsonField<List<VariantSelection>> = JsonMissing.of(),
@@ -533,6 +561,7 @@ private constructor(
             constraints,
             discoverPromoCodes,
             promoCodes,
+            referenceId,
             variantSelections,
             mutableMapOf(),
         )
@@ -583,6 +612,12 @@ private constructor(
          *   (e.g. if the server responded with an unexpected value).
          */
         fun promoCodes(): Optional<List<String>> = promoCodes.getOptional("promoCodes")
+
+        /**
+         * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type
+         *   (e.g. if the server responded with an unexpected value).
+         */
+        fun referenceId(): Optional<String> = referenceId.getOptional("referenceId")
 
         /**
          * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type
@@ -653,6 +688,15 @@ private constructor(
         fun _promoCodes(): JsonField<List<String>> = promoCodes
 
         /**
+         * Returns the raw JSON value of [referenceId].
+         *
+         * Unlike [referenceId], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("referenceId")
+        @ExcludeMissing
+        fun _referenceId(): JsonField<String> = referenceId
+
+        /**
          * Returns the raw JSON value of [variantSelections].
          *
          * Unlike [variantSelections], this method doesn't throw if the JSON field has an unexpected
@@ -700,6 +744,7 @@ private constructor(
             private var constraints: JsonField<Constraints> = JsonMissing.of()
             private var discoverPromoCodes: JsonField<Boolean> = JsonMissing.of()
             private var promoCodes: JsonField<MutableList<String>>? = null
+            private var referenceId: JsonField<String> = JsonMissing.of()
             private var variantSelections: JsonField<MutableList<VariantSelection>>? = null
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
@@ -712,6 +757,7 @@ private constructor(
                 constraints = body.constraints
                 discoverPromoCodes = body.discoverPromoCodes
                 promoCodes = body.promoCodes.map { it.toMutableList() }
+                referenceId = body.referenceId
                 variantSelections = body.variantSelections.map { it.toMutableList() }
                 additionalProperties = body.additionalProperties.toMutableMap()
             }
@@ -843,6 +889,19 @@ private constructor(
                     }
             }
 
+            fun referenceId(referenceId: String) = referenceId(JsonField.of(referenceId))
+
+            /**
+             * Sets [Builder.referenceId] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.referenceId] with a well-typed [String] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun referenceId(referenceId: JsonField<String>) = apply {
+                this.referenceId = referenceId
+            }
+
             fun variantSelections(variantSelections: List<VariantSelection>) =
                 variantSelections(JsonField.of(variantSelections))
 
@@ -912,6 +971,7 @@ private constructor(
                     constraints,
                     discoverPromoCodes,
                     (promoCodes ?: JsonMissing.of()).map { it.toImmutable() },
+                    referenceId,
                     (variantSelections ?: JsonMissing.of()).map { it.toImmutable() },
                     additionalProperties.toMutableMap(),
                 )
@@ -940,6 +1000,7 @@ private constructor(
             constraints().ifPresent { it.validate() }
             discoverPromoCodes()
             promoCodes()
+            referenceId()
             variantSelections().ifPresent { it.forEach { it.validate() } }
             validated = true
         }
@@ -967,6 +1028,7 @@ private constructor(
                 (constraints.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (discoverPromoCodes.asKnown().isPresent) 1 else 0) +
                 (promoCodes.asKnown().getOrNull()?.size ?: 0) +
+                (if (referenceId.asKnown().isPresent) 1 else 0) +
                 (variantSelections.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0)
 
         override fun equals(other: Any?): Boolean {
@@ -982,6 +1044,7 @@ private constructor(
                 constraints == other.constraints &&
                 discoverPromoCodes == other.discoverPromoCodes &&
                 promoCodes == other.promoCodes &&
+                referenceId == other.referenceId &&
                 variantSelections == other.variantSelections &&
                 additionalProperties == other.additionalProperties
         }
@@ -995,6 +1058,7 @@ private constructor(
                 constraints,
                 discoverPromoCodes,
                 promoCodes,
+                referenceId,
                 variantSelections,
                 additionalProperties,
             )
@@ -1003,7 +1067,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{buyer=$buyer, paymentMethod=$paymentMethod, productUrl=$productUrl, quantity=$quantity, constraints=$constraints, discoverPromoCodes=$discoverPromoCodes, promoCodes=$promoCodes, variantSelections=$variantSelections, additionalProperties=$additionalProperties}"
+            "Body{buyer=$buyer, paymentMethod=$paymentMethod, productUrl=$productUrl, quantity=$quantity, constraints=$constraints, discoverPromoCodes=$discoverPromoCodes, promoCodes=$promoCodes, referenceId=$referenceId, variantSelections=$variantSelections, additionalProperties=$additionalProperties}"
     }
 
     class Constraints

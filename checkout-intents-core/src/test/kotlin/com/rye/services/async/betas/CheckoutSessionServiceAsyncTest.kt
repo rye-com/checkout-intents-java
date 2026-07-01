@@ -47,6 +47,7 @@ internal class CheckoutSessionServiceAsyncTest {
                     .discoverPromoCodes(true)
                     .layout(CheckoutSessionCreateParams.Layout.DEFAULT)
                     .addPromoCode("string")
+                    .referenceId("order-1234")
                     .addVariantSelection(
                         VariantSelection.builder()
                             .label("Size, Color, etc.")

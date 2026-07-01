@@ -14,6 +14,7 @@ import com.rye.core.checkRequired
 import com.rye.errors.CheckoutIntentsInvalidDataException
 import java.util.Collections
 import java.util.Objects
+import java.util.Optional
 
 /**
  * Represents a completed order. Orders are created after a checkout intent reaches the `completed`
@@ -26,6 +27,7 @@ private constructor(
     private val checkoutIntentId: JsonField<String>,
     private val createdAt: JsonField<String>,
     private val updatedAt: JsonField<String>,
+    private val referenceId: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -37,7 +39,10 @@ private constructor(
         checkoutIntentId: JsonField<String> = JsonMissing.of(),
         @JsonProperty("createdAt") @ExcludeMissing createdAt: JsonField<String> = JsonMissing.of(),
         @JsonProperty("updatedAt") @ExcludeMissing updatedAt: JsonField<String> = JsonMissing.of(),
-    ) : this(id, checkoutIntentId, createdAt, updatedAt, mutableMapOf())
+        @JsonProperty("referenceId")
+        @ExcludeMissing
+        referenceId: JsonField<String> = JsonMissing.of(),
+    ) : this(id, checkoutIntentId, createdAt, updatedAt, referenceId, mutableMapOf())
 
     /**
      * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type or is
@@ -70,6 +75,15 @@ private constructor(
     fun updatedAt(): String = updatedAt.getRequired("updatedAt")
 
     /**
+     * The `referenceId` you supplied on the checkout intent, echoed back so you can reconcile this
+     * order against your own records. Absent when none was supplied.
+     *
+     * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
+    fun referenceId(): Optional<String> = referenceId.getOptional("referenceId")
+
+    /**
      * Returns the raw JSON value of [id].
      *
      * Unlike [id], this method doesn't throw if the JSON field has an unexpected type.
@@ -99,6 +113,13 @@ private constructor(
      * Unlike [updatedAt], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("updatedAt") @ExcludeMissing fun _updatedAt(): JsonField<String> = updatedAt
+
+    /**
+     * Returns the raw JSON value of [referenceId].
+     *
+     * Unlike [referenceId], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("referenceId") @ExcludeMissing fun _referenceId(): JsonField<String> = referenceId
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -135,6 +156,7 @@ private constructor(
         private var checkoutIntentId: JsonField<String>? = null
         private var createdAt: JsonField<String>? = null
         private var updatedAt: JsonField<String>? = null
+        private var referenceId: JsonField<String> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -143,6 +165,7 @@ private constructor(
             checkoutIntentId = order.checkoutIntentId
             createdAt = order.createdAt
             updatedAt = order.updatedAt
+            referenceId = order.referenceId
             additionalProperties = order.additionalProperties.toMutableMap()
         }
 
@@ -195,6 +218,21 @@ private constructor(
          */
         fun updatedAt(updatedAt: JsonField<String>) = apply { this.updatedAt = updatedAt }
 
+        /**
+         * The `referenceId` you supplied on the checkout intent, echoed back so you can reconcile
+         * this order against your own records. Absent when none was supplied.
+         */
+        fun referenceId(referenceId: String) = referenceId(JsonField.of(referenceId))
+
+        /**
+         * Sets [Builder.referenceId] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.referenceId] with a well-typed [String] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun referenceId(referenceId: JsonField<String>) = apply { this.referenceId = referenceId }
+
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
             putAllAdditionalProperties(additionalProperties)
@@ -235,6 +273,7 @@ private constructor(
                 checkRequired("checkoutIntentId", checkoutIntentId),
                 checkRequired("createdAt", createdAt),
                 checkRequired("updatedAt", updatedAt),
+                referenceId,
                 additionalProperties.toMutableMap(),
             )
     }
@@ -258,6 +297,7 @@ private constructor(
         checkoutIntentId()
         createdAt()
         updatedAt()
+        referenceId()
         validated = true
     }
 
@@ -279,7 +319,8 @@ private constructor(
         (if (id.asKnown().isPresent) 1 else 0) +
             (if (checkoutIntentId.asKnown().isPresent) 1 else 0) +
             (if (createdAt.asKnown().isPresent) 1 else 0) +
-            (if (updatedAt.asKnown().isPresent) 1 else 0)
+            (if (updatedAt.asKnown().isPresent) 1 else 0) +
+            (if (referenceId.asKnown().isPresent) 1 else 0)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
@@ -291,15 +332,16 @@ private constructor(
             checkoutIntentId == other.checkoutIntentId &&
             createdAt == other.createdAt &&
             updatedAt == other.updatedAt &&
+            referenceId == other.referenceId &&
             additionalProperties == other.additionalProperties
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(id, checkoutIntentId, createdAt, updatedAt, additionalProperties)
+        Objects.hash(id, checkoutIntentId, createdAt, updatedAt, referenceId, additionalProperties)
     }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "Order{id=$id, checkoutIntentId=$checkoutIntentId, createdAt=$createdAt, updatedAt=$updatedAt, additionalProperties=$additionalProperties}"
+        "Order{id=$id, checkoutIntentId=$checkoutIntentId, createdAt=$createdAt, updatedAt=$updatedAt, referenceId=$referenceId, additionalProperties=$additionalProperties}"
 }
