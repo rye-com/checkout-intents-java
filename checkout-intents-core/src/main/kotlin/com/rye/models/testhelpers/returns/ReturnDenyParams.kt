@@ -20,6 +20,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
+/** Deny a simulated return. */
 class ReturnDenyParams
 private constructor(
     private val returnId: String?,

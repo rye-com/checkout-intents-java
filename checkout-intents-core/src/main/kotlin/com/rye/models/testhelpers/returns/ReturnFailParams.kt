@@ -19,6 +19,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
+/** Mark a simulated return as failed. */
 class ReturnFailParams
 private constructor(
     private val returnId: String?,

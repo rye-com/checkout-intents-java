@@ -41,6 +41,7 @@ interface ReturnServiceAsync {
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<Return>
 
+    /** Approve a simulated return. */
     fun approve(returnId: String): CompletableFuture<Return> =
         approve(returnId, ReturnApproveParams.none())
 
@@ -72,6 +73,7 @@ interface ReturnServiceAsync {
     fun approve(returnId: String, requestOptions: RequestOptions): CompletableFuture<Return> =
         approve(returnId, ReturnApproveParams.none(), requestOptions)
 
+    /** Deny a simulated return. */
     fun deny(returnId: String): CompletableFuture<Return> = deny(returnId, ReturnDenyParams.none())
 
     /** @see deny */
@@ -102,6 +104,7 @@ interface ReturnServiceAsync {
     fun deny(returnId: String, requestOptions: RequestOptions): CompletableFuture<Return> =
         deny(returnId, ReturnDenyParams.none(), requestOptions)
 
+    /** Mark a simulated return as failed. */
     fun fail(returnId: String): CompletableFuture<Return> = fail(returnId, ReturnFailParams.none())
 
     /** @see fail */
@@ -132,6 +135,7 @@ interface ReturnServiceAsync {
     fun fail(returnId: String, requestOptions: RequestOptions): CompletableFuture<Return> =
         fail(returnId, ReturnFailParams.none(), requestOptions)
 
+    /** Refund a simulated return using the order total as the simulated refund amount. */
     fun refund(returnId: String): CompletableFuture<Return> =
         refund(returnId, ReturnRefundParams.none())
 

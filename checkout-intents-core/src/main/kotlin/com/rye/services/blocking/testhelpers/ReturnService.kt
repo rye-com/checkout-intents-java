@@ -40,6 +40,7 @@ interface ReturnService {
         requestOptions: RequestOptions = RequestOptions.none(),
     ): Return
 
+    /** Approve a simulated return. */
     fun approve(returnId: String): Return = approve(returnId, ReturnApproveParams.none())
 
     /** @see approve */
@@ -68,6 +69,7 @@ interface ReturnService {
     fun approve(returnId: String, requestOptions: RequestOptions): Return =
         approve(returnId, ReturnApproveParams.none(), requestOptions)
 
+    /** Deny a simulated return. */
     fun deny(returnId: String): Return = deny(returnId, ReturnDenyParams.none())
 
     /** @see deny */
@@ -94,6 +96,7 @@ interface ReturnService {
     fun deny(returnId: String, requestOptions: RequestOptions): Return =
         deny(returnId, ReturnDenyParams.none(), requestOptions)
 
+    /** Mark a simulated return as failed. */
     fun fail(returnId: String): Return = fail(returnId, ReturnFailParams.none())
 
     /** @see fail */
@@ -120,6 +123,7 @@ interface ReturnService {
     fun fail(returnId: String, requestOptions: RequestOptions): Return =
         fail(returnId, ReturnFailParams.none(), requestOptions)
 
+    /** Refund a simulated return using the order total as the simulated refund amount. */
     fun refund(returnId: String): Return = refund(returnId, ReturnRefundParams.none())
 
     /** @see refund */

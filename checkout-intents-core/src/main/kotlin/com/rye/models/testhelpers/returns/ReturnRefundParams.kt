@@ -20,6 +20,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
+/** Refund a simulated return using the order total as the simulated refund amount. */
 class ReturnRefundParams
 private constructor(
     private val returnId: String?,

@@ -20,6 +20,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
+/** Approve a simulated return. */
 class ReturnApproveParams
 private constructor(
     private val returnId: String?,
