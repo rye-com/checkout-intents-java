@@ -13,9 +13,12 @@ import com.rye.core.http.HttpRequest
 import com.rye.core.http.HttpResponse
 import com.rye.core.http.HttpResponse.Handler
 import com.rye.core.http.HttpResponseFor
+import com.rye.core.http.json
 import com.rye.core.http.parseable
 import com.rye.core.prepare
+import com.rye.models.orders.Cancellation
 import com.rye.models.orders.Order
+import com.rye.models.orders.OrderCancelParams
 import com.rye.models.orders.OrderListPage
 import com.rye.models.orders.OrderListPageResponse
 import com.rye.models.orders.OrderListParams
@@ -42,6 +45,10 @@ class OrderServiceImpl internal constructor(private val clientOptions: ClientOpt
     override fun list(params: OrderListParams, requestOptions: RequestOptions): OrderListPage =
         // get /api/v1/orders
         withRawResponse().list(params, requestOptions).parse()
+
+    override fun cancel(params: OrderCancelParams, requestOptions: RequestOptions): Cancellation =
+        // post /api/v1/orders/{id}/cancel
+        withRawResponse().cancel(params, requestOptions).parse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         OrderService.WithRawResponse {
@@ -115,6 +122,37 @@ class OrderServiceImpl internal constructor(private val clientOptions: ClientOpt
                             .params(params)
                             .response(it)
                             .build()
+                    }
+            }
+        }
+
+        private val cancelHandler: Handler<Cancellation> =
+            jsonHandler<Cancellation>(clientOptions.jsonMapper)
+
+        override fun cancel(
+            params: OrderCancelParams,
+            requestOptions: RequestOptions,
+        ): HttpResponseFor<Cancellation> {
+            // We check here instead of in the params builder because this can be specified
+            // positionally or in the params class.
+            checkRequired("id", params.id().getOrNull())
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.POST)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments("api", "v1", "orders", params._pathParam(0), "cancel")
+                    .body(json(clientOptions.jsonMapper, params._body()))
+                    .build()
+                    .prepare(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val response = clientOptions.httpClient.execute(request, requestOptions)
+            return errorHandler.handle(response).parseable {
+                response
+                    .use { cancelHandler.handle(it) }
+                    .also {
+                        if (requestOptions.responseValidation!!) {
+                            it.validate()
+                        }
                     }
             }
         }

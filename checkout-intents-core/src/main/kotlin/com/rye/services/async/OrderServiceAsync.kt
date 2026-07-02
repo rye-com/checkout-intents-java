@@ -5,7 +5,9 @@ package com.rye.services.async
 import com.rye.core.ClientOptions
 import com.rye.core.RequestOptions
 import com.rye.core.http.HttpResponseFor
+import com.rye.models.orders.Cancellation
 import com.rye.models.orders.Order
+import com.rye.models.orders.OrderCancelParams
 import com.rye.models.orders.OrderListPageAsync
 import com.rye.models.orders.OrderListParams
 import com.rye.models.orders.OrderRetrieveParams
@@ -73,6 +75,31 @@ interface OrderServiceAsync {
     /** @see list */
     fun list(requestOptions: RequestOptions): CompletableFuture<OrderListPageAsync> =
         list(OrderListParams.none(), requestOptions)
+
+    /**
+     * Request cancellation of an order.
+     *
+     * Order cancellations are subject to each merchant's cancellation policy.
+     */
+    fun cancel(id: String, params: OrderCancelParams): CompletableFuture<Cancellation> =
+        cancel(id, params, RequestOptions.none())
+
+    /** @see cancel */
+    fun cancel(
+        id: String,
+        params: OrderCancelParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<Cancellation> = cancel(params.toBuilder().id(id).build(), requestOptions)
+
+    /** @see cancel */
+    fun cancel(params: OrderCancelParams): CompletableFuture<Cancellation> =
+        cancel(params, RequestOptions.none())
+
+    /** @see cancel */
+    fun cancel(
+        params: OrderCancelParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<Cancellation>
 
     /** A view of [OrderServiceAsync] that provides access to raw HTTP responses for each method. */
     interface WithRawResponse {
@@ -148,5 +175,33 @@ interface OrderServiceAsync {
             requestOptions: RequestOptions
         ): CompletableFuture<HttpResponseFor<OrderListPageAsync>> =
             list(OrderListParams.none(), requestOptions)
+
+        /**
+         * Returns a raw HTTP response for `post /api/v1/orders/{id}/cancel`, but is otherwise the
+         * same as [OrderServiceAsync.cancel].
+         */
+        fun cancel(
+            id: String,
+            params: OrderCancelParams,
+        ): CompletableFuture<HttpResponseFor<Cancellation>> =
+            cancel(id, params, RequestOptions.none())
+
+        /** @see cancel */
+        fun cancel(
+            id: String,
+            params: OrderCancelParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<Cancellation>> =
+            cancel(params.toBuilder().id(id).build(), requestOptions)
+
+        /** @see cancel */
+        fun cancel(params: OrderCancelParams): CompletableFuture<HttpResponseFor<Cancellation>> =
+            cancel(params, RequestOptions.none())
+
+        /** @see cancel */
+        fun cancel(
+            params: OrderCancelParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<Cancellation>>
     }
 }

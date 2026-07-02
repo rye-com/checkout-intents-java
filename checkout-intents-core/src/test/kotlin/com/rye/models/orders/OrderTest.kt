@@ -16,21 +16,21 @@ internal class OrderTest {
             Order.builder()
                 .id("id")
                 .cancellation(
-                    Order.Cancellation.RequestedCancellation.builder()
+                    Cancellation.RequestedCancellation.builder()
                         .id("id")
                         .checkoutIntentId("checkoutIntentId")
                         .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .marketplaceOrderId("marketplaceOrderId")
                         .reason(
-                            Order.Cancellation.RequestedCancellation.Reason.builder()
+                            Cancellation.RequestedCancellation.Reason.builder()
                                 .code(
-                                    Order.Cancellation.RequestedCancellation.Reason.Code
+                                    Cancellation.RequestedCancellation.Reason.Code
                                         .REQUESTED_BY_CUSTOMER
                                 )
                                 .message("message")
                                 .build()
                         )
-                        .state(Order.Cancellation.RequestedCancellation.State.REQUESTED)
+                        .state(Cancellation.RequestedCancellation.State.REQUESTED)
                         .build()
                 )
                 .checkoutIntentId("ci_aaa8af5c5aae4c0e8ef0172c26c65c13")
@@ -42,22 +42,22 @@ internal class OrderTest {
         assertThat(order.id()).isEqualTo("id")
         assertThat(order.cancellation())
             .contains(
-                Order.Cancellation.ofRequested(
-                    Order.Cancellation.RequestedCancellation.builder()
+                Cancellation.ofRequested(
+                    Cancellation.RequestedCancellation.builder()
                         .id("id")
                         .checkoutIntentId("checkoutIntentId")
                         .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .marketplaceOrderId("marketplaceOrderId")
                         .reason(
-                            Order.Cancellation.RequestedCancellation.Reason.builder()
+                            Cancellation.RequestedCancellation.Reason.builder()
                                 .code(
-                                    Order.Cancellation.RequestedCancellation.Reason.Code
+                                    Cancellation.RequestedCancellation.Reason.Code
                                         .REQUESTED_BY_CUSTOMER
                                 )
                                 .message("message")
                                 .build()
                         )
-                        .state(Order.Cancellation.RequestedCancellation.State.REQUESTED)
+                        .state(Cancellation.RequestedCancellation.State.REQUESTED)
                         .build()
                 )
             )
@@ -74,21 +74,21 @@ internal class OrderTest {
             Order.builder()
                 .id("id")
                 .cancellation(
-                    Order.Cancellation.RequestedCancellation.builder()
+                    Cancellation.RequestedCancellation.builder()
                         .id("id")
                         .checkoutIntentId("checkoutIntentId")
                         .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .marketplaceOrderId("marketplaceOrderId")
                         .reason(
-                            Order.Cancellation.RequestedCancellation.Reason.builder()
+                            Cancellation.RequestedCancellation.Reason.builder()
                                 .code(
-                                    Order.Cancellation.RequestedCancellation.Reason.Code
+                                    Cancellation.RequestedCancellation.Reason.Code
                                         .REQUESTED_BY_CUSTOMER
                                 )
                                 .message("message")
                                 .build()
                         )
-                        .state(Order.Cancellation.RequestedCancellation.State.REQUESTED)
+                        .state(Cancellation.RequestedCancellation.State.REQUESTED)
                         .build()
                 )
                 .checkoutIntentId("ci_aaa8af5c5aae4c0e8ef0172c26c65c13")
