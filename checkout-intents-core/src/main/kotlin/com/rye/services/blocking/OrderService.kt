@@ -6,7 +6,9 @@ import com.google.errorprone.annotations.MustBeClosed
 import com.rye.core.ClientOptions
 import com.rye.core.RequestOptions
 import com.rye.core.http.HttpResponseFor
+import com.rye.models.orders.Cancellation
 import com.rye.models.orders.Order
+import com.rye.models.orders.OrderCancelParams
 import com.rye.models.orders.OrderListPage
 import com.rye.models.orders.OrderListParams
 import com.rye.models.orders.OrderRetrieveParams
@@ -69,6 +71,30 @@ interface OrderService {
     /** @see list */
     fun list(requestOptions: RequestOptions): OrderListPage =
         list(OrderListParams.none(), requestOptions)
+
+    /**
+     * Request cancellation of an order.
+     *
+     * Order cancellations are subject to each merchant's cancellation policy.
+     */
+    fun cancel(id: String, params: OrderCancelParams): Cancellation =
+        cancel(id, params, RequestOptions.none())
+
+    /** @see cancel */
+    fun cancel(
+        id: String,
+        params: OrderCancelParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): Cancellation = cancel(params.toBuilder().id(id).build(), requestOptions)
+
+    /** @see cancel */
+    fun cancel(params: OrderCancelParams): Cancellation = cancel(params, RequestOptions.none())
+
+    /** @see cancel */
+    fun cancel(
+        params: OrderCancelParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): Cancellation
 
     /** A view of [OrderService] that provides access to raw HTTP responses for each method. */
     interface WithRawResponse {
@@ -141,5 +167,33 @@ interface OrderService {
         @MustBeClosed
         fun list(requestOptions: RequestOptions): HttpResponseFor<OrderListPage> =
             list(OrderListParams.none(), requestOptions)
+
+        /**
+         * Returns a raw HTTP response for `post /api/v1/orders/{id}/cancel`, but is otherwise the
+         * same as [OrderService.cancel].
+         */
+        @MustBeClosed
+        fun cancel(id: String, params: OrderCancelParams): HttpResponseFor<Cancellation> =
+            cancel(id, params, RequestOptions.none())
+
+        /** @see cancel */
+        @MustBeClosed
+        fun cancel(
+            id: String,
+            params: OrderCancelParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<Cancellation> = cancel(params.toBuilder().id(id).build(), requestOptions)
+
+        /** @see cancel */
+        @MustBeClosed
+        fun cancel(params: OrderCancelParams): HttpResponseFor<Cancellation> =
+            cancel(params, RequestOptions.none())
+
+        /** @see cancel */
+        @MustBeClosed
+        fun cancel(
+            params: OrderCancelParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<Cancellation>
     }
 }
