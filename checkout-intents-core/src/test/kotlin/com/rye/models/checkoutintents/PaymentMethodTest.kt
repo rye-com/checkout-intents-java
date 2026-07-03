@@ -26,8 +26,6 @@ internal class PaymentMethodTest {
 
         assertThat(paymentMethod.stripeToken()).contains(stripeToken)
         assertThat(paymentMethod.basisTheory()).isEmpty
-        assertThat(paymentMethod.nekuda()).isEmpty
-        assertThat(paymentMethod.prava()).isEmpty
         assertThat(paymentMethod.drawdown()).isEmpty
         assertThat(paymentMethod.x402()).isEmpty
     }
@@ -64,8 +62,6 @@ internal class PaymentMethodTest {
 
         assertThat(paymentMethod.stripeToken()).isEmpty
         assertThat(paymentMethod.basisTheory()).contains(basisTheory)
-        assertThat(paymentMethod.nekuda()).isEmpty
-        assertThat(paymentMethod.prava()).isEmpty
         assertThat(paymentMethod.drawdown()).isEmpty
         assertThat(paymentMethod.x402()).isEmpty
     }
@@ -91,92 +87,6 @@ internal class PaymentMethodTest {
     }
 
     @Test
-    fun ofNekuda() {
-        val nekuda =
-            PaymentMethod.NekudaPaymentMethod.builder()
-                .nekudaUserId("nekudaUserId")
-                .type(PaymentMethod.NekudaPaymentMethod.Type.NEKUDA_TOKEN)
-                .nekudaMandateData(
-                    PaymentMethod.NekudaPaymentMethod.NekudaMandateData.builder()
-                        .putAdditionalProperty("foo", JsonValue.from("string"))
-                        .build()
-                )
-                .build()
-
-        val paymentMethod = PaymentMethod.ofNekuda(nekuda)
-
-        assertThat(paymentMethod.stripeToken()).isEmpty
-        assertThat(paymentMethod.basisTheory()).isEmpty
-        assertThat(paymentMethod.nekuda()).contains(nekuda)
-        assertThat(paymentMethod.prava()).isEmpty
-        assertThat(paymentMethod.drawdown()).isEmpty
-        assertThat(paymentMethod.x402()).isEmpty
-    }
-
-    @Test
-    fun ofNekudaRoundtrip() {
-        val jsonMapper = jsonMapper()
-        val paymentMethod =
-            PaymentMethod.ofNekuda(
-                PaymentMethod.NekudaPaymentMethod.builder()
-                    .nekudaUserId("nekudaUserId")
-                    .type(PaymentMethod.NekudaPaymentMethod.Type.NEKUDA_TOKEN)
-                    .nekudaMandateData(
-                        PaymentMethod.NekudaPaymentMethod.NekudaMandateData.builder()
-                            .putAdditionalProperty("foo", JsonValue.from("string"))
-                            .build()
-                    )
-                    .build()
-            )
-
-        val roundtrippedPaymentMethod =
-            jsonMapper.readValue(
-                jsonMapper.writeValueAsString(paymentMethod),
-                jacksonTypeRef<PaymentMethod>(),
-            )
-
-        assertThat(roundtrippedPaymentMethod).isEqualTo(paymentMethod)
-    }
-
-    @Test
-    fun ofPrava() {
-        val prava =
-            PaymentMethod.PravaPaymentMethod.builder()
-                .pravaToken("pravaToken")
-                .type(PaymentMethod.PravaPaymentMethod.Type.PRAVA_TOKEN)
-                .build()
-
-        val paymentMethod = PaymentMethod.ofPrava(prava)
-
-        assertThat(paymentMethod.stripeToken()).isEmpty
-        assertThat(paymentMethod.basisTheory()).isEmpty
-        assertThat(paymentMethod.nekuda()).isEmpty
-        assertThat(paymentMethod.prava()).contains(prava)
-        assertThat(paymentMethod.drawdown()).isEmpty
-        assertThat(paymentMethod.x402()).isEmpty
-    }
-
-    @Test
-    fun ofPravaRoundtrip() {
-        val jsonMapper = jsonMapper()
-        val paymentMethod =
-            PaymentMethod.ofPrava(
-                PaymentMethod.PravaPaymentMethod.builder()
-                    .pravaToken("pravaToken")
-                    .type(PaymentMethod.PravaPaymentMethod.Type.PRAVA_TOKEN)
-                    .build()
-            )
-
-        val roundtrippedPaymentMethod =
-            jsonMapper.readValue(
-                jsonMapper.writeValueAsString(paymentMethod),
-                jacksonTypeRef<PaymentMethod>(),
-            )
-
-        assertThat(roundtrippedPaymentMethod).isEqualTo(paymentMethod)
-    }
-
-    @Test
     fun ofDrawdown() {
         val drawdown =
             PaymentMethod.DrawdownPaymentMethod.builder()
@@ -187,8 +97,6 @@ internal class PaymentMethodTest {
 
         assertThat(paymentMethod.stripeToken()).isEmpty
         assertThat(paymentMethod.basisTheory()).isEmpty
-        assertThat(paymentMethod.nekuda()).isEmpty
-        assertThat(paymentMethod.prava()).isEmpty
         assertThat(paymentMethod.drawdown()).contains(drawdown)
         assertThat(paymentMethod.x402()).isEmpty
     }
@@ -224,8 +132,6 @@ internal class PaymentMethodTest {
 
         assertThat(paymentMethod.stripeToken()).isEmpty
         assertThat(paymentMethod.basisTheory()).isEmpty
-        assertThat(paymentMethod.nekuda()).isEmpty
-        assertThat(paymentMethod.prava()).isEmpty
         assertThat(paymentMethod.drawdown()).isEmpty
         assertThat(paymentMethod.x402()).contains(x402)
     }

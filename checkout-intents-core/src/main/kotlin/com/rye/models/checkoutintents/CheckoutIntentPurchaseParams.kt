@@ -245,16 +245,6 @@ private constructor(
             body.paymentMethod(basisTheory)
         }
 
-        /** Alias for calling [paymentMethod] with `PaymentMethod.ofNekuda(nekuda)`. */
-        fun paymentMethod(nekuda: PaymentMethod.NekudaPaymentMethod) = apply {
-            body.paymentMethod(nekuda)
-        }
-
-        /** Alias for calling [paymentMethod] with `PaymentMethod.ofPrava(prava)`. */
-        fun paymentMethod(prava: PaymentMethod.PravaPaymentMethod) = apply {
-            body.paymentMethod(prava)
-        }
-
         /** Alias for calling [paymentMethod] with `PaymentMethod.ofDrawdown(drawdown)`. */
         fun paymentMethod(drawdown: PaymentMethod.DrawdownPaymentMethod) = apply {
             body.paymentMethod(drawdown)
@@ -798,14 +788,6 @@ private constructor(
              */
             fun paymentMethod(basisTheory: PaymentMethod.BasisTheoryPaymentMethod) =
                 paymentMethod(PaymentMethod.ofBasisTheory(basisTheory))
-
-            /** Alias for calling [paymentMethod] with `PaymentMethod.ofNekuda(nekuda)`. */
-            fun paymentMethod(nekuda: PaymentMethod.NekudaPaymentMethod) =
-                paymentMethod(PaymentMethod.ofNekuda(nekuda))
-
-            /** Alias for calling [paymentMethod] with `PaymentMethod.ofPrava(prava)`. */
-            fun paymentMethod(prava: PaymentMethod.PravaPaymentMethod) =
-                paymentMethod(PaymentMethod.ofPrava(prava))
 
             /** Alias for calling [paymentMethod] with `PaymentMethod.ofDrawdown(drawdown)`. */
             fun paymentMethod(drawdown: PaymentMethod.DrawdownPaymentMethod) =
