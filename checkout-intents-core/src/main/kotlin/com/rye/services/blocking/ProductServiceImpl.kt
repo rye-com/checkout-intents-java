@@ -12,10 +12,16 @@ import com.rye.core.http.HttpRequest
 import com.rye.core.http.HttpResponse
 import com.rye.core.http.HttpResponse.Handler
 import com.rye.core.http.HttpResponseFor
+import com.rye.core.http.json
 import com.rye.core.http.parseable
 import com.rye.core.prepare
 import com.rye.models.products.Product
+import com.rye.models.products.ProductListSubscriptionsParams
+import com.rye.models.products.ProductListSubscriptionsResponse
 import com.rye.models.products.ProductLookupParams
+import com.rye.models.products.ProductSubscribeParams
+import com.rye.models.products.ProductSubscription
+import com.rye.models.products.ProductUnsubscribeParams
 import java.util.function.Consumer
 
 class ProductServiceImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -30,9 +36,30 @@ class ProductServiceImpl internal constructor(private val clientOptions: ClientO
     override fun withOptions(modifier: Consumer<ClientOptions.Builder>): ProductService =
         ProductServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
+    override fun listSubscriptions(
+        params: ProductListSubscriptionsParams,
+        requestOptions: RequestOptions,
+    ): ProductListSubscriptionsResponse =
+        // get /api/v1/products/subscriptions
+        withRawResponse().listSubscriptions(params, requestOptions).parse()
+
     override fun lookup(params: ProductLookupParams, requestOptions: RequestOptions): Product =
         // get /api/v1/products/lookup
         withRawResponse().lookup(params, requestOptions).parse()
+
+    override fun subscribe(
+        params: ProductSubscribeParams,
+        requestOptions: RequestOptions,
+    ): ProductSubscription =
+        // post /api/v1/products/subscribe
+        withRawResponse().subscribe(params, requestOptions).parse()
+
+    override fun unsubscribe(
+        params: ProductUnsubscribeParams,
+        requestOptions: RequestOptions,
+    ): ProductSubscription =
+        // post /api/v1/products/unsubscribe
+        withRawResponse().unsubscribe(params, requestOptions).parse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         ProductService.WithRawResponse {
@@ -46,6 +73,33 @@ class ProductServiceImpl internal constructor(private val clientOptions: ClientO
             ProductServiceImpl.WithRawResponseImpl(
                 clientOptions.toBuilder().apply(modifier::accept).build()
             )
+
+        private val listSubscriptionsHandler: Handler<ProductListSubscriptionsResponse> =
+            jsonHandler<ProductListSubscriptionsResponse>(clientOptions.jsonMapper)
+
+        override fun listSubscriptions(
+            params: ProductListSubscriptionsParams,
+            requestOptions: RequestOptions,
+        ): HttpResponseFor<ProductListSubscriptionsResponse> {
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments("api", "v1", "products", "subscriptions")
+                    .build()
+                    .prepare(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val response = clientOptions.httpClient.execute(request, requestOptions)
+            return errorHandler.handle(response).parseable {
+                response
+                    .use { listSubscriptionsHandler.handle(it) }
+                    .also {
+                        if (requestOptions.responseValidation!!) {
+                            it.validate()
+                        }
+                    }
+            }
+        }
 
         private val lookupHandler: Handler<Product> = jsonHandler<Product>(clientOptions.jsonMapper)
 
@@ -65,6 +119,62 @@ class ProductServiceImpl internal constructor(private val clientOptions: ClientO
             return errorHandler.handle(response).parseable {
                 response
                     .use { lookupHandler.handle(it) }
+                    .also {
+                        if (requestOptions.responseValidation!!) {
+                            it.validate()
+                        }
+                    }
+            }
+        }
+
+        private val subscribeHandler: Handler<ProductSubscription> =
+            jsonHandler<ProductSubscription>(clientOptions.jsonMapper)
+
+        override fun subscribe(
+            params: ProductSubscribeParams,
+            requestOptions: RequestOptions,
+        ): HttpResponseFor<ProductSubscription> {
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.POST)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments("api", "v1", "products", "subscribe")
+                    .body(json(clientOptions.jsonMapper, params._body()))
+                    .build()
+                    .prepare(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val response = clientOptions.httpClient.execute(request, requestOptions)
+            return errorHandler.handle(response).parseable {
+                response
+                    .use { subscribeHandler.handle(it) }
+                    .also {
+                        if (requestOptions.responseValidation!!) {
+                            it.validate()
+                        }
+                    }
+            }
+        }
+
+        private val unsubscribeHandler: Handler<ProductSubscription> =
+            jsonHandler<ProductSubscription>(clientOptions.jsonMapper)
+
+        override fun unsubscribe(
+            params: ProductUnsubscribeParams,
+            requestOptions: RequestOptions,
+        ): HttpResponseFor<ProductSubscription> {
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.POST)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments("api", "v1", "products", "unsubscribe")
+                    .body(json(clientOptions.jsonMapper, params._body()))
+                    .build()
+                    .prepare(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val response = clientOptions.httpClient.execute(request, requestOptions)
+            return errorHandler.handle(response).parseable {
+                response
+                    .use { unsubscribeHandler.handle(it) }
                     .also {
                         if (requestOptions.responseValidation!!) {
                             it.validate()
