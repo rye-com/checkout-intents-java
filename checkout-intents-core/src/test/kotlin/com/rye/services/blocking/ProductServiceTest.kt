@@ -43,7 +43,7 @@ internal class ProductServiceTest {
             productService.subscribe(
                 ProductSubscribeParams.builder()
                     .type(ProductSubscribeParams.Type.STORE)
-                    .url("https://store.myshopify.com")
+                    .url("https://store.com")
                     .build()
             )
 
@@ -60,7 +60,7 @@ internal class ProductServiceTest {
             productService.unsubscribe(
                 ProductUnsubscribeParams.builder()
                     .type(ProductUnsubscribeParams.Type.STORE)
-                    .url("https://store.myshopify.com")
+                    .url("https://store.com")
                     .build()
             )
 

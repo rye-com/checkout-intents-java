@@ -61,7 +61,7 @@ interface ProductServiceAsync {
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<Product>
 
-    /** Subscribe to product events for one integrated Shopify URL. */
+    /** Subscribe to product events from a store. */
     fun subscribe(params: ProductSubscribeParams): CompletableFuture<ProductSubscription> =
         subscribe(params, RequestOptions.none())
 
@@ -71,7 +71,7 @@ interface ProductServiceAsync {
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<ProductSubscription>
 
-    /** Unsubscribe from product events for one integrated Shopify URL. */
+    /** Unsubscribe from product events from a store. */
     fun unsubscribe(params: ProductUnsubscribeParams): CompletableFuture<ProductSubscription> =
         unsubscribe(params, RequestOptions.none())
 

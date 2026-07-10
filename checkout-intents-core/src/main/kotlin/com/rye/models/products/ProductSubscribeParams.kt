@@ -20,7 +20,7 @@ import java.util.Collections
 import java.util.Objects
 import kotlin.jvm.optionals.getOrNull
 
-/** Subscribe to product events for one integrated Shopify URL. */
+/** Subscribe to product events from a store. */
 class ProductSubscribeParams
 private constructor(
     private val body: Body,

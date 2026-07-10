@@ -20,7 +20,7 @@ import java.util.Collections
 import java.util.Objects
 import kotlin.jvm.optionals.getOrNull
 
-/** Unsubscribe from product events for one integrated Shopify URL. */
+/** Unsubscribe from product events from a store. */
 class ProductUnsubscribeParams
 private constructor(
     private val body: Body,
