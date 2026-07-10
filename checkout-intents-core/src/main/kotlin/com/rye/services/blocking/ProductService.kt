@@ -57,7 +57,7 @@ interface ProductService {
         requestOptions: RequestOptions = RequestOptions.none(),
     ): Product
 
-    /** Subscribe to product events for one integrated Shopify URL. */
+    /** Subscribe to product events from a store. */
     fun subscribe(params: ProductSubscribeParams): ProductSubscription =
         subscribe(params, RequestOptions.none())
 
@@ -67,7 +67,7 @@ interface ProductService {
         requestOptions: RequestOptions = RequestOptions.none(),
     ): ProductSubscription
 
-    /** Unsubscribe from product events for one integrated Shopify URL. */
+    /** Unsubscribe from product events from a store. */
     fun unsubscribe(params: ProductUnsubscribeParams): ProductSubscription =
         unsubscribe(params, RequestOptions.none())
 

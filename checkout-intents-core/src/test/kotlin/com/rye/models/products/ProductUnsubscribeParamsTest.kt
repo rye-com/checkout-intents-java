@@ -11,7 +11,7 @@ internal class ProductUnsubscribeParamsTest {
     fun create() {
         ProductUnsubscribeParams.builder()
             .type(ProductUnsubscribeParams.Type.STORE)
-            .url("https://store.myshopify.com")
+            .url("https://store.com")
             .build()
     }
 
@@ -20,12 +20,12 @@ internal class ProductUnsubscribeParamsTest {
         val params =
             ProductUnsubscribeParams.builder()
                 .type(ProductUnsubscribeParams.Type.STORE)
-                .url("https://store.myshopify.com")
+                .url("https://store.com")
                 .build()
 
         val body = params._body()
 
         assertThat(body.type()).isEqualTo(ProductUnsubscribeParams.Type.STORE)
-        assertThat(body.url()).isEqualTo("https://store.myshopify.com")
+        assertThat(body.url()).isEqualTo("https://store.com")
     }
 }

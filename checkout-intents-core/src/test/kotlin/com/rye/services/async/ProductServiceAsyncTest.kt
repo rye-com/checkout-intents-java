@@ -46,7 +46,7 @@ internal class ProductServiceAsyncTest {
             productServiceAsync.subscribe(
                 ProductSubscribeParams.builder()
                     .type(ProductSubscribeParams.Type.STORE)
-                    .url("https://store.myshopify.com")
+                    .url("https://store.com")
                     .build()
             )
 
@@ -64,7 +64,7 @@ internal class ProductServiceAsyncTest {
             productServiceAsync.unsubscribe(
                 ProductUnsubscribeParams.builder()
                     .type(ProductUnsubscribeParams.Type.STORE)
-                    .url("https://store.myshopify.com")
+                    .url("https://store.com")
                     .build()
             )
 

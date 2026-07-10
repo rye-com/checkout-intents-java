@@ -11,7 +11,7 @@ internal class ProductSubscribeParamsTest {
     fun create() {
         ProductSubscribeParams.builder()
             .type(ProductSubscribeParams.Type.STORE)
-            .url("https://store.myshopify.com")
+            .url("https://store.com")
             .build()
     }
 
@@ -20,12 +20,12 @@ internal class ProductSubscribeParamsTest {
         val params =
             ProductSubscribeParams.builder()
                 .type(ProductSubscribeParams.Type.STORE)
-                .url("https://store.myshopify.com")
+                .url("https://store.com")
                 .build()
 
         val body = params._body()
 
         assertThat(body.type()).isEqualTo(ProductSubscribeParams.Type.STORE)
-        assertThat(body.url()).isEqualTo("https://store.myshopify.com")
+        assertThat(body.url()).isEqualTo("https://store.com")
     }
 }
