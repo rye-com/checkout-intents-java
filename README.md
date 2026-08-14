@@ -3,7 +3,7 @@
 <!-- x-release-please-start-version -->
 
 [![Maven Central](https://img.shields.io/maven-central/v/com.rye/checkout-intents)](https://central.sonatype.com/artifact/com.rye/checkout-intents/0.13.0)
-[![javadoc](https://javadoc.io/badge2/com.rye/checkout-intents/0.13.0/javadoc.svg)](https://javadoc.io/doc/com.rye/checkout-intents/0.13.0)
+[![javadoc](https://javadoc.io/badge2/com.rye/checkout-intents/javadoc.svg)](https://javadoc.io/doc/com.rye/checkout-intents/0.13.0)
 
 <!-- x-release-please-end -->
 
