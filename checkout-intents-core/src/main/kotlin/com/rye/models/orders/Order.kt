@@ -12,6 +12,7 @@ import com.rye.core.JsonMissing
 import com.rye.core.JsonValue
 import com.rye.core.checkRequired
 import com.rye.errors.CheckoutIntentsInvalidDataException
+import com.rye.models.checkoutintents.Buyer
 import java.util.Collections
 import java.util.Objects
 import java.util.Optional
@@ -25,6 +26,7 @@ class Order
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val id: JsonField<String>,
+    private val buyer: JsonField<Buyer>,
     private val cancellation: JsonField<Cancellation>,
     private val checkoutIntentId: JsonField<String>,
     private val createdAt: JsonField<String>,
@@ -36,6 +38,7 @@ private constructor(
     @JsonCreator
     private constructor(
         @JsonProperty("id") @ExcludeMissing id: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("buyer") @ExcludeMissing buyer: JsonField<Buyer> = JsonMissing.of(),
         @JsonProperty("cancellation")
         @ExcludeMissing
         cancellation: JsonField<Cancellation> = JsonMissing.of(),
@@ -47,13 +50,30 @@ private constructor(
         @JsonProperty("referenceId")
         @ExcludeMissing
         referenceId: JsonField<String> = JsonMissing.of(),
-    ) : this(id, cancellation, checkoutIntentId, createdAt, updatedAt, referenceId, mutableMapOf())
+    ) : this(
+        id,
+        buyer,
+        cancellation,
+        checkoutIntentId,
+        createdAt,
+        updatedAt,
+        referenceId,
+        mutableMapOf(),
+    )
 
     /**
      * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun id(): String = id.getRequired("id")
+
+    /**
+     * Buyer and shipping-address details captured for this order.
+     *
+     * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
+    fun buyer(): Buyer = buyer.getRequired("buyer")
 
     /**
      * The cancellation for this order, or `null` if none has been requested. Populated by joining
@@ -103,6 +123,13 @@ private constructor(
      * Unlike [id], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("id") @ExcludeMissing fun _id(): JsonField<String> = id
+
+    /**
+     * Returns the raw JSON value of [buyer].
+     *
+     * Unlike [buyer], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("buyer") @ExcludeMissing fun _buyer(): JsonField<Buyer> = buyer
 
     /**
      * Returns the raw JSON value of [cancellation].
@@ -164,6 +191,7 @@ private constructor(
          * The following fields are required:
          * ```java
          * .id()
+         * .buyer()
          * .cancellation()
          * .checkoutIntentId()
          * .createdAt()
@@ -177,6 +205,7 @@ private constructor(
     class Builder internal constructor() {
 
         private var id: JsonField<String>? = null
+        private var buyer: JsonField<Buyer>? = null
         private var cancellation: JsonField<Cancellation>? = null
         private var checkoutIntentId: JsonField<String>? = null
         private var createdAt: JsonField<String>? = null
@@ -187,6 +216,7 @@ private constructor(
         @JvmSynthetic
         internal fun from(order: Order) = apply {
             id = order.id
+            buyer = order.buyer
             cancellation = order.cancellation
             checkoutIntentId = order.checkoutIntentId
             createdAt = order.createdAt
@@ -204,6 +234,17 @@ private constructor(
          * method is primarily for setting the field to an undocumented or not yet supported value.
          */
         fun id(id: JsonField<String>) = apply { this.id = id }
+
+        /** Buyer and shipping-address details captured for this order. */
+        fun buyer(buyer: Buyer) = buyer(JsonField.of(buyer))
+
+        /**
+         * Sets [Builder.buyer] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.buyer] with a well-typed [Buyer] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun buyer(buyer: JsonField<Buyer>) = apply { this.buyer = buyer }
 
         /**
          * The cancellation for this order, or `null` if none has been requested. Populated by
@@ -320,6 +361,7 @@ private constructor(
          * The following fields are required:
          * ```java
          * .id()
+         * .buyer()
          * .cancellation()
          * .checkoutIntentId()
          * .createdAt()
@@ -331,6 +373,7 @@ private constructor(
         fun build(): Order =
             Order(
                 checkRequired("id", id),
+                checkRequired("buyer", buyer),
                 checkRequired("cancellation", cancellation),
                 checkRequired("checkoutIntentId", checkoutIntentId),
                 checkRequired("createdAt", createdAt),
@@ -356,6 +399,7 @@ private constructor(
         }
 
         id()
+        buyer().validate()
         cancellation().ifPresent { it.validate() }
         checkoutIntentId()
         createdAt()
@@ -380,6 +424,7 @@ private constructor(
     @JvmSynthetic
     internal fun validity(): Int =
         (if (id.asKnown().isPresent) 1 else 0) +
+            (buyer.asKnown().getOrNull()?.validity() ?: 0) +
             (cancellation.asKnown().getOrNull()?.validity() ?: 0) +
             (if (checkoutIntentId.asKnown().isPresent) 1 else 0) +
             (if (createdAt.asKnown().isPresent) 1 else 0) +
@@ -393,6 +438,7 @@ private constructor(
 
         return other is Order &&
             id == other.id &&
+            buyer == other.buyer &&
             cancellation == other.cancellation &&
             checkoutIntentId == other.checkoutIntentId &&
             createdAt == other.createdAt &&
@@ -404,6 +450,7 @@ private constructor(
     private val hashCode: Int by lazy {
         Objects.hash(
             id,
+            buyer,
             cancellation,
             checkoutIntentId,
             createdAt,
@@ -416,5 +463,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "Order{id=$id, cancellation=$cancellation, checkoutIntentId=$checkoutIntentId, createdAt=$createdAt, updatedAt=$updatedAt, referenceId=$referenceId, additionalProperties=$additionalProperties}"
+        "Order{id=$id, buyer=$buyer, cancellation=$cancellation, checkoutIntentId=$checkoutIntentId, createdAt=$createdAt, updatedAt=$updatedAt, referenceId=$referenceId, additionalProperties=$additionalProperties}"
 }

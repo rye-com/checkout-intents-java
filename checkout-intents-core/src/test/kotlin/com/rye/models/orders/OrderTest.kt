@@ -4,6 +4,7 @@ package com.rye.models.orders
 
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.rye.core.jsonMapper
+import com.rye.models.checkoutintents.Buyer
 import java.time.OffsetDateTime
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -15,6 +16,20 @@ internal class OrderTest {
         val order =
             Order.builder()
                 .id("id")
+                .buyer(
+                    Buyer.builder()
+                        .address1("123 Main St")
+                        .city("New York")
+                        .country("US")
+                        .email("john.doe@example.com")
+                        .firstName("John")
+                        .lastName("Doe")
+                        .phone("1234567890")
+                        .postalCode("10001")
+                        .province("NY")
+                        .address2("Apt 1")
+                        .build()
+                )
                 .cancellation(
                     Cancellation.RequestedCancellation.builder()
                         .id("id")
@@ -40,6 +55,21 @@ internal class OrderTest {
                 .build()
 
         assertThat(order.id()).isEqualTo("id")
+        assertThat(order.buyer())
+            .isEqualTo(
+                Buyer.builder()
+                    .address1("123 Main St")
+                    .city("New York")
+                    .country("US")
+                    .email("john.doe@example.com")
+                    .firstName("John")
+                    .lastName("Doe")
+                    .phone("1234567890")
+                    .postalCode("10001")
+                    .province("NY")
+                    .address2("Apt 1")
+                    .build()
+            )
         assertThat(order.cancellation())
             .contains(
                 Cancellation.ofRequested(
@@ -73,6 +103,20 @@ internal class OrderTest {
         val order =
             Order.builder()
                 .id("id")
+                .buyer(
+                    Buyer.builder()
+                        .address1("123 Main St")
+                        .city("New York")
+                        .country("US")
+                        .email("john.doe@example.com")
+                        .firstName("John")
+                        .lastName("Doe")
+                        .phone("1234567890")
+                        .postalCode("10001")
+                        .province("NY")
+                        .address2("Apt 1")
+                        .build()
+                )
                 .cancellation(
                     Cancellation.RequestedCancellation.builder()
                         .id("id")
