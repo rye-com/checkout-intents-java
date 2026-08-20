@@ -23,6 +23,7 @@ import com.rye.models.orders.OrderListPageAsync
 import com.rye.models.orders.OrderListPageResponse
 import com.rye.models.orders.OrderListParams
 import com.rye.models.orders.OrderRetrieveParams
+import com.rye.models.orders.OrderUpdateBuyerParams
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
@@ -59,6 +60,13 @@ class OrderServiceAsyncImpl internal constructor(private val clientOptions: Clie
     ): CompletableFuture<Cancellation> =
         // post /api/v1/orders/{id}/cancel
         withRawResponse().cancel(params, requestOptions).thenApply { it.parse() }
+
+    override fun updateBuyer(
+        params: OrderUpdateBuyerParams,
+        requestOptions: RequestOptions,
+    ): CompletableFuture<Order> =
+        // put /api/v1/orders/{id}/buyer
+        withRawResponse().updateBuyer(params, requestOptions).thenApply { it.parse() }
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         OrderServiceAsync.WithRawResponse {
@@ -168,6 +176,40 @@ class OrderServiceAsyncImpl internal constructor(private val clientOptions: Clie
                     errorHandler.handle(response).parseable {
                         response
                             .use { cancelHandler.handle(it) }
+                            .also {
+                                if (requestOptions.responseValidation!!) {
+                                    it.validate()
+                                }
+                            }
+                    }
+                }
+        }
+
+        private val updateBuyerHandler: Handler<Order> =
+            jsonHandler<Order>(clientOptions.jsonMapper)
+
+        override fun updateBuyer(
+            params: OrderUpdateBuyerParams,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<Order>> {
+            // We check here instead of in the params builder because this can be specified
+            // positionally or in the params class.
+            checkRequired("id", params.id().getOrNull())
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.PUT)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments("api", "v1", "orders", params._pathParam(0), "buyer")
+                    .body(json(clientOptions.jsonMapper, params._body()))
+                    .build()
+                    .prepareAsync(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            return request
+                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
+                .thenApply { response ->
+                    errorHandler.handle(response).parseable {
+                        response
+                            .use { updateBuyerHandler.handle(it) }
                             .also {
                                 if (requestOptions.responseValidation!!) {
                                     it.validate()
