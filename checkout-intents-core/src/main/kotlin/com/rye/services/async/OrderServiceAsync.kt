@@ -11,6 +11,7 @@ import com.rye.models.orders.OrderCancelParams
 import com.rye.models.orders.OrderListPageAsync
 import com.rye.models.orders.OrderListParams
 import com.rye.models.orders.OrderRetrieveParams
+import com.rye.models.orders.OrderUpdateBuyerParams
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 
@@ -100,6 +101,27 @@ interface OrderServiceAsync {
         params: OrderCancelParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<Cancellation>
+
+    /** Update buyer fields for an order and update its Shopify shipping address. */
+    fun updateBuyer(id: String, params: OrderUpdateBuyerParams): CompletableFuture<Order> =
+        updateBuyer(id, params, RequestOptions.none())
+
+    /** @see updateBuyer */
+    fun updateBuyer(
+        id: String,
+        params: OrderUpdateBuyerParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<Order> = updateBuyer(params.toBuilder().id(id).build(), requestOptions)
+
+    /** @see updateBuyer */
+    fun updateBuyer(params: OrderUpdateBuyerParams): CompletableFuture<Order> =
+        updateBuyer(params, RequestOptions.none())
+
+    /** @see updateBuyer */
+    fun updateBuyer(
+        params: OrderUpdateBuyerParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<Order>
 
     /** A view of [OrderServiceAsync] that provides access to raw HTTP responses for each method. */
     interface WithRawResponse {
@@ -203,5 +225,33 @@ interface OrderServiceAsync {
             params: OrderCancelParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<Cancellation>>
+
+        /**
+         * Returns a raw HTTP response for `put /api/v1/orders/{id}/buyer`, but is otherwise the
+         * same as [OrderServiceAsync.updateBuyer].
+         */
+        fun updateBuyer(
+            id: String,
+            params: OrderUpdateBuyerParams,
+        ): CompletableFuture<HttpResponseFor<Order>> =
+            updateBuyer(id, params, RequestOptions.none())
+
+        /** @see updateBuyer */
+        fun updateBuyer(
+            id: String,
+            params: OrderUpdateBuyerParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<Order>> =
+            updateBuyer(params.toBuilder().id(id).build(), requestOptions)
+
+        /** @see updateBuyer */
+        fun updateBuyer(params: OrderUpdateBuyerParams): CompletableFuture<HttpResponseFor<Order>> =
+            updateBuyer(params, RequestOptions.none())
+
+        /** @see updateBuyer */
+        fun updateBuyer(
+            params: OrderUpdateBuyerParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<Order>>
     }
 }
