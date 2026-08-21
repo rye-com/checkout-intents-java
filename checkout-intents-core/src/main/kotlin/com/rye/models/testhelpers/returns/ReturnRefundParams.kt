@@ -1,17 +1,17 @@
 // File generated from our OpenAPI spec by Stainless.
 
-package com.rye.models.checkoutintents
+package com.rye.models.testhelpers.returns
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.rye.core.Enum
 import com.rye.core.ExcludeMissing
 import com.rye.core.JsonField
 import com.rye.core.JsonMissing
 import com.rye.core.JsonValue
 import com.rye.core.Params
-import com.rye.core.checkRequired
 import com.rye.core.http.Headers
 import com.rye.core.http.QueryParams
 import com.rye.errors.CheckoutIntentsInvalidDataException
@@ -20,29 +20,31 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** Add payment details to a checkout intent */
-class CheckoutIntentAddPaymentParams
+/** Refund a simulated return using the order total as the simulated refund amount. */
+class ReturnRefundParams
 private constructor(
-    private val id: String?,
+    private val returnId: String?,
     private val body: Body,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
 
-    fun id(): Optional<String> = Optional.ofNullable(id)
+    fun returnId(): Optional<String> = Optional.ofNullable(returnId)
 
     /**
-     * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-     */
-    fun paymentMethod(): PaymentMethod = body.paymentMethod()
-
-    /**
-     * Returns the raw JSON value of [paymentMethod].
+     * Defaults to `shopper`.
      *
-     * Unlike [paymentMethod], this method doesn't throw if the JSON field has an unexpected type.
+     * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
      */
-    fun _paymentMethod(): JsonField<PaymentMethod> = body._paymentMethod()
+    fun costBearer(): Optional<CostBearer> = body.costBearer()
+
+    /**
+     * Returns the raw JSON value of [costBearer].
+     *
+     * Unlike [costBearer], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _costBearer(): JsonField<CostBearer> = body._costBearer()
 
     fun _additionalBodyProperties(): Map<String, JsonValue> = body._additionalProperties()
 
@@ -56,92 +58,53 @@ private constructor(
 
     companion object {
 
-        /**
-         * Returns a mutable builder for constructing an instance of
-         * [CheckoutIntentAddPaymentParams].
-         *
-         * The following fields are required:
-         * ```java
-         * .paymentMethod()
-         * ```
-         */
+        @JvmStatic fun none(): ReturnRefundParams = builder().build()
+
+        /** Returns a mutable builder for constructing an instance of [ReturnRefundParams]. */
         @JvmStatic fun builder() = Builder()
     }
 
-    /** A builder for [CheckoutIntentAddPaymentParams]. */
+    /** A builder for [ReturnRefundParams]. */
     class Builder internal constructor() {
 
-        private var id: String? = null
+        private var returnId: String? = null
         private var body: Body.Builder = Body.builder()
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
         @JvmSynthetic
-        internal fun from(checkoutIntentAddPaymentParams: CheckoutIntentAddPaymentParams) = apply {
-            id = checkoutIntentAddPaymentParams.id
-            body = checkoutIntentAddPaymentParams.body.toBuilder()
-            additionalHeaders = checkoutIntentAddPaymentParams.additionalHeaders.toBuilder()
-            additionalQueryParams = checkoutIntentAddPaymentParams.additionalQueryParams.toBuilder()
+        internal fun from(returnRefundParams: ReturnRefundParams) = apply {
+            returnId = returnRefundParams.returnId
+            body = returnRefundParams.body.toBuilder()
+            additionalHeaders = returnRefundParams.additionalHeaders.toBuilder()
+            additionalQueryParams = returnRefundParams.additionalQueryParams.toBuilder()
         }
 
-        fun id(id: String?) = apply { this.id = id }
+        fun returnId(returnId: String?) = apply { this.returnId = returnId }
 
-        /** Alias for calling [Builder.id] with `id.orElse(null)`. */
-        fun id(id: Optional<String>) = id(id.getOrNull())
+        /** Alias for calling [Builder.returnId] with `returnId.orElse(null)`. */
+        fun returnId(returnId: Optional<String>) = returnId(returnId.getOrNull())
 
         /**
          * Sets the entire request body.
          *
          * This is generally only useful if you are already constructing the body separately.
          * Otherwise, it's more convenient to use the top-level setters instead:
-         * - [paymentMethod]
+         * - [costBearer]
          */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
 
-        fun paymentMethod(paymentMethod: PaymentMethod) = apply {
-            body.paymentMethod(paymentMethod)
-        }
+        /** Defaults to `shopper`. */
+        fun costBearer(costBearer: CostBearer) = apply { body.costBearer(costBearer) }
 
         /**
-         * Sets [Builder.paymentMethod] to an arbitrary JSON value.
+         * Sets [Builder.costBearer] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.paymentMethod] with a well-typed [PaymentMethod] value
+         * You should usually call [Builder.costBearer] with a well-typed [CostBearer] value
          * instead. This method is primarily for setting the field to an undocumented or not yet
          * supported value.
          */
-        fun paymentMethod(paymentMethod: JsonField<PaymentMethod>) = apply {
-            body.paymentMethod(paymentMethod)
-        }
-
-        /** Alias for calling [paymentMethod] with `PaymentMethod.ofStripeToken(stripeToken)`. */
-        fun paymentMethod(stripeToken: PaymentMethod.StripeTokenPaymentMethod) = apply {
-            body.paymentMethod(stripeToken)
-        }
-
-        /** Alias for calling [paymentMethod] with `PaymentMethod.ofBasisTheory(basisTheory)`. */
-        fun paymentMethod(basisTheory: PaymentMethod.BasisTheoryPaymentMethod) = apply {
-            body.paymentMethod(basisTheory)
-        }
-
-        /** Alias for calling [paymentMethod] with `PaymentMethod.ofNekuda(nekuda)`. */
-        fun paymentMethod(nekuda: PaymentMethod.NekudaPaymentMethod) = apply {
-            body.paymentMethod(nekuda)
-        }
-
-        /** Alias for calling [paymentMethod] with `PaymentMethod.ofPrava(prava)`. */
-        fun paymentMethod(prava: PaymentMethod.PravaPaymentMethod) = apply {
-            body.paymentMethod(prava)
-        }
-
-        /** Alias for calling [paymentMethod] with `PaymentMethod.ofDrawdown(drawdown)`. */
-        fun paymentMethod(drawdown: PaymentMethod.DrawdownPaymentMethod) = apply {
-            body.paymentMethod(drawdown)
-        }
-
-        /** Alias for calling [paymentMethod] with `PaymentMethod.ofX402(x402)`. */
-        fun paymentMethod(x402: PaymentMethod.X402PaymentMethod) = apply {
-            body.paymentMethod(x402)
-        }
+        fun costBearer(costBearer: JsonField<CostBearer>) = apply { body.costBearer(costBearer) }
 
         fun additionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) = apply {
             body.additionalProperties(additionalBodyProperties)
@@ -261,20 +224,13 @@ private constructor(
         }
 
         /**
-         * Returns an immutable instance of [CheckoutIntentAddPaymentParams].
+         * Returns an immutable instance of [ReturnRefundParams].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
-         *
-         * The following fields are required:
-         * ```java
-         * .paymentMethod()
-         * ```
-         *
-         * @throws IllegalStateException if any required field is unset.
          */
-        fun build(): CheckoutIntentAddPaymentParams =
-            CheckoutIntentAddPaymentParams(
-                id,
+        fun build(): ReturnRefundParams =
+            ReturnRefundParams(
+                returnId,
                 body.build(),
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
@@ -285,7 +241,7 @@ private constructor(
 
     fun _pathParam(index: Int): String =
         when (index) {
-            0 -> id ?: ""
+            0 -> returnId ?: ""
             else -> ""
         }
 
@@ -296,33 +252,33 @@ private constructor(
     class Body
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
-        private val paymentMethod: JsonField<PaymentMethod>,
+        private val costBearer: JsonField<CostBearer>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
 
         @JsonCreator
         private constructor(
-            @JsonProperty("paymentMethod")
+            @JsonProperty("costBearer")
             @ExcludeMissing
-            paymentMethod: JsonField<PaymentMethod> = JsonMissing.of()
-        ) : this(paymentMethod, mutableMapOf())
+            costBearer: JsonField<CostBearer> = JsonMissing.of()
+        ) : this(costBearer, mutableMapOf())
 
         /**
-         * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type or
-         *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
-         *   value).
-         */
-        fun paymentMethod(): PaymentMethod = paymentMethod.getRequired("paymentMethod")
-
-        /**
-         * Returns the raw JSON value of [paymentMethod].
+         * Defaults to `shopper`.
          *
-         * Unlike [paymentMethod], this method doesn't throw if the JSON field has an unexpected
-         * type.
+         * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type
+         *   (e.g. if the server responded with an unexpected value).
          */
-        @JsonProperty("paymentMethod")
+        fun costBearer(): Optional<CostBearer> = costBearer.getOptional("costBearer")
+
+        /**
+         * Returns the raw JSON value of [costBearer].
+         *
+         * Unlike [costBearer], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("costBearer")
         @ExcludeMissing
-        fun _paymentMethod(): JsonField<PaymentMethod> = paymentMethod
+        fun _costBearer(): JsonField<CostBearer> = costBearer
 
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -338,70 +294,35 @@ private constructor(
 
         companion object {
 
-            /**
-             * Returns a mutable builder for constructing an instance of [Body].
-             *
-             * The following fields are required:
-             * ```java
-             * .paymentMethod()
-             * ```
-             */
+            /** Returns a mutable builder for constructing an instance of [Body]. */
             @JvmStatic fun builder() = Builder()
         }
 
         /** A builder for [Body]. */
         class Builder internal constructor() {
 
-            private var paymentMethod: JsonField<PaymentMethod>? = null
+            private var costBearer: JsonField<CostBearer> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
             internal fun from(body: Body) = apply {
-                paymentMethod = body.paymentMethod
+                costBearer = body.costBearer
                 additionalProperties = body.additionalProperties.toMutableMap()
             }
 
-            fun paymentMethod(paymentMethod: PaymentMethod) =
-                paymentMethod(JsonField.of(paymentMethod))
+            /** Defaults to `shopper`. */
+            fun costBearer(costBearer: CostBearer) = costBearer(JsonField.of(costBearer))
 
             /**
-             * Sets [Builder.paymentMethod] to an arbitrary JSON value.
+             * Sets [Builder.costBearer] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.paymentMethod] with a well-typed [PaymentMethod]
-             * value instead. This method is primarily for setting the field to an undocumented or
-             * not yet supported value.
+             * You should usually call [Builder.costBearer] with a well-typed [CostBearer] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
              */
-            fun paymentMethod(paymentMethod: JsonField<PaymentMethod>) = apply {
-                this.paymentMethod = paymentMethod
+            fun costBearer(costBearer: JsonField<CostBearer>) = apply {
+                this.costBearer = costBearer
             }
-
-            /**
-             * Alias for calling [paymentMethod] with `PaymentMethod.ofStripeToken(stripeToken)`.
-             */
-            fun paymentMethod(stripeToken: PaymentMethod.StripeTokenPaymentMethod) =
-                paymentMethod(PaymentMethod.ofStripeToken(stripeToken))
-
-            /**
-             * Alias for calling [paymentMethod] with `PaymentMethod.ofBasisTheory(basisTheory)`.
-             */
-            fun paymentMethod(basisTheory: PaymentMethod.BasisTheoryPaymentMethod) =
-                paymentMethod(PaymentMethod.ofBasisTheory(basisTheory))
-
-            /** Alias for calling [paymentMethod] with `PaymentMethod.ofNekuda(nekuda)`. */
-            fun paymentMethod(nekuda: PaymentMethod.NekudaPaymentMethod) =
-                paymentMethod(PaymentMethod.ofNekuda(nekuda))
-
-            /** Alias for calling [paymentMethod] with `PaymentMethod.ofPrava(prava)`. */
-            fun paymentMethod(prava: PaymentMethod.PravaPaymentMethod) =
-                paymentMethod(PaymentMethod.ofPrava(prava))
-
-            /** Alias for calling [paymentMethod] with `PaymentMethod.ofDrawdown(drawdown)`. */
-            fun paymentMethod(drawdown: PaymentMethod.DrawdownPaymentMethod) =
-                paymentMethod(PaymentMethod.ofDrawdown(drawdown))
-
-            /** Alias for calling [paymentMethod] with `PaymentMethod.ofX402(x402)`. */
-            fun paymentMethod(x402: PaymentMethod.X402PaymentMethod) =
-                paymentMethod(PaymentMethod.ofX402(x402))
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
@@ -426,29 +347,27 @@ private constructor(
              * Returns an immutable instance of [Body].
              *
              * Further updates to this [Builder] will not mutate the returned instance.
-             *
-             * The following fields are required:
-             * ```java
-             * .paymentMethod()
-             * ```
-             *
-             * @throws IllegalStateException if any required field is unset.
              */
-            fun build(): Body =
-                Body(
-                    checkRequired("paymentMethod", paymentMethod),
-                    additionalProperties.toMutableMap(),
-                )
+            fun build(): Body = Body(costBearer, additionalProperties.toMutableMap())
         }
 
         private var validated: Boolean = false
 
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws CheckoutIntentsInvalidDataException if any value type in this object doesn't
+         *   match its expected type.
+         */
         fun validate(): Body = apply {
             if (validated) {
                 return@apply
             }
 
-            paymentMethod().validate()
+            costBearer().ifPresent { it.validate() }
             validated = true
         }
 
@@ -467,7 +386,7 @@ private constructor(
          * Used for best match union deserialization.
          */
         @JvmSynthetic
-        internal fun validity(): Int = (paymentMethod.asKnown().getOrNull()?.validity() ?: 0)
+        internal fun validity(): Int = (costBearer.asKnown().getOrNull()?.validity() ?: 0)
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -475,16 +394,161 @@ private constructor(
             }
 
             return other is Body &&
-                paymentMethod == other.paymentMethod &&
+                costBearer == other.costBearer &&
                 additionalProperties == other.additionalProperties
         }
 
-        private val hashCode: Int by lazy { Objects.hash(paymentMethod, additionalProperties) }
+        private val hashCode: Int by lazy { Objects.hash(costBearer, additionalProperties) }
 
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{paymentMethod=$paymentMethod, additionalProperties=$additionalProperties}"
+            "Body{costBearer=$costBearer, additionalProperties=$additionalProperties}"
+    }
+
+    /** Defaults to `shopper`. */
+    class CostBearer @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+
+        /**
+         * Returns this class instance's raw value.
+         *
+         * This is usually only useful if this instance was deserialized from data that doesn't
+         * match any known member, and you want to know that value. For example, if the SDK is on an
+         * older version than the API, then the API may respond with new members that the SDK is
+         * unaware of.
+         */
+        @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+
+        companion object {
+
+            @JvmField val SHOPPER = of("shopper")
+
+            @JvmField val DEVELOPER = of("developer")
+
+            @JvmField val RYE = of("rye")
+
+            @JvmStatic fun of(value: String) = CostBearer(JsonField.of(value))
+        }
+
+        /** An enum containing [CostBearer]'s known values. */
+        enum class Known {
+            SHOPPER,
+            DEVELOPER,
+            RYE,
+        }
+
+        /**
+         * An enum containing [CostBearer]'s known values, as well as an [_UNKNOWN] member.
+         *
+         * An instance of [CostBearer] can contain an unknown value in a couple of cases:
+         * - It was deserialized from data that doesn't match any known member. For example, if the
+         *   SDK is on an older version than the API, then the API may respond with new members that
+         *   the SDK is unaware of.
+         * - It was constructed with an arbitrary value using the [of] method.
+         */
+        enum class Value {
+            SHOPPER,
+            DEVELOPER,
+            RYE,
+            /**
+             * An enum member indicating that [CostBearer] was instantiated with an unknown value.
+             */
+            _UNKNOWN,
+        }
+
+        /**
+         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
+         * if the class was instantiated with an unknown value.
+         *
+         * Use the [known] method instead if you're certain the value is always known or if you want
+         * to throw for the unknown case.
+         */
+        fun value(): Value =
+            when (this) {
+                SHOPPER -> Value.SHOPPER
+                DEVELOPER -> Value.DEVELOPER
+                RYE -> Value.RYE
+                else -> Value._UNKNOWN
+            }
+
+        /**
+         * Returns an enum member corresponding to this class instance's value.
+         *
+         * Use the [value] method instead if you're uncertain the value is always known and don't
+         * want to throw for the unknown case.
+         *
+         * @throws CheckoutIntentsInvalidDataException if this class instance's value is a not a
+         *   known member.
+         */
+        fun known(): Known =
+            when (this) {
+                SHOPPER -> Known.SHOPPER
+                DEVELOPER -> Known.DEVELOPER
+                RYE -> Known.RYE
+                else -> throw CheckoutIntentsInvalidDataException("Unknown CostBearer: $value")
+            }
+
+        /**
+         * Returns this class instance's primitive wire representation.
+         *
+         * This differs from the [toString] method because that method is primarily for debugging
+         * and generally doesn't throw.
+         *
+         * @throws CheckoutIntentsInvalidDataException if this class instance's value does not have
+         *   the expected primitive type.
+         */
+        fun asString(): String =
+            _value().asString().orElseThrow {
+                CheckoutIntentsInvalidDataException("Value is not a String")
+            }
+
+        private var validated: Boolean = false
+
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws CheckoutIntentsInvalidDataException if any value type in this object doesn't
+         *   match its expected type.
+         */
+        fun validate(): CostBearer = apply {
+            if (validated) {
+                return@apply
+            }
+
+            known()
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: CheckoutIntentsInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is CostBearer && value == other.value
+        }
+
+        override fun hashCode() = value.hashCode()
+
+        override fun toString() = value.toString()
     }
 
     override fun equals(other: Any?): Boolean {
@@ -492,15 +556,16 @@ private constructor(
             return true
         }
 
-        return other is CheckoutIntentAddPaymentParams &&
-            id == other.id &&
+        return other is ReturnRefundParams &&
+            returnId == other.returnId &&
             body == other.body &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
     }
 
-    override fun hashCode(): Int = Objects.hash(id, body, additionalHeaders, additionalQueryParams)
+    override fun hashCode(): Int =
+        Objects.hash(returnId, body, additionalHeaders, additionalQueryParams)
 
     override fun toString() =
-        "CheckoutIntentAddPaymentParams{id=$id, body=$body, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "ReturnRefundParams{returnId=$returnId, body=$body, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

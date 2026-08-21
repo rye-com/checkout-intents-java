@@ -6,14 +6,15 @@ import com.rye.core.ClientOptions
 import com.rye.core.RequestOptions
 import com.rye.core.http.HttpResponseFor
 import com.rye.models.checkoutintents.CheckoutIntent
-import com.rye.models.checkoutintents.CheckoutIntentAddPaymentParams
 import com.rye.models.checkoutintents.CheckoutIntentConfirmParams
 import com.rye.models.checkoutintents.CheckoutIntentCreateParams
 import com.rye.models.checkoutintents.CheckoutIntentListPageAsync
 import com.rye.models.checkoutintents.CheckoutIntentListParams
 import com.rye.models.checkoutintents.CheckoutIntentPurchaseParams
+import com.rye.models.checkoutintents.CheckoutIntentRetrieveOrderParams
 import com.rye.models.checkoutintents.CheckoutIntentRetrieveParams
 import com.rye.models.checkoutintents.PollOptions
+import com.rye.models.orders.Order
 import com.rye.services.async.checkoutintents.ShipmentServiceAsync
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
@@ -103,30 +104,6 @@ interface CheckoutIntentServiceAsync {
     /** @see list */
     fun list(requestOptions: RequestOptions): CompletableFuture<CheckoutIntentListPageAsync> =
         list(CheckoutIntentListParams.none(), requestOptions)
-
-    /** Add payment details to a checkout intent */
-    fun addPayment(
-        id: String,
-        params: CheckoutIntentAddPaymentParams,
-    ): CompletableFuture<CheckoutIntent> = addPayment(id, params, RequestOptions.none())
-
-    /** @see addPayment */
-    fun addPayment(
-        id: String,
-        params: CheckoutIntentAddPaymentParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<CheckoutIntent> =
-        addPayment(params.toBuilder().id(id).build(), requestOptions)
-
-    /** @see addPayment */
-    fun addPayment(params: CheckoutIntentAddPaymentParams): CompletableFuture<CheckoutIntent> =
-        addPayment(params, RequestOptions.none())
-
-    /** @see addPayment */
-    fun addPayment(
-        params: CheckoutIntentAddPaymentParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<CheckoutIntent>
 
     /**
      * Confirm a checkout intent with provided payment information
@@ -287,6 +264,42 @@ interface CheckoutIntentServiceAsync {
     ): CompletableFuture<CheckoutIntent>
 
     /**
+     * Retrieve the order associated with a checkout intent.
+     *
+     * Returns the single order created when the checkout intent reached the `completed` state. 404
+     * if the intent has not produced an order yet.
+     */
+    fun retrieveOrder(id: String): CompletableFuture<Order> =
+        retrieveOrder(id, CheckoutIntentRetrieveOrderParams.none())
+
+    /** @see retrieveOrder */
+    fun retrieveOrder(
+        id: String,
+        params: CheckoutIntentRetrieveOrderParams = CheckoutIntentRetrieveOrderParams.none(),
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<Order> = retrieveOrder(params.toBuilder().id(id).build(), requestOptions)
+
+    /** @see retrieveOrder */
+    fun retrieveOrder(
+        id: String,
+        params: CheckoutIntentRetrieveOrderParams = CheckoutIntentRetrieveOrderParams.none(),
+    ): CompletableFuture<Order> = retrieveOrder(id, params, RequestOptions.none())
+
+    /** @see retrieveOrder */
+    fun retrieveOrder(
+        params: CheckoutIntentRetrieveOrderParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<Order>
+
+    /** @see retrieveOrder */
+    fun retrieveOrder(params: CheckoutIntentRetrieveOrderParams): CompletableFuture<Order> =
+        retrieveOrder(params, RequestOptions.none())
+
+    /** @see retrieveOrder */
+    fun retrieveOrder(id: String, requestOptions: RequestOptions): CompletableFuture<Order> =
+        retrieveOrder(id, CheckoutIntentRetrieveOrderParams.none(), requestOptions)
+
+    /**
      * A view of [CheckoutIntentServiceAsync] that provides access to raw HTTP responses for each
      * method.
      */
@@ -385,36 +398,6 @@ interface CheckoutIntentServiceAsync {
             list(CheckoutIntentListParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `post /api/v1/checkout-intents/{id}/payment`, but is
-         * otherwise the same as [CheckoutIntentServiceAsync.addPayment].
-         */
-        fun addPayment(
-            id: String,
-            params: CheckoutIntentAddPaymentParams,
-        ): CompletableFuture<HttpResponseFor<CheckoutIntent>> =
-            addPayment(id, params, RequestOptions.none())
-
-        /** @see addPayment */
-        fun addPayment(
-            id: String,
-            params: CheckoutIntentAddPaymentParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<CheckoutIntent>> =
-            addPayment(params.toBuilder().id(id).build(), requestOptions)
-
-        /** @see addPayment */
-        fun addPayment(
-            params: CheckoutIntentAddPaymentParams
-        ): CompletableFuture<HttpResponseFor<CheckoutIntent>> =
-            addPayment(params, RequestOptions.none())
-
-        /** @see addPayment */
-        fun addPayment(
-            params: CheckoutIntentAddPaymentParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<CheckoutIntent>>
-
-        /**
          * Returns a raw HTTP response for `post /api/v1/checkout-intents/{id}/confirm`, but is
          * otherwise the same as [CheckoutIntentServiceAsync.confirm].
          */
@@ -458,5 +441,45 @@ interface CheckoutIntentServiceAsync {
             params: CheckoutIntentPurchaseParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<CheckoutIntent>>
+
+        /**
+         * Returns a raw HTTP response for `get /api/v1/checkout-intents/{id}/order`, but is
+         * otherwise the same as [CheckoutIntentServiceAsync.retrieveOrder].
+         */
+        fun retrieveOrder(id: String): CompletableFuture<HttpResponseFor<Order>> =
+            retrieveOrder(id, CheckoutIntentRetrieveOrderParams.none())
+
+        /** @see retrieveOrder */
+        fun retrieveOrder(
+            id: String,
+            params: CheckoutIntentRetrieveOrderParams = CheckoutIntentRetrieveOrderParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<Order>> =
+            retrieveOrder(params.toBuilder().id(id).build(), requestOptions)
+
+        /** @see retrieveOrder */
+        fun retrieveOrder(
+            id: String,
+            params: CheckoutIntentRetrieveOrderParams = CheckoutIntentRetrieveOrderParams.none(),
+        ): CompletableFuture<HttpResponseFor<Order>> =
+            retrieveOrder(id, params, RequestOptions.none())
+
+        /** @see retrieveOrder */
+        fun retrieveOrder(
+            params: CheckoutIntentRetrieveOrderParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<Order>>
+
+        /** @see retrieveOrder */
+        fun retrieveOrder(
+            params: CheckoutIntentRetrieveOrderParams
+        ): CompletableFuture<HttpResponseFor<Order>> = retrieveOrder(params, RequestOptions.none())
+
+        /** @see retrieveOrder */
+        fun retrieveOrder(
+            id: String,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<Order>> =
+            retrieveOrder(id, CheckoutIntentRetrieveOrderParams.none(), requestOptions)
     }
 }

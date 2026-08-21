@@ -12,14 +12,24 @@ import com.rye.services.async.BrandServiceAsync
 import com.rye.services.async.BrandServiceAsyncImpl
 import com.rye.services.async.CheckoutIntentServiceAsync
 import com.rye.services.async.CheckoutIntentServiceAsyncImpl
+import com.rye.services.async.CommissionServiceAsync
+import com.rye.services.async.CommissionServiceAsyncImpl
 import com.rye.services.async.EventServiceAsync
 import com.rye.services.async.EventServiceAsyncImpl
+import com.rye.services.async.MerchantConnectorServiceAsync
+import com.rye.services.async.MerchantConnectorServiceAsyncImpl
+import com.rye.services.async.OrderServiceAsync
+import com.rye.services.async.OrderServiceAsyncImpl
 import com.rye.services.async.PaymentGatewayServiceAsync
 import com.rye.services.async.PaymentGatewayServiceAsyncImpl
 import com.rye.services.async.ProductServiceAsync
 import com.rye.services.async.ProductServiceAsyncImpl
+import com.rye.services.async.ReturnServiceAsync
+import com.rye.services.async.ReturnServiceAsyncImpl
 import com.rye.services.async.ShipmentServiceAsync
 import com.rye.services.async.ShipmentServiceAsyncImpl
+import com.rye.services.async.TestHelperServiceAsync
+import com.rye.services.async.TestHelperServiceAsyncImpl
 import java.util.function.Consumer
 
 class CheckoutIntentsClientAsyncImpl(private val clientOptions: ClientOptions) :
@@ -50,12 +60,20 @@ class CheckoutIntentsClientAsyncImpl(private val clientOptions: ClientOptions) :
         BrandServiceAsyncImpl(clientOptionsWithUserAgent)
     }
 
+    private val orders: OrderServiceAsync by lazy {
+        OrderServiceAsyncImpl(clientOptionsWithUserAgent)
+    }
+
     private val products: ProductServiceAsync by lazy {
         ProductServiceAsyncImpl(clientOptionsWithUserAgent)
     }
 
     private val shipments: ShipmentServiceAsync by lazy {
         ShipmentServiceAsyncImpl(clientOptionsWithUserAgent)
+    }
+
+    private val commissions: CommissionServiceAsync by lazy {
+        CommissionServiceAsyncImpl(clientOptionsWithUserAgent)
     }
 
     private val paymentGateways: PaymentGatewayServiceAsync by lazy {
@@ -68,6 +86,18 @@ class CheckoutIntentsClientAsyncImpl(private val clientOptions: ClientOptions) :
 
     private val events: EventServiceAsync by lazy {
         EventServiceAsyncImpl(clientOptionsWithUserAgent)
+    }
+
+    private val merchantConnectors: MerchantConnectorServiceAsync by lazy {
+        MerchantConnectorServiceAsyncImpl(clientOptionsWithUserAgent)
+    }
+
+    private val returns: ReturnServiceAsync by lazy {
+        ReturnServiceAsyncImpl(clientOptionsWithUserAgent)
+    }
+
+    private val testHelpers: TestHelperServiceAsync by lazy {
+        TestHelperServiceAsyncImpl(clientOptionsWithUserAgent)
     }
 
     override fun sync(): CheckoutIntentsClient = sync
@@ -85,15 +115,25 @@ class CheckoutIntentsClientAsyncImpl(private val clientOptions: ClientOptions) :
 
     override fun brands(): BrandServiceAsync = brands
 
+    override fun orders(): OrderServiceAsync = orders
+
     override fun products(): ProductServiceAsync = products
 
     override fun shipments(): ShipmentServiceAsync = shipments
+
+    override fun commissions(): CommissionServiceAsync = commissions
 
     override fun paymentGateways(): PaymentGatewayServiceAsync = paymentGateways
 
     override fun billing(): BillingServiceAsync = billing
 
     override fun events(): EventServiceAsync = events
+
+    override fun merchantConnectors(): MerchantConnectorServiceAsync = merchantConnectors
+
+    override fun returns(): ReturnServiceAsync = returns
+
+    override fun testHelpers(): TestHelperServiceAsync = testHelpers
 
     override fun close() = clientOptions.close()
 
@@ -112,12 +152,20 @@ class CheckoutIntentsClientAsyncImpl(private val clientOptions: ClientOptions) :
             BrandServiceAsyncImpl.WithRawResponseImpl(clientOptions)
         }
 
+        private val orders: OrderServiceAsync.WithRawResponse by lazy {
+            OrderServiceAsyncImpl.WithRawResponseImpl(clientOptions)
+        }
+
         private val products: ProductServiceAsync.WithRawResponse by lazy {
             ProductServiceAsyncImpl.WithRawResponseImpl(clientOptions)
         }
 
         private val shipments: ShipmentServiceAsync.WithRawResponse by lazy {
             ShipmentServiceAsyncImpl.WithRawResponseImpl(clientOptions)
+        }
+
+        private val commissions: CommissionServiceAsync.WithRawResponse by lazy {
+            CommissionServiceAsyncImpl.WithRawResponseImpl(clientOptions)
         }
 
         private val paymentGateways: PaymentGatewayServiceAsync.WithRawResponse by lazy {
@@ -130,6 +178,18 @@ class CheckoutIntentsClientAsyncImpl(private val clientOptions: ClientOptions) :
 
         private val events: EventServiceAsync.WithRawResponse by lazy {
             EventServiceAsyncImpl.WithRawResponseImpl(clientOptions)
+        }
+
+        private val merchantConnectors: MerchantConnectorServiceAsync.WithRawResponse by lazy {
+            MerchantConnectorServiceAsyncImpl.WithRawResponseImpl(clientOptions)
+        }
+
+        private val returns: ReturnServiceAsync.WithRawResponse by lazy {
+            ReturnServiceAsyncImpl.WithRawResponseImpl(clientOptions)
+        }
+
+        private val testHelpers: TestHelperServiceAsync.WithRawResponse by lazy {
+            TestHelperServiceAsyncImpl.WithRawResponseImpl(clientOptions)
         }
 
         override fun withOptions(
@@ -145,14 +205,25 @@ class CheckoutIntentsClientAsyncImpl(private val clientOptions: ClientOptions) :
 
         override fun brands(): BrandServiceAsync.WithRawResponse = brands
 
+        override fun orders(): OrderServiceAsync.WithRawResponse = orders
+
         override fun products(): ProductServiceAsync.WithRawResponse = products
 
         override fun shipments(): ShipmentServiceAsync.WithRawResponse = shipments
+
+        override fun commissions(): CommissionServiceAsync.WithRawResponse = commissions
 
         override fun paymentGateways(): PaymentGatewayServiceAsync.WithRawResponse = paymentGateways
 
         override fun billing(): BillingServiceAsync.WithRawResponse = billing
 
         override fun events(): EventServiceAsync.WithRawResponse = events
+
+        override fun merchantConnectors(): MerchantConnectorServiceAsync.WithRawResponse =
+            merchantConnectors
+
+        override fun returns(): ReturnServiceAsync.WithRawResponse = returns
+
+        override fun testHelpers(): TestHelperServiceAsync.WithRawResponse = testHelpers
     }
 }

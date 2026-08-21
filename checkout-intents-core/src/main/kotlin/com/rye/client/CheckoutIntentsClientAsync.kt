@@ -7,10 +7,15 @@ import com.rye.services.async.BetaServiceAsync
 import com.rye.services.async.BillingServiceAsync
 import com.rye.services.async.BrandServiceAsync
 import com.rye.services.async.CheckoutIntentServiceAsync
+import com.rye.services.async.CommissionServiceAsync
 import com.rye.services.async.EventServiceAsync
+import com.rye.services.async.MerchantConnectorServiceAsync
+import com.rye.services.async.OrderServiceAsync
 import com.rye.services.async.PaymentGatewayServiceAsync
 import com.rye.services.async.ProductServiceAsync
+import com.rye.services.async.ReturnServiceAsync
 import com.rye.services.async.ShipmentServiceAsync
+import com.rye.services.async.TestHelperServiceAsync
 import java.util.function.Consumer
 
 /**
@@ -55,15 +60,25 @@ interface CheckoutIntentsClientAsync {
 
     fun brands(): BrandServiceAsync
 
+    fun orders(): OrderServiceAsync
+
     fun products(): ProductServiceAsync
 
     fun shipments(): ShipmentServiceAsync
+
+    fun commissions(): CommissionServiceAsync
 
     fun paymentGateways(): PaymentGatewayServiceAsync
 
     fun billing(): BillingServiceAsync
 
     fun events(): EventServiceAsync
+
+    fun merchantConnectors(): MerchantConnectorServiceAsync
+
+    fun returns(): ReturnServiceAsync
+
+    fun testHelpers(): TestHelperServiceAsync
 
     /**
      * Closes this client, relinquishing any underlying resources.
@@ -99,14 +114,24 @@ interface CheckoutIntentsClientAsync {
 
         fun brands(): BrandServiceAsync.WithRawResponse
 
+        fun orders(): OrderServiceAsync.WithRawResponse
+
         fun products(): ProductServiceAsync.WithRawResponse
 
         fun shipments(): ShipmentServiceAsync.WithRawResponse
+
+        fun commissions(): CommissionServiceAsync.WithRawResponse
 
         fun paymentGateways(): PaymentGatewayServiceAsync.WithRawResponse
 
         fun billing(): BillingServiceAsync.WithRawResponse
 
         fun events(): EventServiceAsync.WithRawResponse
+
+        fun merchantConnectors(): MerchantConnectorServiceAsync.WithRawResponse
+
+        fun returns(): ReturnServiceAsync.WithRawResponse
+
+        fun testHelpers(): TestHelperServiceAsync.WithRawResponse
     }
 }

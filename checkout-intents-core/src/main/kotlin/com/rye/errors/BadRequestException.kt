@@ -5,12 +5,16 @@ package com.rye.errors
 import com.rye.core.JsonValue
 import com.rye.core.checkRequired
 import com.rye.core.http.Headers
+import com.rye.core.jsonMapper
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 class BadRequestException
 private constructor(private val headers: Headers, private val body: JsonValue, cause: Throwable?) :
-    CheckoutIntentsServiceException("400: $body", cause) {
+    CheckoutIntentsServiceException(
+        "400: ${if (body.isMissing()) "Unknown" else jsonMapper().writeValueAsString(body)}",
+        cause,
+    ) {
 
     override fun statusCode(): Int = 400
 

@@ -2,8 +2,8 @@
 
 <!-- x-release-please-start-version -->
 
-[![Maven Central](https://img.shields.io/maven-central/v/com.rye/checkout-intents)](https://central.sonatype.com/artifact/com.rye/checkout-intents/0.13.0)
-[![javadoc](https://javadoc.io/badge2/com.rye/checkout-intents/0.13.0/javadoc.svg)](https://javadoc.io/doc/com.rye/checkout-intents/0.13.0)
+[![Maven Central](https://img.shields.io/maven-central/v/com.rye/checkout-intents)](https://central.sonatype.com/artifact/com.rye/checkout-intents/0.14.0)
+[![javadoc](https://javadoc.io/badge2/com.rye/checkout-intents/javadoc.svg)](https://javadoc.io/doc/com.rye/checkout-intents/0.14.0)
 
 <!-- x-release-please-end -->
 
@@ -13,7 +13,7 @@ It is generated with [Stainless](https://www.stainless.com/).
 
 <!-- x-release-please-start-version -->
 
-The REST API documentation can be found on [docs.rye.com](https://docs.rye.com). Javadocs are available on [javadoc.io](https://javadoc.io/doc/com.rye/checkout-intents/0.13.0).
+The REST API documentation can be found on [docs.rye.com](https://docs.rye.com). Javadocs are available on [javadoc.io](https://javadoc.io/doc/com.rye/checkout-intents/0.14.0).
 
 <!-- x-release-please-end -->
 
@@ -24,7 +24,7 @@ The REST API documentation can be found on [docs.rye.com](https://docs.rye.com).
 ### Gradle
 
 ```kotlin
-implementation("com.rye:checkout-intents:0.13.0")
+implementation("com.rye:checkout-intents:0.14.0")
 ```
 
 ### Maven
@@ -33,7 +33,7 @@ implementation("com.rye:checkout-intents:0.13.0")
 <dependency>
   <groupId>com.rye</groupId>
   <artifactId>checkout-intents</artifactId>
-  <version>0.13.0</version>
+  <version>0.14.0</version>
 </dependency>
 ```
 
@@ -597,8 +597,6 @@ while (true) {
 
 ## Logging
 
-The SDK uses the standard [OkHttp logging interceptor](https://github.com/square/okhttp/tree/master/okhttp-logging-interceptor).
-
 Enable logging by setting the `CHECKOUT_INTENTS_LOG` environment variable to `info`:
 
 ```sh
@@ -609,6 +607,19 @@ Or to `debug` for more verbose logging:
 
 ```sh
 export CHECKOUT_INTENTS_LOG=debug
+```
+
+Or configure the client manually using the `logLevel` method:
+
+```java
+import com.rye.client.CheckoutIntentsClient;
+import com.rye.client.okhttp.CheckoutIntentsOkHttpClient;
+import com.rye.core.LogLevel;
+
+CheckoutIntentsClient client = CheckoutIntentsOkHttpClient.builder()
+    .fromEnv()
+    .logLevel(LogLevel.INFO)
+    .build();
 ```
 
 ## ProGuard and R8
@@ -702,6 +713,21 @@ CheckoutIntentsClient client = CheckoutIntentsOkHttpClient.builder()
         "https://example.com", 8080
       )
     ))
+    .build();
+```
+
+If the proxy responds with `407 Proxy Authentication Required`, supply credentials by also configuring `proxyAuthenticator`:
+
+```java
+import com.rye.client.CheckoutIntentsClient;
+import com.rye.client.okhttp.CheckoutIntentsOkHttpClient;
+import com.rye.core.http.ProxyAuthenticator;
+
+CheckoutIntentsClient client = CheckoutIntentsOkHttpClient.builder()
+    .fromEnv()
+    .proxy(...)
+    // Or a custom implementation of `ProxyAuthenticator`.
+    .proxyAuthenticator(ProxyAuthenticator.basic("username", "password"))
     .build();
 ```
 
@@ -917,7 +943,7 @@ To access undocumented response properties, call the `_additionalProperties()` m
 import com.rye.core.JsonValue;
 import java.util.Map;
 
-Map<String, JsonValue> additionalProperties = client.betas().checkoutSessions().create(params)._additionalProperties();
+Map<String, JsonValue> additionalProperties = client.checkoutIntents().retrieveOrder(params)._additionalProperties();
 JsonValue secretPropertyValue = additionalProperties.get("secretProperty");
 
 String result = secretPropertyValue.accept(new JsonValue.Visitor<>() {
@@ -947,19 +973,19 @@ To access a property's raw JSON value, which may be undocumented, call its `_` p
 import com.rye.core.JsonField;
 import java.util.Optional;
 
-JsonField<String> productUrl = client.betas().checkoutSessions().create(params)._productUrl();
+JsonField<Object> field = client.checkoutIntents().retrieveOrder(params)._field();
 
-if (productUrl.isMissing()) {
+if (field.isMissing()) {
   // The property is absent from the JSON response
-} else if (productUrl.isNull()) {
+} else if (field.isNull()) {
   // The property was set to literal null
 } else {
   // Check if value was provided as a string
   // Other methods include `asNumber()`, `asBoolean()`, etc.
-  Optional<String> jsonString = productUrl.asString();
+  Optional<String> jsonString = field.asString();
 
   // Try to deserialize into a custom type
-  MyClass myObject = productUrl.asUnknown().orElseThrow().convert(MyClass.class);
+  MyClass myObject = field.asUnknown().orElseThrow().convert(MyClass.class);
 }
 ```
 
@@ -969,12 +995,14 @@ In rare cases, the API may return a response that doesn't match the expected typ
 
 By default, the SDK will not throw an exception in this case. It will throw [`CheckoutIntentsInvalidDataException`](checkout-intents-core/src/main/kotlin/com/rye/errors/CheckoutIntentsInvalidDataException.kt) only if you directly access the property.
 
-If you would prefer to check that the response is completely well-typed upfront, then either call `validate()`:
+Validating the response is _not_ forwards compatible with new types from the API for existing fields.
+
+If you would still prefer to check that the response is completely well-typed upfront, then either call `validate()`:
 
 ```java
-import com.rye.models.betas.CheckoutSession;
+import com.rye.models.orders.Order;
 
-CheckoutSession checkoutSession = client.betas().checkoutSessions().create(params).validate();
+Order order = client.checkoutIntents().retrieveOrder(params).validate();
 ```
 
 Or configure the method call to validate the response using the `responseValidation` method:

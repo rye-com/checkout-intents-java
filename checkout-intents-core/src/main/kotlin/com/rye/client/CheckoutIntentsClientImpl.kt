@@ -12,14 +12,24 @@ import com.rye.services.blocking.BrandService
 import com.rye.services.blocking.BrandServiceImpl
 import com.rye.services.blocking.CheckoutIntentService
 import com.rye.services.blocking.CheckoutIntentServiceImpl
+import com.rye.services.blocking.CommissionService
+import com.rye.services.blocking.CommissionServiceImpl
 import com.rye.services.blocking.EventService
 import com.rye.services.blocking.EventServiceImpl
+import com.rye.services.blocking.MerchantConnectorService
+import com.rye.services.blocking.MerchantConnectorServiceImpl
+import com.rye.services.blocking.OrderService
+import com.rye.services.blocking.OrderServiceImpl
 import com.rye.services.blocking.PaymentGatewayService
 import com.rye.services.blocking.PaymentGatewayServiceImpl
 import com.rye.services.blocking.ProductService
 import com.rye.services.blocking.ProductServiceImpl
+import com.rye.services.blocking.ReturnService
+import com.rye.services.blocking.ReturnServiceImpl
 import com.rye.services.blocking.ShipmentService
 import com.rye.services.blocking.ShipmentServiceImpl
+import com.rye.services.blocking.TestHelperService
+import com.rye.services.blocking.TestHelperServiceImpl
 import java.util.function.Consumer
 
 class CheckoutIntentsClientImpl(private val clientOptions: ClientOptions) : CheckoutIntentsClient {
@@ -49,10 +59,16 @@ class CheckoutIntentsClientImpl(private val clientOptions: ClientOptions) : Chec
 
     private val brands: BrandService by lazy { BrandServiceImpl(clientOptionsWithUserAgent) }
 
+    private val orders: OrderService by lazy { OrderServiceImpl(clientOptionsWithUserAgent) }
+
     private val products: ProductService by lazy { ProductServiceImpl(clientOptionsWithUserAgent) }
 
     private val shipments: ShipmentService by lazy {
         ShipmentServiceImpl(clientOptionsWithUserAgent)
+    }
+
+    private val commissions: CommissionService by lazy {
+        CommissionServiceImpl(clientOptionsWithUserAgent)
     }
 
     private val paymentGateways: PaymentGatewayService by lazy {
@@ -62,6 +78,16 @@ class CheckoutIntentsClientImpl(private val clientOptions: ClientOptions) : Chec
     private val billing: BillingService by lazy { BillingServiceImpl(clientOptionsWithUserAgent) }
 
     private val events: EventService by lazy { EventServiceImpl(clientOptionsWithUserAgent) }
+
+    private val merchantConnectors: MerchantConnectorService by lazy {
+        MerchantConnectorServiceImpl(clientOptionsWithUserAgent)
+    }
+
+    private val returns: ReturnService by lazy { ReturnServiceImpl(clientOptionsWithUserAgent) }
+
+    private val testHelpers: TestHelperService by lazy {
+        TestHelperServiceImpl(clientOptionsWithUserAgent)
+    }
 
     override fun async(): CheckoutIntentsClientAsync = async
 
@@ -76,15 +102,25 @@ class CheckoutIntentsClientImpl(private val clientOptions: ClientOptions) : Chec
 
     override fun brands(): BrandService = brands
 
+    override fun orders(): OrderService = orders
+
     override fun products(): ProductService = products
 
     override fun shipments(): ShipmentService = shipments
+
+    override fun commissions(): CommissionService = commissions
 
     override fun paymentGateways(): PaymentGatewayService = paymentGateways
 
     override fun billing(): BillingService = billing
 
     override fun events(): EventService = events
+
+    override fun merchantConnectors(): MerchantConnectorService = merchantConnectors
+
+    override fun returns(): ReturnService = returns
+
+    override fun testHelpers(): TestHelperService = testHelpers
 
     override fun close() = clientOptions.close()
 
@@ -103,12 +139,20 @@ class CheckoutIntentsClientImpl(private val clientOptions: ClientOptions) : Chec
             BrandServiceImpl.WithRawResponseImpl(clientOptions)
         }
 
+        private val orders: OrderService.WithRawResponse by lazy {
+            OrderServiceImpl.WithRawResponseImpl(clientOptions)
+        }
+
         private val products: ProductService.WithRawResponse by lazy {
             ProductServiceImpl.WithRawResponseImpl(clientOptions)
         }
 
         private val shipments: ShipmentService.WithRawResponse by lazy {
             ShipmentServiceImpl.WithRawResponseImpl(clientOptions)
+        }
+
+        private val commissions: CommissionService.WithRawResponse by lazy {
+            CommissionServiceImpl.WithRawResponseImpl(clientOptions)
         }
 
         private val paymentGateways: PaymentGatewayService.WithRawResponse by lazy {
@@ -121,6 +165,18 @@ class CheckoutIntentsClientImpl(private val clientOptions: ClientOptions) : Chec
 
         private val events: EventService.WithRawResponse by lazy {
             EventServiceImpl.WithRawResponseImpl(clientOptions)
+        }
+
+        private val merchantConnectors: MerchantConnectorService.WithRawResponse by lazy {
+            MerchantConnectorServiceImpl.WithRawResponseImpl(clientOptions)
+        }
+
+        private val returns: ReturnService.WithRawResponse by lazy {
+            ReturnServiceImpl.WithRawResponseImpl(clientOptions)
+        }
+
+        private val testHelpers: TestHelperService.WithRawResponse by lazy {
+            TestHelperServiceImpl.WithRawResponseImpl(clientOptions)
         }
 
         override fun withOptions(
@@ -136,14 +192,25 @@ class CheckoutIntentsClientImpl(private val clientOptions: ClientOptions) : Chec
 
         override fun brands(): BrandService.WithRawResponse = brands
 
+        override fun orders(): OrderService.WithRawResponse = orders
+
         override fun products(): ProductService.WithRawResponse = products
 
         override fun shipments(): ShipmentService.WithRawResponse = shipments
+
+        override fun commissions(): CommissionService.WithRawResponse = commissions
 
         override fun paymentGateways(): PaymentGatewayService.WithRawResponse = paymentGateways
 
         override fun billing(): BillingService.WithRawResponse = billing
 
         override fun events(): EventService.WithRawResponse = events
+
+        override fun merchantConnectors(): MerchantConnectorService.WithRawResponse =
+            merchantConnectors
+
+        override fun returns(): ReturnService.WithRawResponse = returns
+
+        override fun testHelpers(): TestHelperService.WithRawResponse = testHelpers
     }
 }

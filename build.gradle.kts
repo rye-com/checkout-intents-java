@@ -8,7 +8,7 @@ repositories {
 
 allprojects {
     group = "com.rye"
-    version = "0.13.0" // x-release-please-version
+    version = "0.14.0" // x-release-please-version
 }
 
 subprojects {
@@ -21,7 +21,6 @@ subprojects {
         group = "Verification"
         description = "Verifies all source files are formatted."
     }
-    apply(plugin = "org.jetbrains.dokka")
 }
 
 subprojects {

@@ -23,7 +23,6 @@ import com.rye.core.JsonValue
 import com.rye.core.allMaxBy
 import com.rye.core.checkRequired
 import com.rye.core.getOrThrow
-import com.rye.core.toImmutable
 import com.rye.errors.CheckoutIntentsInvalidDataException
 import java.util.Collections
 import java.util.Objects
@@ -36,8 +35,6 @@ class PaymentMethod
 private constructor(
     private val stripeToken: StripeTokenPaymentMethod? = null,
     private val basisTheory: BasisTheoryPaymentMethod? = null,
-    private val nekuda: NekudaPaymentMethod? = null,
-    private val prava: PravaPaymentMethod? = null,
     private val drawdown: DrawdownPaymentMethod? = null,
     private val x402: X402PaymentMethod? = null,
     private val _json: JsonValue? = null,
@@ -47,10 +44,6 @@ private constructor(
 
     fun basisTheory(): Optional<BasisTheoryPaymentMethod> = Optional.ofNullable(basisTheory)
 
-    fun nekuda(): Optional<NekudaPaymentMethod> = Optional.ofNullable(nekuda)
-
-    fun prava(): Optional<PravaPaymentMethod> = Optional.ofNullable(prava)
-
     fun drawdown(): Optional<DrawdownPaymentMethod> = Optional.ofNullable(drawdown)
 
     fun x402(): Optional<X402PaymentMethod> = Optional.ofNullable(x402)
@@ -58,10 +51,6 @@ private constructor(
     fun isStripeToken(): Boolean = stripeToken != null
 
     fun isBasisTheory(): Boolean = basisTheory != null
-
-    fun isNekuda(): Boolean = nekuda != null
-
-    fun isPrava(): Boolean = prava != null
 
     fun isDrawdown(): Boolean = drawdown != null
 
@@ -71,22 +60,45 @@ private constructor(
 
     fun asBasisTheory(): BasisTheoryPaymentMethod = basisTheory.getOrThrow("basisTheory")
 
-    fun asNekuda(): NekudaPaymentMethod = nekuda.getOrThrow("nekuda")
-
-    fun asPrava(): PravaPaymentMethod = prava.getOrThrow("prava")
-
     fun asDrawdown(): DrawdownPaymentMethod = drawdown.getOrThrow("drawdown")
 
     fun asX402(): X402PaymentMethod = x402.getOrThrow("x402")
 
     fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
+    /**
+     * Maps this instance's current variant to a value of type [T] using the given [visitor].
+     *
+     * Note that this method is _not_ forwards compatible with new variants from the API, unless
+     * [visitor] overrides [Visitor.unknown]. To handle variants not known to this version of the
+     * SDK gracefully, consider overriding [Visitor.unknown]:
+     * ```java
+     * import com.rye.core.JsonValue;
+     * import java.util.Optional;
+     *
+     * Optional<String> result = paymentMethod.accept(new PaymentMethod.Visitor<Optional<String>>() {
+     *     @Override
+     *     public Optional<String> visitStripeToken(StripeTokenPaymentMethod stripeToken) {
+     *         return Optional.of(stripeToken.toString());
+     *     }
+     *
+     *     // ...
+     *
+     *     @Override
+     *     public Optional<String> unknown(JsonValue json) {
+     *         // Or inspect the `json`.
+     *         return Optional.empty();
+     *     }
+     * });
+     * ```
+     *
+     * @throws CheckoutIntentsInvalidDataException if [Visitor.unknown] is not overridden in
+     *   [visitor] and the current variant is unknown.
+     */
     fun <T> accept(visitor: Visitor<T>): T =
         when {
             stripeToken != null -> visitor.visitStripeToken(stripeToken)
             basisTheory != null -> visitor.visitBasisTheory(basisTheory)
-            nekuda != null -> visitor.visitNekuda(nekuda)
-            prava != null -> visitor.visitPrava(prava)
             drawdown != null -> visitor.visitDrawdown(drawdown)
             x402 != null -> visitor.visitX402(x402)
             else -> visitor.unknown(_json)
@@ -94,6 +106,14 @@ private constructor(
 
     private var validated: Boolean = false
 
+    /**
+     * Validates that the types of all values in this object match their expected types recursively.
+     *
+     * This method is _not_ forwards compatible with new types from the API for existing fields.
+     *
+     * @throws CheckoutIntentsInvalidDataException if any value type in this object doesn't match
+     *   its expected type.
+     */
     fun validate(): PaymentMethod = apply {
         if (validated) {
             return@apply
@@ -107,14 +127,6 @@ private constructor(
 
                 override fun visitBasisTheory(basisTheory: BasisTheoryPaymentMethod) {
                     basisTheory.validate()
-                }
-
-                override fun visitNekuda(nekuda: NekudaPaymentMethod) {
-                    nekuda.validate()
-                }
-
-                override fun visitPrava(prava: PravaPaymentMethod) {
-                    prava.validate()
                 }
 
                 override fun visitDrawdown(drawdown: DrawdownPaymentMethod) {
@@ -152,10 +164,6 @@ private constructor(
                 override fun visitBasisTheory(basisTheory: BasisTheoryPaymentMethod) =
                     basisTheory.validity()
 
-                override fun visitNekuda(nekuda: NekudaPaymentMethod) = nekuda.validity()
-
-                override fun visitPrava(prava: PravaPaymentMethod) = prava.validity()
-
                 override fun visitDrawdown(drawdown: DrawdownPaymentMethod) = drawdown.validity()
 
                 override fun visitX402(x402: X402PaymentMethod) = x402.validity()
@@ -172,21 +180,16 @@ private constructor(
         return other is PaymentMethod &&
             stripeToken == other.stripeToken &&
             basisTheory == other.basisTheory &&
-            nekuda == other.nekuda &&
-            prava == other.prava &&
             drawdown == other.drawdown &&
             x402 == other.x402
     }
 
-    override fun hashCode(): Int =
-        Objects.hash(stripeToken, basisTheory, nekuda, prava, drawdown, x402)
+    override fun hashCode(): Int = Objects.hash(stripeToken, basisTheory, drawdown, x402)
 
     override fun toString(): String =
         when {
             stripeToken != null -> "PaymentMethod{stripeToken=$stripeToken}"
             basisTheory != null -> "PaymentMethod{basisTheory=$basisTheory}"
-            nekuda != null -> "PaymentMethod{nekuda=$nekuda}"
-            prava != null -> "PaymentMethod{prava=$prava}"
             drawdown != null -> "PaymentMethod{drawdown=$drawdown}"
             x402 != null -> "PaymentMethod{x402=$x402}"
             _json != null -> "PaymentMethod{_unknown=$_json}"
@@ -203,10 +206,6 @@ private constructor(
         fun ofBasisTheory(basisTheory: BasisTheoryPaymentMethod) =
             PaymentMethod(basisTheory = basisTheory)
 
-        @JvmStatic fun ofNekuda(nekuda: NekudaPaymentMethod) = PaymentMethod(nekuda = nekuda)
-
-        @JvmStatic fun ofPrava(prava: PravaPaymentMethod) = PaymentMethod(prava = prava)
-
         @JvmStatic
         fun ofDrawdown(drawdown: DrawdownPaymentMethod) = PaymentMethod(drawdown = drawdown)
 
@@ -221,10 +220,6 @@ private constructor(
         fun visitStripeToken(stripeToken: StripeTokenPaymentMethod): T
 
         fun visitBasisTheory(basisTheory: BasisTheoryPaymentMethod): T
-
-        fun visitNekuda(nekuda: NekudaPaymentMethod): T
-
-        fun visitPrava(prava: PravaPaymentMethod): T
 
         fun visitDrawdown(drawdown: DrawdownPaymentMethod): T
 
@@ -256,12 +251,6 @@ private constructor(
                         },
                         tryDeserialize(node, jacksonTypeRef<BasisTheoryPaymentMethod>())?.let {
                             PaymentMethod(basisTheory = it, _json = json)
-                        },
-                        tryDeserialize(node, jacksonTypeRef<NekudaPaymentMethod>())?.let {
-                            PaymentMethod(nekuda = it, _json = json)
-                        },
-                        tryDeserialize(node, jacksonTypeRef<PravaPaymentMethod>())?.let {
-                            PaymentMethod(prava = it, _json = json)
                         },
                         tryDeserialize(node, jacksonTypeRef<DrawdownPaymentMethod>())?.let {
                             PaymentMethod(drawdown = it, _json = json)
@@ -295,8 +284,6 @@ private constructor(
             when {
                 value.stripeToken != null -> generator.writeObject(value.stripeToken)
                 value.basisTheory != null -> generator.writeObject(value.basisTheory)
-                value.nekuda != null -> generator.writeObject(value.nekuda)
-                value.prava != null -> generator.writeObject(value.prava)
                 value.drawdown != null -> generator.writeObject(value.drawdown)
                 value.x402 != null -> generator.writeObject(value.x402)
                 value._json != null -> generator.writeObject(value._json)
@@ -457,6 +444,15 @@ private constructor(
 
         private var validated: Boolean = false
 
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws CheckoutIntentsInvalidDataException if any value type in this object doesn't
+         *   match its expected type.
+         */
         fun validate(): StripeTokenPaymentMethod = apply {
             if (validated) {
                 return@apply
@@ -569,6 +565,16 @@ private constructor(
 
             private var validated: Boolean = false
 
+            /**
+             * Validates that the types of all values in this object match their expected types
+             * recursively.
+             *
+             * This method is _not_ forwards compatible with new types from the API for existing
+             * fields.
+             *
+             * @throws CheckoutIntentsInvalidDataException if any value type in this object doesn't
+             *   match its expected type.
+             */
             fun validate(): Type = apply {
                 if (validated) {
                     return@apply
@@ -780,6 +786,15 @@ private constructor(
 
         private var validated: Boolean = false
 
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws CheckoutIntentsInvalidDataException if any value type in this object doesn't
+         *   match its expected type.
+         */
         fun validate(): BasisTheoryPaymentMethod = apply {
             if (validated) {
                 return@apply
@@ -892,6 +907,16 @@ private constructor(
 
             private var validated: Boolean = false
 
+            /**
+             * Validates that the types of all values in this object match their expected types
+             * recursively.
+             *
+             * This method is _not_ forwards compatible with new types from the API for existing
+             * fields.
+             *
+             * @throws CheckoutIntentsInvalidDataException if any value type in this object doesn't
+             *   match its expected type.
+             */
             fun validate(): Type = apply {
                 if (validated) {
                     return@apply
@@ -949,801 +974,6 @@ private constructor(
 
         override fun toString() =
             "BasisTheoryPaymentMethod{basisTheoryToken=$basisTheoryToken, type=$type, additionalProperties=$additionalProperties}"
-    }
-
-    class NekudaPaymentMethod
-    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
-    private constructor(
-        private val nekudaUserId: JsonField<String>,
-        private val type: JsonField<Type>,
-        private val nekudaMandateData: JsonField<NekudaMandateData>,
-        private val additionalProperties: MutableMap<String, JsonValue>,
-    ) {
-
-        @JsonCreator
-        private constructor(
-            @JsonProperty("nekudaUserId")
-            @ExcludeMissing
-            nekudaUserId: JsonField<String> = JsonMissing.of(),
-            @JsonProperty("type") @ExcludeMissing type: JsonField<Type> = JsonMissing.of(),
-            @JsonProperty("nekudaMandateData")
-            @ExcludeMissing
-            nekudaMandateData: JsonField<NekudaMandateData> = JsonMissing.of(),
-        ) : this(nekudaUserId, type, nekudaMandateData, mutableMapOf())
-
-        /**
-         * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type or
-         *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
-         *   value).
-         */
-        fun nekudaUserId(): String = nekudaUserId.getRequired("nekudaUserId")
-
-        /**
-         * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type or
-         *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
-         *   value).
-         */
-        fun type(): Type = type.getRequired("type")
-
-        /**
-         * Construct a type with a set of properties K of type T
-         *
-         * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type
-         *   (e.g. if the server responded with an unexpected value).
-         */
-        fun nekudaMandateData(): Optional<NekudaMandateData> =
-            nekudaMandateData.getOptional("nekudaMandateData")
-
-        /**
-         * Returns the raw JSON value of [nekudaUserId].
-         *
-         * Unlike [nekudaUserId], this method doesn't throw if the JSON field has an unexpected
-         * type.
-         */
-        @JsonProperty("nekudaUserId")
-        @ExcludeMissing
-        fun _nekudaUserId(): JsonField<String> = nekudaUserId
-
-        /**
-         * Returns the raw JSON value of [type].
-         *
-         * Unlike [type], this method doesn't throw if the JSON field has an unexpected type.
-         */
-        @JsonProperty("type") @ExcludeMissing fun _type(): JsonField<Type> = type
-
-        /**
-         * Returns the raw JSON value of [nekudaMandateData].
-         *
-         * Unlike [nekudaMandateData], this method doesn't throw if the JSON field has an unexpected
-         * type.
-         */
-        @JsonProperty("nekudaMandateData")
-        @ExcludeMissing
-        fun _nekudaMandateData(): JsonField<NekudaMandateData> = nekudaMandateData
-
-        @JsonAnySetter
-        private fun putAdditionalProperty(key: String, value: JsonValue) {
-            additionalProperties.put(key, value)
-        }
-
-        @JsonAnyGetter
-        @ExcludeMissing
-        fun _additionalProperties(): Map<String, JsonValue> =
-            Collections.unmodifiableMap(additionalProperties)
-
-        fun toBuilder() = Builder().from(this)
-
-        companion object {
-
-            /**
-             * Returns a mutable builder for constructing an instance of [NekudaPaymentMethod].
-             *
-             * The following fields are required:
-             * ```java
-             * .nekudaUserId()
-             * .type()
-             * ```
-             */
-            @JvmStatic fun builder() = Builder()
-        }
-
-        /** A builder for [NekudaPaymentMethod]. */
-        class Builder internal constructor() {
-
-            private var nekudaUserId: JsonField<String>? = null
-            private var type: JsonField<Type>? = null
-            private var nekudaMandateData: JsonField<NekudaMandateData> = JsonMissing.of()
-            private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
-
-            @JvmSynthetic
-            internal fun from(nekudaPaymentMethod: NekudaPaymentMethod) = apply {
-                nekudaUserId = nekudaPaymentMethod.nekudaUserId
-                type = nekudaPaymentMethod.type
-                nekudaMandateData = nekudaPaymentMethod.nekudaMandateData
-                additionalProperties = nekudaPaymentMethod.additionalProperties.toMutableMap()
-            }
-
-            fun nekudaUserId(nekudaUserId: String) = nekudaUserId(JsonField.of(nekudaUserId))
-
-            /**
-             * Sets [Builder.nekudaUserId] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.nekudaUserId] with a well-typed [String] value
-             * instead. This method is primarily for setting the field to an undocumented or not yet
-             * supported value.
-             */
-            fun nekudaUserId(nekudaUserId: JsonField<String>) = apply {
-                this.nekudaUserId = nekudaUserId
-            }
-
-            fun type(type: Type) = type(JsonField.of(type))
-
-            /**
-             * Sets [Builder.type] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.type] with a well-typed [Type] value instead. This
-             * method is primarily for setting the field to an undocumented or not yet supported
-             * value.
-             */
-            fun type(type: JsonField<Type>) = apply { this.type = type }
-
-            /** Construct a type with a set of properties K of type T */
-            fun nekudaMandateData(nekudaMandateData: NekudaMandateData) =
-                nekudaMandateData(JsonField.of(nekudaMandateData))
-
-            /**
-             * Sets [Builder.nekudaMandateData] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.nekudaMandateData] with a well-typed
-             * [NekudaMandateData] value instead. This method is primarily for setting the field to
-             * an undocumented or not yet supported value.
-             */
-            fun nekudaMandateData(nekudaMandateData: JsonField<NekudaMandateData>) = apply {
-                this.nekudaMandateData = nekudaMandateData
-            }
-
-            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.clear()
-                putAllAdditionalProperties(additionalProperties)
-            }
-
-            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-                additionalProperties.put(key, value)
-            }
-
-            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.putAll(additionalProperties)
-            }
-
-            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
-
-            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-                keys.forEach(::removeAdditionalProperty)
-            }
-
-            /**
-             * Returns an immutable instance of [NekudaPaymentMethod].
-             *
-             * Further updates to this [Builder] will not mutate the returned instance.
-             *
-             * The following fields are required:
-             * ```java
-             * .nekudaUserId()
-             * .type()
-             * ```
-             *
-             * @throws IllegalStateException if any required field is unset.
-             */
-            fun build(): NekudaPaymentMethod =
-                NekudaPaymentMethod(
-                    checkRequired("nekudaUserId", nekudaUserId),
-                    checkRequired("type", type),
-                    nekudaMandateData,
-                    additionalProperties.toMutableMap(),
-                )
-        }
-
-        private var validated: Boolean = false
-
-        fun validate(): NekudaPaymentMethod = apply {
-            if (validated) {
-                return@apply
-            }
-
-            nekudaUserId()
-            type().validate()
-            nekudaMandateData().ifPresent { it.validate() }
-            validated = true
-        }
-
-        fun isValid(): Boolean =
-            try {
-                validate()
-                true
-            } catch (e: CheckoutIntentsInvalidDataException) {
-                false
-            }
-
-        /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
-         *
-         * Used for best match union deserialization.
-         */
-        @JvmSynthetic
-        internal fun validity(): Int =
-            (if (nekudaUserId.asKnown().isPresent) 1 else 0) +
-                (type.asKnown().getOrNull()?.validity() ?: 0) +
-                (nekudaMandateData.asKnown().getOrNull()?.validity() ?: 0)
-
-        class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
-
-            /**
-             * Returns this class instance's raw value.
-             *
-             * This is usually only useful if this instance was deserialized from data that doesn't
-             * match any known member, and you want to know that value. For example, if the SDK is
-             * on an older version than the API, then the API may respond with new members that the
-             * SDK is unaware of.
-             */
-            @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
-
-            companion object {
-
-                @JvmField val NEKUDA_TOKEN = of("nekuda_token")
-
-                @JvmStatic fun of(value: String) = Type(JsonField.of(value))
-            }
-
-            /** An enum containing [Type]'s known values. */
-            enum class Known {
-                NEKUDA_TOKEN
-            }
-
-            /**
-             * An enum containing [Type]'s known values, as well as an [_UNKNOWN] member.
-             *
-             * An instance of [Type] can contain an unknown value in a couple of cases:
-             * - It was deserialized from data that doesn't match any known member. For example, if
-             *   the SDK is on an older version than the API, then the API may respond with new
-             *   members that the SDK is unaware of.
-             * - It was constructed with an arbitrary value using the [of] method.
-             */
-            enum class Value {
-                NEKUDA_TOKEN,
-                /** An enum member indicating that [Type] was instantiated with an unknown value. */
-                _UNKNOWN,
-            }
-
-            /**
-             * Returns an enum member corresponding to this class instance's value, or
-             * [Value._UNKNOWN] if the class was instantiated with an unknown value.
-             *
-             * Use the [known] method instead if you're certain the value is always known or if you
-             * want to throw for the unknown case.
-             */
-            fun value(): Value =
-                when (this) {
-                    NEKUDA_TOKEN -> Value.NEKUDA_TOKEN
-                    else -> Value._UNKNOWN
-                }
-
-            /**
-             * Returns an enum member corresponding to this class instance's value.
-             *
-             * Use the [value] method instead if you're uncertain the value is always known and
-             * don't want to throw for the unknown case.
-             *
-             * @throws CheckoutIntentsInvalidDataException if this class instance's value is a not a
-             *   known member.
-             */
-            fun known(): Known =
-                when (this) {
-                    NEKUDA_TOKEN -> Known.NEKUDA_TOKEN
-                    else -> throw CheckoutIntentsInvalidDataException("Unknown Type: $value")
-                }
-
-            /**
-             * Returns this class instance's primitive wire representation.
-             *
-             * This differs from the [toString] method because that method is primarily for
-             * debugging and generally doesn't throw.
-             *
-             * @throws CheckoutIntentsInvalidDataException if this class instance's value does not
-             *   have the expected primitive type.
-             */
-            fun asString(): String =
-                _value().asString().orElseThrow {
-                    CheckoutIntentsInvalidDataException("Value is not a String")
-                }
-
-            private var validated: Boolean = false
-
-            fun validate(): Type = apply {
-                if (validated) {
-                    return@apply
-                }
-
-                known()
-                validated = true
-            }
-
-            fun isValid(): Boolean =
-                try {
-                    validate()
-                    true
-                } catch (e: CheckoutIntentsInvalidDataException) {
-                    false
-                }
-
-            /**
-             * Returns a score indicating how many valid values are contained in this object
-             * recursively.
-             *
-             * Used for best match union deserialization.
-             */
-            @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
-
-            override fun equals(other: Any?): Boolean {
-                if (this === other) {
-                    return true
-                }
-
-                return other is Type && value == other.value
-            }
-
-            override fun hashCode() = value.hashCode()
-
-            override fun toString() = value.toString()
-        }
-
-        /** Construct a type with a set of properties K of type T */
-        class NekudaMandateData
-        @JsonCreator
-        private constructor(
-            @com.fasterxml.jackson.annotation.JsonValue
-            private val additionalProperties: Map<String, JsonValue>
-        ) {
-
-            @JsonAnyGetter
-            @ExcludeMissing
-            fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
-
-            fun toBuilder() = Builder().from(this)
-
-            companion object {
-
-                /**
-                 * Returns a mutable builder for constructing an instance of [NekudaMandateData].
-                 */
-                @JvmStatic fun builder() = Builder()
-            }
-
-            /** A builder for [NekudaMandateData]. */
-            class Builder internal constructor() {
-
-                private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
-
-                @JvmSynthetic
-                internal fun from(nekudaMandateData: NekudaMandateData) = apply {
-                    additionalProperties = nekudaMandateData.additionalProperties.toMutableMap()
-                }
-
-                fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                    this.additionalProperties.clear()
-                    putAllAdditionalProperties(additionalProperties)
-                }
-
-                fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-                    additionalProperties.put(key, value)
-                }
-
-                fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
-                    apply {
-                        this.additionalProperties.putAll(additionalProperties)
-                    }
-
-                fun removeAdditionalProperty(key: String) = apply {
-                    additionalProperties.remove(key)
-                }
-
-                fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-                    keys.forEach(::removeAdditionalProperty)
-                }
-
-                /**
-                 * Returns an immutable instance of [NekudaMandateData].
-                 *
-                 * Further updates to this [Builder] will not mutate the returned instance.
-                 */
-                fun build(): NekudaMandateData =
-                    NekudaMandateData(additionalProperties.toImmutable())
-            }
-
-            private var validated: Boolean = false
-
-            fun validate(): NekudaMandateData = apply {
-                if (validated) {
-                    return@apply
-                }
-
-                validated = true
-            }
-
-            fun isValid(): Boolean =
-                try {
-                    validate()
-                    true
-                } catch (e: CheckoutIntentsInvalidDataException) {
-                    false
-                }
-
-            /**
-             * Returns a score indicating how many valid values are contained in this object
-             * recursively.
-             *
-             * Used for best match union deserialization.
-             */
-            @JvmSynthetic
-            internal fun validity(): Int =
-                additionalProperties.count { (_, value) -> !value.isNull() && !value.isMissing() }
-
-            override fun equals(other: Any?): Boolean {
-                if (this === other) {
-                    return true
-                }
-
-                return other is NekudaMandateData &&
-                    additionalProperties == other.additionalProperties
-            }
-
-            private val hashCode: Int by lazy { Objects.hash(additionalProperties) }
-
-            override fun hashCode(): Int = hashCode
-
-            override fun toString() =
-                "NekudaMandateData{additionalProperties=$additionalProperties}"
-        }
-
-        override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
-
-            return other is NekudaPaymentMethod &&
-                nekudaUserId == other.nekudaUserId &&
-                type == other.type &&
-                nekudaMandateData == other.nekudaMandateData &&
-                additionalProperties == other.additionalProperties
-        }
-
-        private val hashCode: Int by lazy {
-            Objects.hash(nekudaUserId, type, nekudaMandateData, additionalProperties)
-        }
-
-        override fun hashCode(): Int = hashCode
-
-        override fun toString() =
-            "NekudaPaymentMethod{nekudaUserId=$nekudaUserId, type=$type, nekudaMandateData=$nekudaMandateData, additionalProperties=$additionalProperties}"
-    }
-
-    class PravaPaymentMethod
-    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
-    private constructor(
-        private val pravaToken: JsonField<String>,
-        private val type: JsonField<Type>,
-        private val additionalProperties: MutableMap<String, JsonValue>,
-    ) {
-
-        @JsonCreator
-        private constructor(
-            @JsonProperty("pravaToken")
-            @ExcludeMissing
-            pravaToken: JsonField<String> = JsonMissing.of(),
-            @JsonProperty("type") @ExcludeMissing type: JsonField<Type> = JsonMissing.of(),
-        ) : this(pravaToken, type, mutableMapOf())
-
-        /**
-         * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type or
-         *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
-         *   value).
-         */
-        fun pravaToken(): String = pravaToken.getRequired("pravaToken")
-
-        /**
-         * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type or
-         *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
-         *   value).
-         */
-        fun type(): Type = type.getRequired("type")
-
-        /**
-         * Returns the raw JSON value of [pravaToken].
-         *
-         * Unlike [pravaToken], this method doesn't throw if the JSON field has an unexpected type.
-         */
-        @JsonProperty("pravaToken")
-        @ExcludeMissing
-        fun _pravaToken(): JsonField<String> = pravaToken
-
-        /**
-         * Returns the raw JSON value of [type].
-         *
-         * Unlike [type], this method doesn't throw if the JSON field has an unexpected type.
-         */
-        @JsonProperty("type") @ExcludeMissing fun _type(): JsonField<Type> = type
-
-        @JsonAnySetter
-        private fun putAdditionalProperty(key: String, value: JsonValue) {
-            additionalProperties.put(key, value)
-        }
-
-        @JsonAnyGetter
-        @ExcludeMissing
-        fun _additionalProperties(): Map<String, JsonValue> =
-            Collections.unmodifiableMap(additionalProperties)
-
-        fun toBuilder() = Builder().from(this)
-
-        companion object {
-
-            /**
-             * Returns a mutable builder for constructing an instance of [PravaPaymentMethod].
-             *
-             * The following fields are required:
-             * ```java
-             * .pravaToken()
-             * .type()
-             * ```
-             */
-            @JvmStatic fun builder() = Builder()
-        }
-
-        /** A builder for [PravaPaymentMethod]. */
-        class Builder internal constructor() {
-
-            private var pravaToken: JsonField<String>? = null
-            private var type: JsonField<Type>? = null
-            private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
-
-            @JvmSynthetic
-            internal fun from(pravaPaymentMethod: PravaPaymentMethod) = apply {
-                pravaToken = pravaPaymentMethod.pravaToken
-                type = pravaPaymentMethod.type
-                additionalProperties = pravaPaymentMethod.additionalProperties.toMutableMap()
-            }
-
-            fun pravaToken(pravaToken: String) = pravaToken(JsonField.of(pravaToken))
-
-            /**
-             * Sets [Builder.pravaToken] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.pravaToken] with a well-typed [String] value
-             * instead. This method is primarily for setting the field to an undocumented or not yet
-             * supported value.
-             */
-            fun pravaToken(pravaToken: JsonField<String>) = apply { this.pravaToken = pravaToken }
-
-            fun type(type: Type) = type(JsonField.of(type))
-
-            /**
-             * Sets [Builder.type] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.type] with a well-typed [Type] value instead. This
-             * method is primarily for setting the field to an undocumented or not yet supported
-             * value.
-             */
-            fun type(type: JsonField<Type>) = apply { this.type = type }
-
-            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.clear()
-                putAllAdditionalProperties(additionalProperties)
-            }
-
-            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-                additionalProperties.put(key, value)
-            }
-
-            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.putAll(additionalProperties)
-            }
-
-            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
-
-            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-                keys.forEach(::removeAdditionalProperty)
-            }
-
-            /**
-             * Returns an immutable instance of [PravaPaymentMethod].
-             *
-             * Further updates to this [Builder] will not mutate the returned instance.
-             *
-             * The following fields are required:
-             * ```java
-             * .pravaToken()
-             * .type()
-             * ```
-             *
-             * @throws IllegalStateException if any required field is unset.
-             */
-            fun build(): PravaPaymentMethod =
-                PravaPaymentMethod(
-                    checkRequired("pravaToken", pravaToken),
-                    checkRequired("type", type),
-                    additionalProperties.toMutableMap(),
-                )
-        }
-
-        private var validated: Boolean = false
-
-        fun validate(): PravaPaymentMethod = apply {
-            if (validated) {
-                return@apply
-            }
-
-            pravaToken()
-            type().validate()
-            validated = true
-        }
-
-        fun isValid(): Boolean =
-            try {
-                validate()
-                true
-            } catch (e: CheckoutIntentsInvalidDataException) {
-                false
-            }
-
-        /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
-         *
-         * Used for best match union deserialization.
-         */
-        @JvmSynthetic
-        internal fun validity(): Int =
-            (if (pravaToken.asKnown().isPresent) 1 else 0) +
-                (type.asKnown().getOrNull()?.validity() ?: 0)
-
-        class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
-
-            /**
-             * Returns this class instance's raw value.
-             *
-             * This is usually only useful if this instance was deserialized from data that doesn't
-             * match any known member, and you want to know that value. For example, if the SDK is
-             * on an older version than the API, then the API may respond with new members that the
-             * SDK is unaware of.
-             */
-            @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
-
-            companion object {
-
-                @JvmField val PRAVA_TOKEN = of("prava_token")
-
-                @JvmStatic fun of(value: String) = Type(JsonField.of(value))
-            }
-
-            /** An enum containing [Type]'s known values. */
-            enum class Known {
-                PRAVA_TOKEN
-            }
-
-            /**
-             * An enum containing [Type]'s known values, as well as an [_UNKNOWN] member.
-             *
-             * An instance of [Type] can contain an unknown value in a couple of cases:
-             * - It was deserialized from data that doesn't match any known member. For example, if
-             *   the SDK is on an older version than the API, then the API may respond with new
-             *   members that the SDK is unaware of.
-             * - It was constructed with an arbitrary value using the [of] method.
-             */
-            enum class Value {
-                PRAVA_TOKEN,
-                /** An enum member indicating that [Type] was instantiated with an unknown value. */
-                _UNKNOWN,
-            }
-
-            /**
-             * Returns an enum member corresponding to this class instance's value, or
-             * [Value._UNKNOWN] if the class was instantiated with an unknown value.
-             *
-             * Use the [known] method instead if you're certain the value is always known or if you
-             * want to throw for the unknown case.
-             */
-            fun value(): Value =
-                when (this) {
-                    PRAVA_TOKEN -> Value.PRAVA_TOKEN
-                    else -> Value._UNKNOWN
-                }
-
-            /**
-             * Returns an enum member corresponding to this class instance's value.
-             *
-             * Use the [value] method instead if you're uncertain the value is always known and
-             * don't want to throw for the unknown case.
-             *
-             * @throws CheckoutIntentsInvalidDataException if this class instance's value is a not a
-             *   known member.
-             */
-            fun known(): Known =
-                when (this) {
-                    PRAVA_TOKEN -> Known.PRAVA_TOKEN
-                    else -> throw CheckoutIntentsInvalidDataException("Unknown Type: $value")
-                }
-
-            /**
-             * Returns this class instance's primitive wire representation.
-             *
-             * This differs from the [toString] method because that method is primarily for
-             * debugging and generally doesn't throw.
-             *
-             * @throws CheckoutIntentsInvalidDataException if this class instance's value does not
-             *   have the expected primitive type.
-             */
-            fun asString(): String =
-                _value().asString().orElseThrow {
-                    CheckoutIntentsInvalidDataException("Value is not a String")
-                }
-
-            private var validated: Boolean = false
-
-            fun validate(): Type = apply {
-                if (validated) {
-                    return@apply
-                }
-
-                known()
-                validated = true
-            }
-
-            fun isValid(): Boolean =
-                try {
-                    validate()
-                    true
-                } catch (e: CheckoutIntentsInvalidDataException) {
-                    false
-                }
-
-            /**
-             * Returns a score indicating how many valid values are contained in this object
-             * recursively.
-             *
-             * Used for best match union deserialization.
-             */
-            @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
-
-            override fun equals(other: Any?): Boolean {
-                if (this === other) {
-                    return true
-                }
-
-                return other is Type && value == other.value
-            }
-
-            override fun hashCode() = value.hashCode()
-
-            override fun toString() = value.toString()
-        }
-
-        override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
-
-            return other is PravaPaymentMethod &&
-                pravaToken == other.pravaToken &&
-                type == other.type &&
-                additionalProperties == other.additionalProperties
-        }
-
-        private val hashCode: Int by lazy { Objects.hash(pravaToken, type, additionalProperties) }
-
-        override fun hashCode(): Int = hashCode
-
-        override fun toString() =
-            "PravaPaymentMethod{pravaToken=$pravaToken, type=$type, additionalProperties=$additionalProperties}"
     }
 
     class DrawdownPaymentMethod
@@ -1860,6 +1090,15 @@ private constructor(
 
         private var validated: Boolean = false
 
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws CheckoutIntentsInvalidDataException if any value type in this object doesn't
+         *   match its expected type.
+         */
         fun validate(): DrawdownPaymentMethod = apply {
             if (validated) {
                 return@apply
@@ -1968,6 +1207,16 @@ private constructor(
 
             private var validated: Boolean = false
 
+            /**
+             * Validates that the types of all values in this object match their expected types
+             * recursively.
+             *
+             * This method is _not_ forwards compatible with new types from the API for existing
+             * fields.
+             *
+             * @throws CheckoutIntentsInvalidDataException if any value type in this object doesn't
+             *   match its expected type.
+             */
             fun validate(): Type = apply {
                 if (validated) {
                     return@apply
@@ -2170,6 +1419,15 @@ private constructor(
 
         private var validated: Boolean = false
 
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws CheckoutIntentsInvalidDataException if any value type in this object doesn't
+         *   match its expected type.
+         */
         fun validate(): X402PaymentMethod = apply {
             if (validated) {
                 return@apply
@@ -2297,6 +1555,16 @@ private constructor(
 
             private var validated: Boolean = false
 
+            /**
+             * Validates that the types of all values in this object match their expected types
+             * recursively.
+             *
+             * This method is _not_ forwards compatible with new types from the API for existing
+             * fields.
+             *
+             * @throws CheckoutIntentsInvalidDataException if any value type in this object doesn't
+             *   match its expected type.
+             */
             fun validate(): Network = apply {
                 if (validated) {
                     return@apply
@@ -2418,6 +1686,16 @@ private constructor(
 
             private var validated: Boolean = false
 
+            /**
+             * Validates that the types of all values in this object match their expected types
+             * recursively.
+             *
+             * This method is _not_ forwards compatible with new types from the API for existing
+             * fields.
+             *
+             * @throws CheckoutIntentsInvalidDataException if any value type in this object doesn't
+             *   match its expected type.
+             */
             fun validate(): Type = apply {
                 if (validated) {
                     return@apply

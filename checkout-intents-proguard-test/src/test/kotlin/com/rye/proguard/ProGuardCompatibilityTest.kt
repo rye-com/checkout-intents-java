@@ -55,11 +55,16 @@ internal class ProGuardCompatibilityTest {
         assertThat(client.checkoutIntents()).isNotNull()
         assertThat(client.betas()).isNotNull()
         assertThat(client.brands()).isNotNull()
+        assertThat(client.orders()).isNotNull()
         assertThat(client.products()).isNotNull()
         assertThat(client.shipments()).isNotNull()
+        assertThat(client.commissions()).isNotNull()
         assertThat(client.paymentGateways()).isNotNull()
         assertThat(client.billing()).isNotNull()
         assertThat(client.events()).isNotNull()
+        assertThat(client.merchantConnectors()).isNotNull()
+        assertThat(client.returns()).isNotNull()
+        assertThat(client.testHelpers()).isNotNull()
     }
 
     @Test
@@ -96,6 +101,7 @@ internal class ProGuardCompatibilityTest {
                 )
                 .discoverPromoCodes(true)
                 .addPromoCode("SAVE20")
+                .referenceId("order-1234")
                 .addVariantSelection(
                     VariantSelection.builder()
                         .label("Size, Color, etc.")
@@ -148,6 +154,7 @@ internal class ProGuardCompatibilityTest {
                     )
                     .discoverPromoCodes(true)
                     .addPromoCode("SAVE20")
+                    .referenceId("order-1234")
                     .addVariantSelection(
                         VariantSelection.builder()
                             .label("Size, Color, etc.")

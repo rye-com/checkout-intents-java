@@ -19,15 +19,16 @@ import com.rye.core.http.parseable
 import com.rye.core.prepareAsync
 import com.rye.errors.PollTimeoutException
 import com.rye.models.checkoutintents.CheckoutIntent
-import com.rye.models.checkoutintents.CheckoutIntentAddPaymentParams
 import com.rye.models.checkoutintents.CheckoutIntentConfirmParams
 import com.rye.models.checkoutintents.CheckoutIntentCreateParams
 import com.rye.models.checkoutintents.CheckoutIntentListPageAsync
 import com.rye.models.checkoutintents.CheckoutIntentListPageResponse
 import com.rye.models.checkoutintents.CheckoutIntentListParams
 import com.rye.models.checkoutintents.CheckoutIntentPurchaseParams
+import com.rye.models.checkoutintents.CheckoutIntentRetrieveOrderParams
 import com.rye.models.checkoutintents.CheckoutIntentRetrieveParams
 import com.rye.models.checkoutintents.PollOptions
+import com.rye.models.orders.Order
 import com.rye.services.async.checkoutintents.ShipmentServiceAsync
 import com.rye.services.async.checkoutintents.ShipmentServiceAsyncImpl
 import java.time.Duration
@@ -74,13 +75,6 @@ internal constructor(private val clientOptions: ClientOptions) : CheckoutIntentS
     ): CompletableFuture<CheckoutIntentListPageAsync> =
         // get /api/v1/checkout-intents
         withRawResponse().list(params, requestOptions).thenApply { it.parse() }
-
-    override fun addPayment(
-        params: CheckoutIntentAddPaymentParams,
-        requestOptions: RequestOptions,
-    ): CompletableFuture<CheckoutIntent> =
-        // post /api/v1/checkout-intents/{id}/payment
-        withRawResponse().addPayment(params, requestOptions).thenApply { it.parse() }
 
     override fun confirm(
         params: CheckoutIntentConfirmParams,
@@ -143,6 +137,13 @@ internal constructor(private val clientOptions: ClientOptions) : CheckoutIntentS
         confirm(id, params, requestOptions).thenCompose {
             pollUntilCompleted(id, options, requestOptions)
         }
+
+    override fun retrieveOrder(
+        params: CheckoutIntentRetrieveOrderParams,
+        requestOptions: RequestOptions,
+    ): CompletableFuture<Order> =
+        // get /api/v1/checkout-intents/{id}/order
+        withRawResponse().retrieveOrder(params, requestOptions).thenApply { it.parse() }
 
     private fun pollUntil(
         id: String,
@@ -397,46 +398,6 @@ internal constructor(private val clientOptions: ClientOptions) : CheckoutIntentS
                 }
         }
 
-        private val addPaymentHandler: Handler<CheckoutIntent> =
-            jsonHandler<CheckoutIntent>(clientOptions.jsonMapper)
-
-        override fun addPayment(
-            params: CheckoutIntentAddPaymentParams,
-            requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<CheckoutIntent>> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
-            checkRequired("id", params.id().getOrNull())
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.POST)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments(
-                        "api",
-                        "v1",
-                        "checkout-intents",
-                        params._pathParam(0),
-                        "payment",
-                    )
-                    .body(json(clientOptions.jsonMapper, params._body()))
-                    .build()
-                    .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
-                        response
-                            .use { addPaymentHandler.handle(it) }
-                            .also {
-                                if (requestOptions.responseValidation!!) {
-                                    it.validate()
-                                }
-                            }
-                    }
-                }
-        }
-
         private val confirmHandler: Handler<CheckoutIntent> =
             jsonHandler<CheckoutIntent>(clientOptions.jsonMapper)
 
@@ -499,6 +460,39 @@ internal constructor(private val clientOptions: ClientOptions) : CheckoutIntentS
                     errorHandler.handle(response).parseable {
                         response
                             .use { purchaseHandler.handle(it) }
+                            .also {
+                                if (requestOptions.responseValidation!!) {
+                                    it.validate()
+                                }
+                            }
+                    }
+                }
+        }
+
+        private val retrieveOrderHandler: Handler<Order> =
+            jsonHandler<Order>(clientOptions.jsonMapper)
+
+        override fun retrieveOrder(
+            params: CheckoutIntentRetrieveOrderParams,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<Order>> {
+            // We check here instead of in the params builder because this can be specified
+            // positionally or in the params class.
+            checkRequired("id", params.id().getOrNull())
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments("api", "v1", "checkout-intents", params._pathParam(0), "order")
+                    .build()
+                    .prepareAsync(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            return request
+                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
+                .thenApply { response ->
+                    errorHandler.handle(response).parseable {
+                        response
+                            .use { retrieveOrderHandler.handle(it) }
                             .also {
                                 if (requestOptions.responseValidation!!) {
                                     it.validate()

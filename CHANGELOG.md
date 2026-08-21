@@ -1,5 +1,65 @@
 # Changelog
 
+## 0.14.0 (2026-08-20)
+
+Full Changelog: [v0.13.0...v0.14.0](https://github.com/rye-com/checkout-intents-java/compare/v0.13.0...v0.14.0)
+
+### Features
+
+* [return-api/release]: mark return api as public ([44b95df](https://github.com/rye-com/checkout-intents-java/commit/44b95df635c8a197c3937271985b80aa46103bee))
+* Add `POST /orders/:id/cancel` endpoint ([db9574a](https://github.com/rye-com/checkout-intents-java/commit/db9574ad9948217379a1b87534a982fa433f4fac))
+* Add more paginator test cases ([f88fc2e](https://github.com/rye-com/checkout-intents-java/commit/f88fc2e78e6197b1d87bfbaaae10c3af0453e38f))
+* Add referenceId field, log Rye order ID upon placement if available ([75c45eb](https://github.com/rye-com/checkout-intents-java/commit/75c45ebf50f6de6f93393da0db11df99a643b599))
+* **api:** add merchant connector installation link endpoint ([9354874](https://github.com/rye-com/checkout-intents-java/commit/93548741aa1338d4716189525527b66a9f010985))
+* **api:** publish product subscriptions api ([653a8bf](https://github.com/rye-com/checkout-intents-java/commit/653a8bfcc107104f8f9d739a27f97cdc6606e519))
+* Catch cvc expiration early ([af8a360](https://github.com/rye-com/checkout-intents-java/commit/af8a3603d1174918e1e4dcb0f2d49b809ef42634))
+* **client:** improve logging ([87fd822](https://github.com/rye-com/checkout-intents-java/commit/87fd822de4b4828802e47f4e055f7409b4a9268e))
+* **client:** more robust error parsing ([afe3fdb](https://github.com/rye-com/checkout-intents-java/commit/afe3fdb62b40dad7e0932885bfebe4881b325cd0))
+* **client:** support proxy authentication ([d030185](https://github.com/rye-com/checkout-intents-java/commit/d0301857655fbf39f07d39b6e5738d3359ed2568))
+* Commission GET-by-id + checkoutIntentId filter ([a944090](https://github.com/rye-com/checkout-intents-java/commit/a94409020bc4dcc41b2ffa2956eb49ebe21c5120))
+* Commission REST endpoints + response enrichment (RYE-6914) ([773e8ce](https://github.com/rye-com/checkout-intents-java/commit/773e8ce188c570a865071364a2ae1b56ad29cc99))
+* **commissions:** types + cursor-paginated repo (1/2) ([3146baa](https://github.com/rye-com/checkout-intents-java/commit/3146baa81be3f8dd36a3ae262ffc5d6aa8a96ee4))
+* Detect expired CVCs ([1f44693](https://github.com/rye-com/checkout-intents-java/commit/1f4469370c56c05fb913593b4b97821fc3153ff0))
+* Impl address update endpoint ([95d2956](https://github.com/rye-com/checkout-intents-java/commit/95d29563dc5dbea8b195112c64749aaa2e6bfa2f))
+* internal updates ([50fc91e](https://github.com/rye-com/checkout-intents-java/commit/50fc91e4a8bb7c4a77c35c5f9d0e87bc922e3633))
+* Move order write into PostPurchaseOperations ([8fb9bcd](https://github.com/rye-com/checkout-intents-java/commit/8fb9bcd22ee64c8388792c5f956010b3715d5a41))
+* Plumbing for updating order addresses ([1ae210d](https://github.com/rye-com/checkout-intents-java/commit/1ae210d7e5d7966c2c2d28a4068239e5a4a7e944))
+* Remove Nekuda & Prava payment tokens ([0ad3a0c](https://github.com/rye-com/checkout-intents-java/commit/0ad3a0c0652b0e39ffa0b1b193124d6a0ee91f56))
+* Revert "Catch cvc expiration early" ([35ce024](https://github.com/rye-com/checkout-intents-java/commit/35ce02411df9daac4a6f22cd2df4d7bb5fd32825))
+* Show commissions in offer (2/2) ([c5da853](https://github.com/rye-com/checkout-intents-java/commit/c5da8537e83eec708a0128019ed5bb11c77699b8))
+* Show estimated commission amount in offer API response (RYE-7349) ([5203f72](https://github.com/rye-com/checkout-intents-java/commit/5203f724b76c3c300832bd30b44567f668a0110d))
+* **stlc:** configurable CI runner and private-production-repo support in workflow templates ([a767bff](https://github.com/rye-com/checkout-intents-java/commit/a767bff6cbbc1e00d60b3f5935dbbabf6a83af8e))
+* support setting headers via env ([74327b3](https://github.com/rye-com/checkout-intents-java/commit/74327b34d7ff5be0e5c3ea507d6e3028872c4cb8))
+* Tidy-up before PRing `/orders/:id/cancel` ([70b7e5f](https://github.com/rye-com/checkout-intents-java/commit/70b7e5fe01c6d07168f57d87fa4a0ed81c3645ab))
+
+
+### Bug Fixes
+
+* **docs:** link the javadoc badge so the version stays current after release ([55e4054](https://github.com/rye-com/checkout-intents-java/commit/55e405494d36cc02f29eacd8eeccbc0f049af954))
+
+
+### Performance Improvements
+
+* **client:** create one json mapper ([617c724](https://github.com/rye-com/checkout-intents-java/commit/617c7249ce33e3e542b4557e075928aab3bd494c))
+
+
+### Chores
+
+* **docs:** improve test helper summaries and descriptions ([dde2c62](https://github.com/rye-com/checkout-intents-java/commit/dde2c62b75e4405b41f98db7d0d8ecae9110e733))
+* **docs:** tidy descriptions ([019a0f1](https://github.com/rye-com/checkout-intents-java/commit/019a0f1a7ac1b20e68af7ddd7175560aabd7befe))
+* **internal:** codegen related update ([ef263fc](https://github.com/rye-com/checkout-intents-java/commit/ef263fc2ccabf499651a2cf05cfb0601d49913b4))
+* **internal:** codegen related update ([21613e7](https://github.com/rye-com/checkout-intents-java/commit/21613e73ac183fcc78d04a45912517f7fabffa08))
+* **internal:** improvements ([06063d1](https://github.com/rye-com/checkout-intents-java/commit/06063d196f4a8a886bf5c7bb568102a1257056c3))
+* **internal:** improvements ([472a83f](https://github.com/rye-com/checkout-intents-java/commit/472a83fabac66cbbe8785790ab2196cd4f78c229))
+* redact api-key headers in debug logs ([a031359](https://github.com/rye-com/checkout-intents-java/commit/a031359f88102d81f3b80290040208807999ea79))
+* remove duplicated dokka setup ([6856d36](https://github.com/rye-com/checkout-intents-java/commit/6856d363d2d726ac8a1f5a58719b6eae560e31a7))
+
+
+### Documentation
+
+* **api:** improve shipments advance api description ([82e2b24](https://github.com/rye-com/checkout-intents-java/commit/82e2b247e3601e3b5e92370da10f8984d7410887))
+* clarify forwards compat behavior ([716301b](https://github.com/rye-com/checkout-intents-java/commit/716301b6cd032ca0bfd1300ad5a5425eead6af6d))
+
 ## 0.13.0 (2026-04-27)
 
 Full Changelog: [v0.12.0...v0.13.0](https://github.com/rye-com/checkout-intents-java/compare/v0.12.0...v0.13.0)

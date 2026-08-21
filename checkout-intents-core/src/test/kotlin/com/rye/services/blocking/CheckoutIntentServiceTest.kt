@@ -4,7 +4,6 @@ package com.rye.services.blocking
 
 import com.rye.client.okhttp.CheckoutIntentsOkHttpClient
 import com.rye.models.checkoutintents.Buyer
-import com.rye.models.checkoutintents.CheckoutIntentAddPaymentParams
 import com.rye.models.checkoutintents.CheckoutIntentConfirmParams
 import com.rye.models.checkoutintents.CheckoutIntentCreateParams
 import com.rye.models.checkoutintents.CheckoutIntentPurchaseParams
@@ -51,6 +50,7 @@ internal class CheckoutIntentServiceTest {
                     )
                     .discoverPromoCodes(true)
                     .addPromoCode("SAVE20")
+                    .referenceId("order-1234")
                     .addVariantSelection(
                         VariantSelection.builder()
                             .label("Size, Color, etc.")
@@ -83,28 +83,6 @@ internal class CheckoutIntentServiceTest {
         val page = checkoutIntentService.list()
 
         page.response().validate()
-    }
-
-    @Disabled("Mock server tests are disabled")
-    @Test
-    fun addPayment() {
-        val client = CheckoutIntentsOkHttpClient.builder().apiKey("My API Key").build()
-        val checkoutIntentService = client.checkoutIntents()
-
-        val checkoutIntent =
-            checkoutIntentService.addPayment(
-                CheckoutIntentAddPaymentParams.builder()
-                    .id("id")
-                    .paymentMethod(
-                        PaymentMethod.StripeTokenPaymentMethod.builder()
-                            .stripeToken("tok_1RkrWWHGDlstla3f1Fc7ZrhH")
-                            .type(PaymentMethod.StripeTokenPaymentMethod.Type.STRIPE_TOKEN)
-                            .build()
-                    )
-                    .build()
-            )
-
-        checkoutIntent.validate()
     }
 
     @Disabled("Mock server tests are disabled")
@@ -171,6 +149,7 @@ internal class CheckoutIntentServiceTest {
                     )
                     .discoverPromoCodes(true)
                     .addPromoCode("SAVE20")
+                    .referenceId("order-1234")
                     .addVariantSelection(
                         VariantSelection.builder()
                             .label("Size, Color, etc.")
@@ -181,5 +160,16 @@ internal class CheckoutIntentServiceTest {
             )
 
         checkoutIntent.validate()
+    }
+
+    @Disabled("Mock server tests are disabled")
+    @Test
+    fun retrieveOrder() {
+        val client = CheckoutIntentsOkHttpClient.builder().apiKey("My API Key").build()
+        val checkoutIntentService = client.checkoutIntents()
+
+        val order = checkoutIntentService.retrieveOrder("id")
+
+        order.validate()
     }
 }

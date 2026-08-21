@@ -48,6 +48,7 @@ internal class CheckoutIntentTest {
                 )
                 .discoverPromoCodes(true)
                 .addPromoCode("SAVE20")
+                .referenceId("order-1234")
                 .addVariantSelection(
                     VariantSelection.builder()
                         .label("Size, Color, etc.")
@@ -102,6 +103,7 @@ internal class CheckoutIntentTest {
                     )
                     .discoverPromoCodes(true)
                     .addPromoCode("SAVE20")
+                    .referenceId("order-1234")
                     .addVariantSelection(
                         VariantSelection.builder()
                             .label("Size, Color, etc.")
@@ -154,6 +156,7 @@ internal class CheckoutIntentTest {
                 )
                 .discoverPromoCodes(true)
                 .addPromoCode("SAVE20")
+                .referenceId("order-1234")
                 .addVariantSelection(
                     VariantSelection.builder()
                         .label("Size, Color, etc.")
@@ -218,6 +221,14 @@ internal class CheckoutIntentTest {
                                 .build()
                         )
                         .addAppliedPromoCode("string")
+                        .commission(
+                            Offer.Commission.builder()
+                                .amount(
+                                    Money.builder().amountSubunits(1500).currencyCode("USD").build()
+                                )
+                                .estimate(true)
+                                .build()
+                        )
                         .build()
                 )
                 .state(
@@ -276,6 +287,7 @@ internal class CheckoutIntentTest {
                     )
                     .discoverPromoCodes(true)
                     .addPromoCode("SAVE20")
+                    .referenceId("order-1234")
                     .addVariantSelection(
                         VariantSelection.builder()
                             .label("Size, Color, etc.")
@@ -358,6 +370,17 @@ internal class CheckoutIntentTest {
                                     .build()
                             )
                             .addAppliedPromoCode("string")
+                            .commission(
+                                Offer.Commission.builder()
+                                    .amount(
+                                        Money.builder()
+                                            .amountSubunits(1500)
+                                            .currencyCode("USD")
+                                            .build()
+                                    )
+                                    .estimate(true)
+                                    .build()
+                            )
                             .build()
                     )
                     .state(
@@ -415,6 +438,7 @@ internal class CheckoutIntentTest {
                 )
                 .discoverPromoCodes(true)
                 .addPromoCode("SAVE20")
+                .referenceId("order-1234")
                 .addVariantSelection(
                     VariantSelection.builder()
                         .label("Size, Color, etc.")
@@ -502,6 +526,14 @@ internal class CheckoutIntentTest {
                                 .build()
                         )
                         .addAppliedPromoCode("string")
+                        .commission(
+                            Offer.Commission.builder()
+                                .amount(
+                                    Money.builder().amountSubunits(1500).currencyCode("USD").build()
+                                )
+                                .estimate(true)
+                                .build()
+                        )
                         .build()
                 )
                 .paymentMethod(
@@ -558,6 +590,7 @@ internal class CheckoutIntentTest {
                     )
                     .discoverPromoCodes(true)
                     .addPromoCode("SAVE20")
+                    .referenceId("order-1234")
                     .addVariantSelection(
                         VariantSelection.builder()
                             .label("Size, Color, etc.")
@@ -664,6 +697,17 @@ internal class CheckoutIntentTest {
                                     .build()
                             )
                             .addAppliedPromoCode("string")
+                            .commission(
+                                Offer.Commission.builder()
+                                    .amount(
+                                        Money.builder()
+                                            .amountSubunits(1500)
+                                            .currencyCode("USD")
+                                            .build()
+                                    )
+                                    .estimate(true)
+                                    .build()
+                            )
                             .build()
                     )
                     .paymentMethod(
@@ -718,6 +762,7 @@ internal class CheckoutIntentTest {
                 )
                 .discoverPromoCodes(true)
                 .addPromoCode("SAVE20")
+                .referenceId("order-1234")
                 .addVariantSelection(
                     VariantSelection.builder()
                         .label("Size, Color, etc.")
@@ -782,6 +827,14 @@ internal class CheckoutIntentTest {
                                 .build()
                         )
                         .addAppliedPromoCode("string")
+                        .commission(
+                            Offer.Commission.builder()
+                                .amount(
+                                    Money.builder().amountSubunits(1500).currencyCode("USD").build()
+                                )
+                                .estimate(true)
+                                .build()
+                        )
                         .build()
                 )
                 .paymentMethod(
@@ -838,6 +891,7 @@ internal class CheckoutIntentTest {
                     )
                     .discoverPromoCodes(true)
                     .addPromoCode("SAVE20")
+                    .referenceId("order-1234")
                     .addVariantSelection(
                         VariantSelection.builder()
                             .label("Size, Color, etc.")
@@ -920,6 +974,17 @@ internal class CheckoutIntentTest {
                                     .build()
                             )
                             .addAppliedPromoCode("string")
+                            .commission(
+                                Offer.Commission.builder()
+                                    .amount(
+                                        Money.builder()
+                                            .amountSubunits(1500)
+                                            .currencyCode("USD")
+                                            .build()
+                                    )
+                                    .estimate(true)
+                                    .build()
+                            )
                             .build()
                     )
                     .paymentMethod(
@@ -974,6 +1039,7 @@ internal class CheckoutIntentTest {
                 )
                 .discoverPromoCodes(true)
                 .addPromoCode("SAVE20")
+                .referenceId("order-1234")
                 .addVariantSelection(
                     VariantSelection.builder()
                         .label("Size, Color, etc.")
@@ -1038,6 +1104,14 @@ internal class CheckoutIntentTest {
                                 .build()
                         )
                         .addAppliedPromoCode("string")
+                        .commission(
+                            Offer.Commission.builder()
+                                .amount(
+                                    Money.builder().amountSubunits(1500).currencyCode("USD").build()
+                                )
+                                .estimate(true)
+                                .build()
+                        )
                         .build()
                 )
                 .orderId("orderId")
@@ -1096,6 +1170,7 @@ internal class CheckoutIntentTest {
                     )
                     .discoverPromoCodes(true)
                     .addPromoCode("SAVE20")
+                    .referenceId("order-1234")
                     .addVariantSelection(
                         VariantSelection.builder()
                             .label("Size, Color, etc.")
@@ -1178,6 +1253,17 @@ internal class CheckoutIntentTest {
                                     .build()
                             )
                             .addAppliedPromoCode("string")
+                            .commission(
+                                Offer.Commission.builder()
+                                    .amount(
+                                        Money.builder()
+                                            .amountSubunits(1500)
+                                            .currencyCode("USD")
+                                            .build()
+                                    )
+                                    .estimate(true)
+                                    .build()
+                            )
                             .build()
                     )
                     .orderId("orderId")
@@ -1234,6 +1320,7 @@ internal class CheckoutIntentTest {
                 )
                 .discoverPromoCodes(true)
                 .addPromoCode("SAVE20")
+                .referenceId("order-1234")
                 .addVariantSelection(
                     VariantSelection.builder()
                         .label("Size, Color, etc.")
@@ -1305,6 +1392,14 @@ internal class CheckoutIntentTest {
                                 .build()
                         )
                         .addAppliedPromoCode("string")
+                        .commission(
+                            Offer.Commission.builder()
+                                .amount(
+                                    Money.builder().amountSubunits(1500).currencyCode("USD").build()
+                                )
+                                .estimate(true)
+                                .build()
+                        )
                         .build()
                 )
                 .paymentMethod(
@@ -1360,6 +1455,7 @@ internal class CheckoutIntentTest {
                     )
                     .discoverPromoCodes(true)
                     .addPromoCode("SAVE20")
+                    .referenceId("order-1234")
                     .addVariantSelection(
                         VariantSelection.builder()
                             .label("Size, Color, etc.")
@@ -1449,6 +1545,17 @@ internal class CheckoutIntentTest {
                                     .build()
                             )
                             .addAppliedPromoCode("string")
+                            .commission(
+                                Offer.Commission.builder()
+                                    .amount(
+                                        Money.builder()
+                                            .amountSubunits(1500)
+                                            .currencyCode("USD")
+                                            .build()
+                                    )
+                                    .estimate(true)
+                                    .build()
+                            )
                             .build()
                     )
                     .paymentMethod(

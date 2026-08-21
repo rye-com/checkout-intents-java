@@ -7,10 +7,15 @@ import com.rye.services.blocking.BetaService
 import com.rye.services.blocking.BillingService
 import com.rye.services.blocking.BrandService
 import com.rye.services.blocking.CheckoutIntentService
+import com.rye.services.blocking.CommissionService
 import com.rye.services.blocking.EventService
+import com.rye.services.blocking.MerchantConnectorService
+import com.rye.services.blocking.OrderService
 import com.rye.services.blocking.PaymentGatewayService
 import com.rye.services.blocking.ProductService
+import com.rye.services.blocking.ReturnService
 import com.rye.services.blocking.ShipmentService
+import com.rye.services.blocking.TestHelperService
 import java.util.function.Consumer
 
 /**
@@ -55,15 +60,25 @@ interface CheckoutIntentsClient {
 
     fun brands(): BrandService
 
+    fun orders(): OrderService
+
     fun products(): ProductService
 
     fun shipments(): ShipmentService
+
+    fun commissions(): CommissionService
 
     fun paymentGateways(): PaymentGatewayService
 
     fun billing(): BillingService
 
     fun events(): EventService
+
+    fun merchantConnectors(): MerchantConnectorService
+
+    fun returns(): ReturnService
+
+    fun testHelpers(): TestHelperService
 
     /**
      * Closes this client, relinquishing any underlying resources.
@@ -98,14 +113,24 @@ interface CheckoutIntentsClient {
 
         fun brands(): BrandService.WithRawResponse
 
+        fun orders(): OrderService.WithRawResponse
+
         fun products(): ProductService.WithRawResponse
 
         fun shipments(): ShipmentService.WithRawResponse
+
+        fun commissions(): CommissionService.WithRawResponse
 
         fun paymentGateways(): PaymentGatewayService.WithRawResponse
 
         fun billing(): BillingService.WithRawResponse
 
         fun events(): EventService.WithRawResponse
+
+        fun merchantConnectors(): MerchantConnectorService.WithRawResponse
+
+        fun returns(): ReturnService.WithRawResponse
+
+        fun testHelpers(): TestHelperService.WithRawResponse
     }
 }

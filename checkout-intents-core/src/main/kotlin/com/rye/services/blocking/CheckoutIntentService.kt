@@ -7,14 +7,15 @@ import com.rye.core.ClientOptions
 import com.rye.core.RequestOptions
 import com.rye.core.http.HttpResponseFor
 import com.rye.models.checkoutintents.CheckoutIntent
-import com.rye.models.checkoutintents.CheckoutIntentAddPaymentParams
 import com.rye.models.checkoutintents.CheckoutIntentConfirmParams
 import com.rye.models.checkoutintents.CheckoutIntentCreateParams
 import com.rye.models.checkoutintents.CheckoutIntentListPage
 import com.rye.models.checkoutintents.CheckoutIntentListParams
 import com.rye.models.checkoutintents.CheckoutIntentPurchaseParams
+import com.rye.models.checkoutintents.CheckoutIntentRetrieveOrderParams
 import com.rye.models.checkoutintents.CheckoutIntentRetrieveParams
 import com.rye.models.checkoutintents.PollOptions
+import com.rye.models.orders.Order
 import com.rye.services.blocking.checkoutintents.ShipmentService
 import java.util.function.Consumer
 
@@ -100,27 +101,6 @@ interface CheckoutIntentService {
     /** @see list */
     fun list(requestOptions: RequestOptions): CheckoutIntentListPage =
         list(CheckoutIntentListParams.none(), requestOptions)
-
-    /** Add payment details to a checkout intent */
-    fun addPayment(id: String, params: CheckoutIntentAddPaymentParams): CheckoutIntent =
-        addPayment(id, params, RequestOptions.none())
-
-    /** @see addPayment */
-    fun addPayment(
-        id: String,
-        params: CheckoutIntentAddPaymentParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CheckoutIntent = addPayment(params.toBuilder().id(id).build(), requestOptions)
-
-    /** @see addPayment */
-    fun addPayment(params: CheckoutIntentAddPaymentParams): CheckoutIntent =
-        addPayment(params, RequestOptions.none())
-
-    /** @see addPayment */
-    fun addPayment(
-        params: CheckoutIntentAddPaymentParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CheckoutIntent
 
     /**
      * Confirm a checkout intent with provided payment information
@@ -271,6 +251,42 @@ interface CheckoutIntentService {
     ): CheckoutIntent
 
     /**
+     * Retrieve the order associated with a checkout intent.
+     *
+     * Returns the single order created when the checkout intent reached the `completed` state. 404
+     * if the intent has not produced an order yet.
+     */
+    fun retrieveOrder(id: String): Order =
+        retrieveOrder(id, CheckoutIntentRetrieveOrderParams.none())
+
+    /** @see retrieveOrder */
+    fun retrieveOrder(
+        id: String,
+        params: CheckoutIntentRetrieveOrderParams = CheckoutIntentRetrieveOrderParams.none(),
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): Order = retrieveOrder(params.toBuilder().id(id).build(), requestOptions)
+
+    /** @see retrieveOrder */
+    fun retrieveOrder(
+        id: String,
+        params: CheckoutIntentRetrieveOrderParams = CheckoutIntentRetrieveOrderParams.none(),
+    ): Order = retrieveOrder(id, params, RequestOptions.none())
+
+    /** @see retrieveOrder */
+    fun retrieveOrder(
+        params: CheckoutIntentRetrieveOrderParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): Order
+
+    /** @see retrieveOrder */
+    fun retrieveOrder(params: CheckoutIntentRetrieveOrderParams): Order =
+        retrieveOrder(params, RequestOptions.none())
+
+    /** @see retrieveOrder */
+    fun retrieveOrder(id: String, requestOptions: RequestOptions): Order =
+        retrieveOrder(id, CheckoutIntentRetrieveOrderParams.none(), requestOptions)
+
+    /**
      * A view of [CheckoutIntentService] that provides access to raw HTTP responses for each method.
      */
     interface WithRawResponse {
@@ -368,37 +384,6 @@ interface CheckoutIntentService {
             list(CheckoutIntentListParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `post /api/v1/checkout-intents/{id}/payment`, but is
-         * otherwise the same as [CheckoutIntentService.addPayment].
-         */
-        @MustBeClosed
-        fun addPayment(
-            id: String,
-            params: CheckoutIntentAddPaymentParams,
-        ): HttpResponseFor<CheckoutIntent> = addPayment(id, params, RequestOptions.none())
-
-        /** @see addPayment */
-        @MustBeClosed
-        fun addPayment(
-            id: String,
-            params: CheckoutIntentAddPaymentParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<CheckoutIntent> =
-            addPayment(params.toBuilder().id(id).build(), requestOptions)
-
-        /** @see addPayment */
-        @MustBeClosed
-        fun addPayment(params: CheckoutIntentAddPaymentParams): HttpResponseFor<CheckoutIntent> =
-            addPayment(params, RequestOptions.none())
-
-        /** @see addPayment */
-        @MustBeClosed
-        fun addPayment(
-            params: CheckoutIntentAddPaymentParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<CheckoutIntent>
-
-        /**
          * Returns a raw HTTP response for `post /api/v1/checkout-intents/{id}/confirm`, but is
          * otherwise the same as [CheckoutIntentService.confirm].
          */
@@ -443,5 +428,45 @@ interface CheckoutIntentService {
             params: CheckoutIntentPurchaseParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<CheckoutIntent>
+
+        /**
+         * Returns a raw HTTP response for `get /api/v1/checkout-intents/{id}/order`, but is
+         * otherwise the same as [CheckoutIntentService.retrieveOrder].
+         */
+        @MustBeClosed
+        fun retrieveOrder(id: String): HttpResponseFor<Order> =
+            retrieveOrder(id, CheckoutIntentRetrieveOrderParams.none())
+
+        /** @see retrieveOrder */
+        @MustBeClosed
+        fun retrieveOrder(
+            id: String,
+            params: CheckoutIntentRetrieveOrderParams = CheckoutIntentRetrieveOrderParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<Order> = retrieveOrder(params.toBuilder().id(id).build(), requestOptions)
+
+        /** @see retrieveOrder */
+        @MustBeClosed
+        fun retrieveOrder(
+            id: String,
+            params: CheckoutIntentRetrieveOrderParams = CheckoutIntentRetrieveOrderParams.none(),
+        ): HttpResponseFor<Order> = retrieveOrder(id, params, RequestOptions.none())
+
+        /** @see retrieveOrder */
+        @MustBeClosed
+        fun retrieveOrder(
+            params: CheckoutIntentRetrieveOrderParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<Order>
+
+        /** @see retrieveOrder */
+        @MustBeClosed
+        fun retrieveOrder(params: CheckoutIntentRetrieveOrderParams): HttpResponseFor<Order> =
+            retrieveOrder(params, RequestOptions.none())
+
+        /** @see retrieveOrder */
+        @MustBeClosed
+        fun retrieveOrder(id: String, requestOptions: RequestOptions): HttpResponseFor<Order> =
+            retrieveOrder(id, CheckoutIntentRetrieveOrderParams.none(), requestOptions)
     }
 }

@@ -63,8 +63,6 @@ private constructor(
         bankTransferDetails.getRequired("bankTransferDetails")
 
     /**
-     * Vendor-agnostic provider types
-     *
      * @throws CheckoutIntentsInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
@@ -201,7 +199,6 @@ private constructor(
             this.bankTransferDetails = bankTransferDetails
         }
 
-        /** Vendor-agnostic provider types */
         fun status(status: Status) = status(JsonField.of(status))
 
         /**
@@ -273,6 +270,14 @@ private constructor(
 
     private var validated: Boolean = false
 
+    /**
+     * Validates that the types of all values in this object match their expected types recursively.
+     *
+     * This method is _not_ forwards compatible with new types from the API for existing fields.
+     *
+     * @throws CheckoutIntentsInvalidDataException if any value type in this object doesn't match
+     *   its expected type.
+     */
     fun validate(): BillingCreateTopupInvoiceResponse = apply {
         if (validated) {
             return@apply
@@ -542,6 +547,15 @@ private constructor(
 
         private var validated: Boolean = false
 
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws CheckoutIntentsInvalidDataException if any value type in this object doesn't
+         *   match its expected type.
+         */
         fun validate(): BankTransferDetails = apply {
             if (validated) {
                 return@apply
@@ -604,7 +618,6 @@ private constructor(
             "BankTransferDetails{accountHolderName=$accountHolderName, accountNumber=$accountNumber, bankName=$bankName, routingNumber=$routingNumber, additionalProperties=$additionalProperties}"
     }
 
-    /** Vendor-agnostic provider types */
     class Status @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
         /**
@@ -718,6 +731,15 @@ private constructor(
 
         private var validated: Boolean = false
 
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws CheckoutIntentsInvalidDataException if any value type in this object doesn't
+         *   match its expected type.
+         */
         fun validate(): Status = apply {
             if (validated) {
                 return@apply
