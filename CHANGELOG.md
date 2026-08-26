@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.14.1 (2026-08-26)
+
+Full Changelog: [v0.14.0...v0.14.1](https://github.com/rye-com/checkout-intents-java/compare/v0.14.0...v0.14.1)
+
 ## 0.14.0 (2026-08-20)
 
 Full Changelog: [v0.13.0...v0.14.0](https://github.com/rye-com/checkout-intents-java/compare/v0.13.0...v0.14.0)
