@@ -155,14 +155,6 @@ private constructor(
         private fun urlForEnvironment(environment: String): String =
             if (environment == "production") PRODUCTION_URL else STAGING_URL
 
-        private val ENVIRONMENT_REGEX = Regex("""^RYE/(staging|production)-""")
-
-        internal fun extractEnvironmentFromApiKey(apiKey: String): String? =
-            ENVIRONMENT_REGEX.find(apiKey)?.groupValues?.get(1)
-
-        private fun urlForEnvironment(environment: String): String =
-            if (environment == "production") PRODUCTION_URL else STAGING_URL
-
         /**
          * Returns a mutable builder for constructing an instance of [ClientOptions].
          *
