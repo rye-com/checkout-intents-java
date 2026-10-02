@@ -5,7 +5,6 @@
 
 ### Features
 
-* point the default environments at the Jolly API hosts ([aab996a](https://github.com/rye-com/checkout-intents-java/commit/aab996a96ccd8658b60b6e569e9d57aa0879add9))
 * point the default environments at the Jolly API hosts ([0d781de](https://github.com/rye-com/checkout-intents-java/commit/0d781de52ac4b490979001e509e5fceddb7add0c))
 
 ## 0.14.0 (2026-08-20)
